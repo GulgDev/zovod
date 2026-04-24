@@ -1,0 +1,14 @@
+{
+  "name": "zovod",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.13",
+    "typescript": "^6.0.3"
+  }
+}
