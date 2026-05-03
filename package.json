@@ -16,6 +16,8 @@
     "jest-extended": "^6.0.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.1",
-    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "core-js": "^3.49.0"
   }
 }
