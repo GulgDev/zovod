@@ -13,7 +13,7 @@ export class DirectedGraph {
     const keyFrom = packCoords(x1, y1),
       keyTo = packCoords(x2, y2);
 
-    if (this.predecessors.has(keyFrom))
+    if (this.predecessors.has(keyTo))
       throw new Error(`(${x2}, ${y2}) already has a predecessor`);
 
     this.predecessors.set(keyTo, keyFrom);
