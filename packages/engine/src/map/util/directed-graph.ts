@@ -17,7 +17,7 @@ export class DirectedGraph {
       throw new Error(`(${x2}, ${y2}) already has a predecessor`);
 
     this.predecessors.set(keyTo, keyFrom);
-    this.successors.getOrInsertComputed(keyFrom, () => new Set()).add(keyFrom);
+    this.successors.getOrInsertComputed(keyFrom, () => new Set()).add(keyTo);
   }
 
   deleteEdge(x1: number, y1: number, x2: number, y2: number): void {
