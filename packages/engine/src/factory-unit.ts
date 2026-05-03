@@ -1,8 +1,7 @@
-import { Entity } from "./entity";
 import { Renderer } from "./render";
 import { ResourceKind } from "./resource-kind";
 
-export abstract class FactoryUnit implements Entity {
+export abstract class FactoryUnit {
   constructor(slotCount: number) {}
 
   update(): void {
