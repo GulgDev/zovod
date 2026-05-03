@@ -13,7 +13,7 @@ export class FactoryMap {
 
   removeUnitAt(x: number, y: number): void {
     const unit = this.unitGrid.getUnitAt(x, y);
-    if (unit) this.getSourceUnit(x, y)!.removeTarget(unit);
+    if (unit) this.getSourceUnit(x, y)?.removeTarget(unit);
 
     this.unitGrid.removeUnitAt(x, y);
     this.flowGrid.deleteFlowSegmentAt(x, y);
