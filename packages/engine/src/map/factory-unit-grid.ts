@@ -13,10 +13,11 @@ export class FactoryUnitGrid {
     else this.units.set(key, unit);
   }
 
-  removeUnitAt(x: number, y: number): boolean {
+  removeUnitAt(x: number, y: number): void {
     FactoryUnitGrid.validatePosition(x, y);
 
-    return this.units.delete(packCoords(x, y));
+    if (!this.units.delete(packCoords(x, y)))
+      throw new Error(`No unit to remove at (${x}, ${y})`);
   }
 
   getUnitAt(x: number, y: number): FactoryUnit | undefined {
@@ -35,6 +36,6 @@ export class FactoryUnitGrid {
   }
 
   static isUnitCell(x: number, y: number): boolean {
-    return x % 2 === 0 && y % 2 === (x / 2) % 2;
+    return x % 2 === 0 && (y - x / 2) % 2 === 0;
   }
 }
