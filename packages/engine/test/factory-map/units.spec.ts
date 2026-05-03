@@ -95,4 +95,22 @@ describe("FactoryMap - unit map", () => {
       expect(() => map.removeUnitAt(2, 1)).toThrow("No unit to remove at");
     });
   });
+
+  describe("getAllUnits", () => {
+    it("retrieves all units", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+
+      expect([...map.getAllUnits()]).toIncludeSameMembers([unit1, unit2]);
+
+      map.removeUnitAt(0, 0);
+      map.removeUnitAt(2, 1);
+
+      expect(map.getAllUnits()).toBeEmpty();
+    });
+  });
 });
