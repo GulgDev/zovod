@@ -19,8 +19,6 @@ export abstract class FactoryUnit {
     this.targetDistribution.delete(unit);
   }
 
-  constructor(slotCount: number) {}
-
   getTargets(): IterableIterator<FactoryUnit> {
     return this.targetDistribution.keys();
   }
@@ -56,7 +54,13 @@ export abstract class FactoryUnit {
   }
 }
 
-export class Plant extends FactoryUnit {
+export class ContainerUnit extends FactoryUnit {
+  constructor(slotCount: number) {
+    super();
+  }
+}
+
+export class Plant extends ContainerUnit {
   constructor(
     readonly consumedKind: ResourceKind,
     readonly producedKind: ResourceKind,
@@ -67,13 +71,13 @@ export class Plant extends FactoryUnit {
   }
 }
 
-export class Storage extends FactoryUnit {
+export class Storage extends ContainerUnit {
   constructor(slotCount: number) {
     super(slotCount);
   }
 }
 
-export class Market extends FactoryUnit {
+export class Market extends ContainerUnit {
   constructor(
     slotCount: number,
     readonly sellInterval: number,
