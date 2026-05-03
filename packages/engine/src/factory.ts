@@ -4,8 +4,9 @@ import { FactoryMap } from "./map";
 export class Factory {
   readonly map: FactoryMap = new FactoryMap();
 
-  private unassignedWorkforceUnits: number = 0;
+  private unassignedWorkforceUnits = 0;
 
+  // eslint-disable-next-line no-unused-vars
   constructor(private money: number) {}
 
   update(): void {

@@ -1,8 +1,8 @@
 import { dist, packCoords, Point, unpackCoords } from "./math";
 
 export class DirectedGraph {
-  private readonly successors: Map<number, Set<number>> = new Map();
-  private readonly predecessors: Map<number, number> = new Map();
+  private readonly successors = new Map<number, Set<number>>();
+  private readonly predecessors = new Map<number, number>();
 
   addEdge(x1: number, y1: number, x2: number, y2: number): void {
     if (dist(x1, y1, x2, y2) !== 1)

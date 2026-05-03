@@ -2,7 +2,7 @@ import { FactoryUnit } from "../factory-unit";
 import { packCoords } from "./util/math";
 
 export class FactoryUnitGrid {
-  private readonly units: Map<number, FactoryUnit> = new Map();
+  private readonly units = new Map<number, FactoryUnit>();
 
   placeUnit(unit: FactoryUnit, x: number, y: number): void {
     FactoryUnitGrid.validatePosition(x, y);
@@ -30,7 +30,7 @@ export class FactoryUnitGrid {
     return this.units.values();
   }
 
-  private static validatePosition(x: number, y: number) {
+  private static validatePosition(x: number, y: number): void {
     if (!FactoryUnitGrid.isUnitCell(x, y))
       throw new Error(`Invalid unit position (${x}, ${y})`);
   }

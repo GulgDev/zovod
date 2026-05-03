@@ -2,7 +2,7 @@ import { Renderer } from "./render";
 import { ResourceKind } from "./resource-kind";
 
 export abstract class FactoryUnit {
-  private targetDistribution: Map<FactoryUnit, number> = new Map();
+  private targetDistribution = new Map<FactoryUnit, number>();
 
   addTarget(unit: FactoryUnit): void {
     this.targetDistribution.forEach((probability, target) =>
@@ -49,12 +49,14 @@ export abstract class FactoryUnit {
     // TODO
   }
 
+  // eslint-disable-next-line no-unused-vars
   render(renderer: Renderer): void {
     // TODO
   }
 }
 
 export class ContainerUnit extends FactoryUnit {
+  // eslint-disable-next-line no-unused-vars
   constructor(slotCount: number) {
     super();
   }
@@ -62,10 +64,12 @@ export class ContainerUnit extends FactoryUnit {
 
 export class Plant extends ContainerUnit {
   constructor(
+    /* eslint-disable no-unused-vars */
     readonly consumedKind: ResourceKind,
     readonly producedKind: ResourceKind,
     readonly requiredWorkforce: number,
     readonly throughputPerWorker: number,
+    /* eslint-enable no-unused-vars */
   ) {
     super(1);
   }
@@ -80,6 +84,7 @@ export class Storage extends ContainerUnit {
 export class Market extends ContainerUnit {
   constructor(
     slotCount: number,
+    // eslint-disable-next-line no-unused-vars
     readonly sellInterval: number,
   ) {
     super(slotCount);
