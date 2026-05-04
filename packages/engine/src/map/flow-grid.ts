@@ -22,7 +22,7 @@ export class FlowGrid {
         `Invalid ending point for the flow segment: (${points.at(-1)![0]}, ${points.at(-1)![1]})`,
       );
 
-    for (let i = 0; i < points.length - 2; ++i)
+    for (let i = 0; i < points.length - 1; ++i)
       this.graph.addEdge(...points[i], ...points[i + 1]);
   }
 
