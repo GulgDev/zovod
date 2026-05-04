@@ -34,6 +34,13 @@ export class FactoryMap {
     return current && this.unitGrid.getUnitAt(...current);
   }
 
+  private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
+    for (const [targetX, targetY] of this.flowGrid.getFlowTargets(x, y))
+      if (FactoryUnitGrid.isUnitCell(targetX, targetY))
+        yield this.unitGrid.getUnitAt(targetX, targetY)!;
+      else yield* this.getTargetUnits(targetX, targetY);
+  }
+
   addFlowSegment(points: readonly Point[]): boolean {
     if (
       !(
@@ -56,6 +63,9 @@ export class FactoryMap {
   }
 
   deleteFlowSegmentAt(x: number, y: number): void {
+    const source = this.getSourceUnit(x, y)!;
+    for (const target of this.getTargetUnits(x, y)) source.removeTarget(target);
+
     this.flowGrid.deleteFlowSegmentAt(x, y);
   }
 
