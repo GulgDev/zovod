@@ -7,16 +7,20 @@ export class FactoryMap {
   private readonly unitGrid: FactoryUnitGrid = new FactoryUnitGrid();
   private readonly flowGrid: FlowGrid = new FlowGrid();
 
-  placeUnit(unit: FactoryUnit, x: number, y: number): void {
-    this.unitGrid.placeUnit(unit, x, y);
+  placeUnit(unit: FactoryUnit, x: number, y: number): boolean {
+    return this.unitGrid.placeUnit(unit, x, y);
   }
 
-  removeUnitAt(x: number, y: number): void {
-    const unit = this.unitGrid.getUnitAt(x, y);
-    if (unit) this.getSourceUnit(x, y)?.removeTarget(unit);
+  removeUnitAt(x: number, y: number): boolean {
+    const unit = this.unitGrid.getUnitAt(x, y),
+      source = this.getSourceUnit(x, y);
 
-    this.unitGrid.removeUnitAt(x, y);
-    this.flowGrid.deleteFlowSegmentAt(x, y);
+    const success = this.unitGrid.removeUnitAt(x, y);
+    if (success) {
+      if (unit) source?.removeTarget(unit);
+      this.flowGrid.deleteFlowSegmentAt(x, y);
+    }
+    return success;
   }
 
   getUnitAt(x: number, y: number): FactoryUnit | undefined {
@@ -76,15 +80,12 @@ export class FactoryMap {
   }
 
   deleteFlowSegmentAt(x: number, y: number): boolean {
-    if (!(this.getFlowSource(x, y) || this.getFlowTargets(x, y).length > 0))
-      return false;
+    const source = this.getSourceUnit(x, y)!,
+      targets = Array.from(this.getTargetUnits(x, y));
 
-    const source = this.getSourceUnit(x, y)!;
-    for (const target of this.getTargetUnits(x, y)) source.removeTarget(target);
-
-    if (!this.flowGrid.deleteFlowSegmentAt(x, y))
-      throw new Error(`Failed to delete flow segment at ${x}, ${y}`);
-    return true;
+    const success = this.flowGrid.deleteFlowSegmentAt(x, y);
+    if (success) for (const target of targets) source.removeTarget(target);
+    return success;
   }
 
   getFlowSource(x: number, y: number): Point | undefined {
