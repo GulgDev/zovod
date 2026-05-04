@@ -36,6 +36,7 @@ export class FlowGrid {
       this.graph.getSuccessors(...current).length < 2
     );
 
+    if (current) this.graph.deleteEdge(...current, ...prev);
     this.deleteSubtree(...prev);
   }
 
