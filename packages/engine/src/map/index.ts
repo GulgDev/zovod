@@ -28,6 +28,7 @@ export class FactoryMap {
   }
 
   private getSourceUnit(x: number, y: number): FactoryUnit | undefined {
+    // TODO: update source unit finding logic to account for cases when x, y is a unit cell
     let current: Point | undefined = [x, y];
     do current = this.flowGrid.getFlowSource(...current);
     while (current && !FactoryUnitGrid.isUnitCell(...current));
@@ -71,6 +72,8 @@ export class FactoryMap {
   }
 
   deleteFlowSegmentAt(x: number, y: number): void {
+    // TODO: add flow segment existence check to throw or return false
+
     const source = this.getSourceUnit(x, y)!;
     for (const target of this.getTargetUnits(x, y)) source.removeTarget(target);
 
