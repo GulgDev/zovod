@@ -1,5 +1,5 @@
 import { Renderer } from "./render";
-import { FactoryMap } from "./map";
+import { FactoryMap } from "./factory-map";
 
 export class Factory {
   readonly map: FactoryMap = new FactoryMap();

@@ -1,5 +1,6 @@
-import { Renderer } from "./render";
-import { ResourceKind } from "./resource-kind";
+import { Renderer } from "../render";
+import { ResourceKind } from "../resource-kind";
+import { sampleFrom } from "./util/sample";
 
 export abstract class FactoryUnit {
   private targetDistribution = new Map<FactoryUnit, number>();
@@ -45,6 +46,17 @@ export abstract class FactoryUnit {
     this.targetDistribution = new Map(distribution);
   }
 
+  abstract canAccept(resource: ResourceKind): boolean;
+
+  accept(resource: ResourceKind): void {
+    if (!this.canAccept(resource))
+      throw new Error(`Cannot accept resource ${resource}`);
+
+    this.handleResource(resource);
+  }
+
+  protected abstract handleResource(resource: ResourceKind): void;
+
   update(): void {
     // TODO
   }
@@ -52,38 +64,5 @@ export abstract class FactoryUnit {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   render(renderer: Renderer): void {
     // TODO
-  }
-}
-
-export class ContainerUnit extends FactoryUnit {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  constructor(slotCount: number) {
-    super();
-  }
-}
-
-export class Plant extends ContainerUnit {
-  constructor(
-    readonly consumedKind: ResourceKind,
-    readonly producedKind: ResourceKind,
-    readonly requiredWorkforce: number,
-    readonly throughputPerWorker: number,
-  ) {
-    super(1);
-  }
-}
-
-export class Storage extends ContainerUnit {
-  constructor(slotCount: number) {
-    super(slotCount);
-  }
-}
-
-export class Market extends ContainerUnit {
-  constructor(
-    slotCount: number,
-    readonly sellInterval: number,
-  ) {
-    super(slotCount);
   }
 }
