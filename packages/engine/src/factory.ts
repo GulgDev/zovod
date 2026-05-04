@@ -6,7 +6,6 @@ export class Factory {
 
   private unassignedWorkforceUnits = 0;
 
-  // eslint-disable-next-line no-unused-vars
   constructor(private money: number) {}
 
   update(): void {

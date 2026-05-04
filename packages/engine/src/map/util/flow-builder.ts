@@ -6,7 +6,6 @@ export class FlowBuilder {
   private readonly points: Point[];
 
   constructor(
-    // eslint-disable-next-line no-unused-vars
     private readonly map: FactoryMap,
     startX: number,
     startY: number,
