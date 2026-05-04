@@ -13,6 +13,8 @@ export class DirectedGraph {
     const keyFrom = packCoords(x1, y1),
       keyTo = packCoords(x2, y2);
 
+    // Trying to add a second incoming edge is an invalid
+    // operation and should be checked user-side
     if (this.predecessors.has(keyTo))
       throw new Error(`(${x2}, ${y2}) already has a predecessor`);
 
