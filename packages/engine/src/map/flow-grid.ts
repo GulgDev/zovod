@@ -5,7 +5,7 @@ import { Point } from "./util/math";
 export class FlowGrid {
   private readonly graph: DirectedGraph = new DirectedGraph();
 
-  addFlowSegment(points: readonly Point[]): void {
+  addFlowSegment(points: readonly Point[]): boolean {
     if (points.length < 2)
       throw new Error("Flow segment must have at least 2 points");
 
@@ -22,11 +22,23 @@ export class FlowGrid {
         `Invalid ending point for the flow segment: (${points.at(-1)![0]}, ${points.at(-1)![1]})`,
       );
 
+    for (let i = 1; i < points.length; ++i)
+      if (this.graph.getPredecessor(...points[i])) return false;
+
     for (let i = 0; i < points.length - 1; ++i)
       this.graph.addEdge(...points[i], ...points[i + 1]);
+    return true;
   }
 
-  deleteFlowSegmentAt(x: number, y: number): void {
+  deleteFlowSegmentAt(x: number, y: number): boolean {
+    if (
+      !(
+        this.graph.getPredecessor(x, y) ||
+        this.graph.getSuccessors(x, y).length > 0
+      )
+    )
+      return false;
+
     let current: Point | undefined = [x, y],
       prev: Point;
     do current = this.graph.getPredecessor(...(prev = current));
@@ -38,6 +50,7 @@ export class FlowGrid {
 
     if (current) this.graph.deleteEdge(...current, ...prev);
     this.deleteSubtree(...prev);
+    return true;
   }
 
   private deleteSubtree(x: number, y: number): void {

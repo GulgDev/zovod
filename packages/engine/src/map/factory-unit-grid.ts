@@ -4,20 +4,19 @@ import { packCoords } from "./util/math";
 export class FactoryUnitGrid {
   private readonly units = new Map<number, FactoryUnit>();
 
-  placeUnit(unit: FactoryUnit, x: number, y: number): void {
+  placeUnit(unit: FactoryUnit, x: number, y: number): boolean {
     FactoryUnitGrid.validatePosition(x, y);
 
     const key = packCoords(x, y);
-    if (this.units.has(key))
-      throw new Error(`A unit is already placed at (${x}, ${y})`);
-    else this.units.set(key, unit);
+    if (this.units.has(key)) return false;
+    this.units.set(key, unit);
+    return true;
   }
 
-  removeUnitAt(x: number, y: number): void {
+  removeUnitAt(x: number, y: number): boolean {
     FactoryUnitGrid.validatePosition(x, y);
 
-    if (!this.units.delete(packCoords(x, y)))
-      throw new Error(`No unit to remove at (${x}, ${y})`);
+    return this.units.delete(packCoords(x, y));
   }
 
   getUnitAt(x: number, y: number): FactoryUnit | undefined {

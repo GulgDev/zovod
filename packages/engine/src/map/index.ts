@@ -33,8 +33,7 @@ export class FactoryMap {
       const next = this.flowGrid.getFlowSource(...current);
       if (!next) break;
       current = next;
-    } 
-    while (current && !FactoryUnitGrid.isUnitCell(...current));
+    } while (current && !FactoryUnitGrid.isUnitCell(...current));
     return current && this.unitGrid.getUnitAt(...current);
   }
 
@@ -53,6 +52,8 @@ export class FactoryMap {
         throw new Error(`Cannot connect (${x1}, ${y1}) and (${x2}, ${y2})`);
     }
 
+    // All flow segments must start in either an occupied unit cell
+    // or a (branching) flow node and end in an occupied unit cell
     if (
       !(
         this.flowGrid.getFlowSource(...points[0]) ||
@@ -63,7 +64,7 @@ export class FactoryMap {
     )
       return false;
 
-    this.flowGrid.addFlowSegment(points);
+    if (!this.flowGrid.addFlowSegment(points)) return false;
 
     (FactoryUnitGrid.isUnitCell(...points[0])
       ? this.unitGrid.getUnitAt(...points[0])
@@ -74,13 +75,16 @@ export class FactoryMap {
     return true;
   }
 
-  deleteFlowSegmentAt(x: number, y: number): void {
-    // TODO: add flow segment existence check to throw or return false
+  deleteFlowSegmentAt(x: number, y: number): boolean {
+    if (!(this.getFlowSource(x, y) || this.getFlowTargets(x, y).length > 0))
+      return false;
 
     const source = this.getSourceUnit(x, y)!;
     for (const target of this.getTargetUnits(x, y)) source.removeTarget(target);
 
-    this.flowGrid.deleteFlowSegmentAt(x, y);
+    if (!this.flowGrid.deleteFlowSegmentAt(x, y))
+      throw new Error(`Failed to delete flow segment at ${x}, ${y}`);
+    return true;
   }
 
   getFlowSource(x: number, y: number): Point | undefined {
