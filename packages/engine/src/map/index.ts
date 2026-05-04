@@ -38,7 +38,12 @@ export class FactoryMap {
       if (!next) break;
       current = next;
     } while (current && !FactoryUnitGrid.isUnitCell(...current));
-    return current && this.unitGrid.getUnitAt(...current);
+    return (
+      current &&
+      (FactoryUnitGrid.isUnitCell(...current)
+        ? this.unitGrid.getUnitAt(...current)
+        : undefined)
+    );
   }
 
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
