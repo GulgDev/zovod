@@ -1,7 +1,7 @@
 import { FactoryUnit } from "../factory-unit";
 import { FactoryUnitGrid } from "./factory-unit-grid";
 import { FlowGrid } from "./flow-grid";
-import { Point } from "./util/math";
+import { dist, Point } from "./util/math";
 
 export class FactoryMap {
   private readonly unitGrid: FactoryUnitGrid = new FactoryUnitGrid();
@@ -42,6 +42,13 @@ export class FactoryMap {
   }
 
   addFlowSegment(points: readonly Point[]): boolean {
+    for (let i = 0; i < points.length - 1; ++i) {
+      const [x1, y1] = points[i],
+        [x2, y2] = points[i + 1];
+      if (dist(x1, y1, x2, y2) !== 1)
+        throw new Error(`Cannot connect (${x1}, ${y1}) and (${x2}, ${y2})`);
+    }
+
     if (
       !(
         this.flowGrid.getFlowSource(...points[0]) ||
