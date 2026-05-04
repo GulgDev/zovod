@@ -33,5 +33,60 @@ describe("FactoryMap - flow map", () => {
         [2, -1],
       ]);
     });
+
+    it("fails when the flow segment has empty source or target", () => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+
+      expect(
+        map.addFlowSegment([
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [2, 1],
+        ]),
+      ).toBeFalse();
+
+      expect(
+        map.addFlowSegment([
+          [2, 1],
+          [2, 0],
+          [1, 0],
+          [0, 0],
+        ]),
+      ).toBeFalse();
+    });
+
+    it("throws when the flow segment target is not a unit cell", () => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+
+      expect(() =>
+        map.addFlowSegment([
+          [0, 0],
+          [1, 0],
+          [2, 0],
+        ]),
+      ).toThrow("Invalid unit position");
+
+      expect(() =>
+        map.addFlowSegment([
+          [1, 0],
+          [2, 0],
+          [2, 1],
+        ]),
+      ).not.toThrow("Invalid unit position");
+    });
+
+    it("throws when the flow segment is non-continuous", () => {
+      const map = new FactoryMap();
+
+      expect(() =>
+        map.addFlowSegment([
+          [0, 0],
+          [2, 1],
+        ]),
+      ).toThrow("Cannot connect");
+    });
   });
 });
