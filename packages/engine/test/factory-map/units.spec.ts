@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FactoryMap } from "../../src/map";
-import { FactoryUnit } from "../../src/factory-unit";
-
-// An empty class just to allow instantiation (FactoryUnit is abstract)
-class UnitMock extends FactoryUnit {}
+import { UnitMock } from "./util/unit-mock";
 
 // Unit cell coordinates must satisfy (2n, 2m + n)
 const invalidPositions = [
