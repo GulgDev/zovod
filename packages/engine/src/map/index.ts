@@ -28,9 +28,12 @@ export class FactoryMap {
   }
 
   private getSourceUnit(x: number, y: number): FactoryUnit | undefined {
-    // TODO: update source unit finding logic to account for cases when x, y is a unit cell
     let current: Point | undefined = [x, y];
-    do current = this.flowGrid.getFlowSource(...current);
+    do {
+      const next = this.flowGrid.getFlowSource(...current);
+      if (!next) break;
+      current = next;
+    } 
     while (current && !FactoryUnitGrid.isUnitCell(...current));
     return current && this.unitGrid.getUnitAt(...current);
   }
