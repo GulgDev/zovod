@@ -91,27 +91,25 @@ describe("FactoryMap - flow map", () => {
   });
 
   describe("deleteFlowSegmentAt", () => {
-    it("deletes a flow segment", () => {
-      for (const [x, y] of [
+    it.each([
+      ["the start", 0, 0],
+      ["the middle", 1, 0],
+      ["the end", 2, 1],
+    ])("deletes a flow segment at %s", (_, x, y) => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+      map.placeUnit(new UnitMock(), 2, 1);
+      map.addFlowSegment([
         [0, 0],
         [1, 0],
-        [2, 2],
-      ]) {
-        const map = new FactoryMap();
-        map.placeUnit(new UnitMock(), 0, 0);
-        map.placeUnit(new UnitMock(), 2, 1);
-        map.addFlowSegment([
-          [0, 0],
-          [1, 0],
-          [2, 0],
-          [2, 1],
-        ]);
+        [2, 0],
+        [2, 1],
+      ]);
 
-        map.deleteFlowSegmentAt(x, y);
-        expect(map.getFlowTargets(0, 0)).toBeEmpty();
-        expect(map.getFlowTargets(1, 0)).toBeEmpty();
-        expect(map.getFlowTargets(2, 0)).toBeEmpty();
-      }
+      map.deleteFlowSegmentAt(x, y);
+      expect(map.getFlowTargets(0, 0)).toBeEmpty();
+      expect(map.getFlowTargets(1, 0)).toBeEmpty();
+      expect(map.getFlowTargets(2, 0)).toBeEmpty();
     });
   });
 });
