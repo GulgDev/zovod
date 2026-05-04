@@ -106,7 +106,7 @@ describe("FactoryMap - flow map", () => {
         [2, 1],
       ]);
 
-      map.deleteFlowSegmentAt(x, y);
+      expect(map.deleteFlowSegmentAt(x, y)).toBeTrue();
       expect(map.getFlowTargets(0, 0)).toBeEmpty();
       expect(map.getFlowTargets(1, 0)).toBeEmpty();
       expect(map.getFlowTargets(2, 0)).toBeEmpty();
