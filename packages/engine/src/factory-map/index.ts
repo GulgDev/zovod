@@ -1,4 +1,4 @@
-import { FactoryUnit } from "../factory-unit";
+import { FactoryUnit } from "../factory-units/factory-unit";
 import { FactoryUnitGrid } from "./factory-unit-grid";
 import { FlowGrid } from "./flow-grid";
 import { dist, Point } from "./util/math";
