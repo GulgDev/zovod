@@ -30,13 +30,20 @@ describe("FactoryMap - unit map", () => {
       const unit1 = new UnitMock(),
         unit2 = new UnitMock();
 
-      map.placeUnit(unit1, 0, 0);
+      expect(map.placeUnit(unit1, 0, 0)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
       expect(map.getUnitAt(2, 1)).toBeUndefined();
 
-      map.placeUnit(unit2, 2, 1);
+      expect(map.placeUnit(unit2, 2, 1)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
       expect(map.getUnitAt(2, 1)).toBe(unit2);
+    });
+
+    it("fails when placing on an occupied cell", () => {
+      const map = new FactoryMap();
+
+      expect(map.placeUnit(new UnitMock(), 0, 0)).toBeTrue();
+      expect(map.placeUnit(new UnitMock(), 0, 0)).toBeFalse();
     });
 
     it("throws for invalid positions", () => {
@@ -46,15 +53,6 @@ describe("FactoryMap - unit map", () => {
         expect(() => map.placeUnit(new UnitMock(), x, y)).toThrow(
           "Invalid unit position",
         ),
-      );
-    });
-
-    it("throws when placing on an occupied cell", () => {
-      const map = new FactoryMap();
-      map.placeUnit(new UnitMock(), 0, 0);
-
-      expect(() => map.placeUnit(new UnitMock(), 0, 0)).toThrow(
-        "A unit is already placed at",
       );
     });
   });
@@ -68,12 +66,20 @@ describe("FactoryMap - unit map", () => {
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
-      map.removeUnitAt(0, 0);
+      expect(map.removeUnitAt(0, 0)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBeUndefined();
       expect(map.getUnitAt(2, 1)).toBe(unit2);
 
-      map.removeUnitAt(2, 1);
+      expect(map.removeUnitAt(2, 1)).toBeTrue();
       expect(map.getUnitAt(2, 1)).toBeUndefined();
+    });
+
+    it("fails for empty cells", () => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+
+      expect(map.removeUnitAt(0, 0)).toBeTrue();
+      expect(map.removeUnitAt(2, 1)).toBeFalse();
     });
 
     it("throws for invalid positions", () => {
@@ -82,14 +88,6 @@ describe("FactoryMap - unit map", () => {
       invalidPositions.forEach(([x, y]) =>
         expect(() => map.removeUnitAt(x, y)).toThrow("Invalid unit position"),
       );
-    });
-
-    it("throws for empty cells", () => {
-      const map = new FactoryMap();
-      map.placeUnit(new UnitMock(), 0, 0);
-
-      expect(() => map.removeUnitAt(0, 0)).not.toThrow();
-      expect(() => map.removeUnitAt(2, 1)).toThrow("No unit to remove at");
     });
   });
 
