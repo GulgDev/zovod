@@ -89,4 +89,29 @@ describe("FactoryMap - flow map", () => {
       ).toThrow("Cannot connect");
     });
   });
+
+  describe("deleteFlowSegmentAt", () => {
+    it("deletes a flow segment", () => {
+      for (const [x, y] of [
+        [0, 0],
+        [1, 0],
+        [2, 2],
+      ]) {
+        const map = new FactoryMap();
+        map.placeUnit(new UnitMock(), 0, 0);
+        map.placeUnit(new UnitMock(), 2, 1);
+        map.addFlowSegment([
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [2, 1],
+        ]);
+
+        map.deleteFlowSegmentAt(x, y);
+        expect(map.getFlowTargets(0, 0)).toBeEmpty();
+        expect(map.getFlowTargets(1, 0)).toBeEmpty();
+        expect(map.getFlowTargets(2, 0)).toBeEmpty();
+      }
+    });
+  });
 });
