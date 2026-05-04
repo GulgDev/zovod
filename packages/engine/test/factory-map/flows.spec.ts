@@ -111,5 +111,12 @@ describe("FactoryMap - flow map", () => {
       expect(map.getFlowTargets(1, 0)).toBeEmpty();
       expect(map.getFlowTargets(2, 0)).toBeEmpty();
     });
+
+    it("fails when flow segment is absent", () => {
+      const map = new FactoryMap();
+
+      expect(map.deleteFlowSegmentAt(0, 0)).toBeFalse();
+      expect(map.deleteFlowSegmentAt(1, 0)).toBeFalse();
+    });
   });
 });
