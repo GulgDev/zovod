@@ -45,7 +45,8 @@ export class FactoryMap {
     if (
       !(
         this.flowGrid.getFlowSource(...points[0]) ||
-        this.unitGrid.getUnitAt(...points[0])
+        (FactoryUnitGrid.isUnitCell(...points[0]) &&
+          this.unitGrid.getUnitAt(...points[0]))
       ) ||
       !this.unitGrid.getUnitAt(...points.at(-1)!)
     )
