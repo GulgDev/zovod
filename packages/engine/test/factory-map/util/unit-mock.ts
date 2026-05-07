@@ -1,4 +1,13 @@
-import { FactoryUnit } from "../../../src/factory-units/factory-unit";
+import { FactoryUnit } from "../../../src/factory/factory-unit";
 
-// An empty class just to allow instantiation (FactoryUnit is abstract)
-export class UnitMock extends FactoryUnit {}
+export class UnitMock extends FactoryUnit {
+  protected canAccept(): boolean {
+    return false;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected accept(): void {}
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected doUpdate(): void {}
+}
