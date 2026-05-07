@@ -46,19 +46,29 @@ export abstract class FactoryUnit {
     this.targetDistribution = new Map(distribution);
   }
 
-  abstract canAccept(resource: ResourceKind): boolean;
+  protected abstract canAccept(resource: ResourceKind): boolean;
 
-  accept(resource: ResourceKind): void {
-    if (!this.canAccept(resource))
-      throw new Error(`Cannot accept resource ${resource}`);
+  protected abstract accept(resource: ResourceKind): void;
 
-    this.handleResource(resource);
+  protected send(resource: ResourceKind): boolean {
+    const distribution = new Map(
+      this.getTargetDistribution()
+        .entries()
+        .filter(([target]) => target.canAccept(resource)),
+    );
+    if (distribution.size === 0) return false;
+
+    const target = sampleFrom(distribution);
+    target.accept(resource);
+    return true;
   }
 
-  protected abstract handleResource(resource: ResourceKind): void;
+  protected abstract doUpdate(deltaTime: number): void;
 
-  update(): void {
-    // TODO
+  paused = false;
+
+  update(deltaTime: number): void {
+    if (!this.paused) this.doUpdate(deltaTime);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

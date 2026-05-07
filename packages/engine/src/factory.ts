@@ -4,8 +4,8 @@ import { FactoryMap } from "./factory-map";
 export class Factory {
   readonly map: FactoryMap = new FactoryMap();
 
-  update(): void {
-    for (const unit of this.map.getAllUnits()) unit.update();
+  update(deltaTime: number): void {
+    for (const unit of this.map.getAllUnits()) unit.update(deltaTime);
   }
 
   render(renderer: Renderer): void {

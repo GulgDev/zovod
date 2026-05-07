@@ -1,12 +1,23 @@
-import { FactoryUnit } from "./factory-unit";
+import { Timer } from "../ticker/timer";
+import { ContainerUnit } from "./container-unit";
 
-export class Market extends FactoryUnit {
+export class Market extends ContainerUnit {
   constructor(
-    readonly slotCount: number,
+    slotCount: number,
     readonly sellInterval: number,
   ) {
-    super();
+    super(slotCount);
+
+    this.sellTimer = new Timer(this.sellInterval);
   }
 
-  // TODO
+  private sellTimer: Timer;
+
+  doUpdate(deltaTime: number): void {
+    if (this.sellTimer.update(deltaTime)) {
+      for (const resource of this.getContainedResources()); // TODO: sell
+
+      this.clear();
+    }
+  }
 }
