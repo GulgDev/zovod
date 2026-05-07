@@ -73,6 +73,15 @@ export class Inventory {
     return canAfford;
   }
 
+  sellWorkforce(units: number): void {
+    if (this.currentUnassignedWorkforce < units)
+      throw new Error("Not enough unassigned workers to sell");
+
+    this.currentTotalWorkforce -= units;
+    this.currentUnassignedWorkforce -= units;
+    this.earnMoney(this.pricing.workforceUnit.sell * units);
+  }
+
   assignWorkforce(productionPlant: ProductionPlant, units: number): void {
     if (this.currentUnassignedWorkforce < units)
       throw new Error("Not enough unassigned workers");
