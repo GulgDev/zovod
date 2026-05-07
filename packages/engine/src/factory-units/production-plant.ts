@@ -1,6 +1,7 @@
 import { ResourceKind } from "../resource-kind";
 import { Timer } from "../util/timer";
 import { FactoryUnit } from "../factory/factory-unit";
+import { Game } from "..";
 
 export class ProductionPlant extends FactoryUnit {
   assignedWorkforceUnits = 0;
@@ -34,7 +35,7 @@ export class ProductionPlant extends FactoryUnit {
     );
   }
 
-  doUpdate(deltaTime: number): void {
+  doUpdate(_game: Game, deltaTime: number): void {
     if (!this.isWorking) return;
 
     if (this.productionTimer.update(deltaTime)) this.send(this.producedKind);

@@ -1,3 +1,4 @@
+import { Game } from "..";
 import { Timer } from "../util/timer";
 import { ContainerUnit } from "./container-unit";
 
@@ -13,9 +14,10 @@ export class Market extends ContainerUnit {
 
   private sellTimer: Timer;
 
-  doUpdate(deltaTime: number): void {
+  doUpdate(game: Game, deltaTime: number): void {
     if (this.sellTimer.update(deltaTime)) {
-      for (const resource of this.getContainedResources()); // TODO: sell
+      for (const resource of this.getContainedResources())
+        game.wallet.sellResource(resource);
 
       this.clear();
     }

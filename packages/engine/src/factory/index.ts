@@ -1,11 +1,12 @@
+import { Game } from "..";
 import { Renderer } from "../render";
 import { FactoryMap } from "./factory-map";
 
 export class Factory {
   readonly map = new FactoryMap();
 
-  update(deltaTime: number): void {
-    for (const unit of this.map.getAllUnits()) unit.update(deltaTime);
+  update(game: Game, deltaTime: number): void {
+    for (const unit of this.map.getAllUnits()) unit.update(game, deltaTime);
   }
 
   render(renderer: Renderer): void {
