@@ -47,10 +47,10 @@ export class FactoryMap {
   }
 
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
+    if (FactoryUnitGrid.isUnitCell(x, y)) yield this.unitGrid.getUnitAt(x, y)!;
+
     for (const [targetX, targetY] of this.flowGrid.getFlowTargets(x, y))
-      if (FactoryUnitGrid.isUnitCell(targetX, targetY))
-        yield this.unitGrid.getUnitAt(targetX, targetY)!;
-      else yield* this.getTargetUnits(targetX, targetY);
+      yield* this.getTargetUnits(targetX, targetY);
   }
 
   addFlowSegment(points: readonly Point[]): boolean {
