@@ -86,7 +86,7 @@ export class FactoryMap {
 
   deleteFlowSegmentAt(x: number, y: number): boolean {
     const source = this.getSourceUnit(x, y)!,
-      targets = Array.from(this.getTargetUnits(x, y));
+      targets = this.getTargetUnits(x, y);
 
     const success = this.flowGrid.deleteFlowSegmentAt(x, y);
     if (success) for (const target of targets) source.removeTarget(target);
