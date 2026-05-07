@@ -1,8 +1,8 @@
-import { Renderer } from "./render";
+import { Renderer } from "../render";
 import { FactoryMap } from "./factory-map";
 
 export class Factory {
-  readonly map: FactoryMap = new FactoryMap();
+  readonly map = new FactoryMap();
 
   update(deltaTime: number): void {
     for (const unit of this.map.getAllUnits()) unit.update(deltaTime);

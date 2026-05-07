@@ -1,4 +1,4 @@
-import { FactoryUnitGrid } from "./factory-unit-grid";
+import { FactoryUnitGrid } from "./unit-grid";
 import { DirectedGraph } from "./util/directed-graph";
 import { Point } from "./util/math";
 

@@ -1,5 +1,5 @@
 import { FactoryMap } from "..";
-import { FactoryUnitGrid } from "../factory-unit-grid";
+import { FactoryUnitGrid } from "../unit-grid";
 import { dist, Point } from "./math";
 
 export class FlowBuilder {
