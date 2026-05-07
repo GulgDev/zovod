@@ -1,5 +1,5 @@
 import { ResourceKind } from "../resource-kind";
-import { Timer } from "../ticker/timer";
+import { Timer } from "../util/timer";
 import { FactoryUnit } from "../factory/factory-unit";
 
 export class ProductionPlant extends FactoryUnit {
