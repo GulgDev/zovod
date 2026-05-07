@@ -12,7 +12,7 @@ export class Storage extends ContainerUnit {
     if (resource === undefined && this.renewedResourceKind !== undefined) {
       // the storage is empty, try to renew resources
 
-      if (game.wallet.buyResource(this.renewedResourceKind))
+      if (game.inventory.buyResource(this.renewedResourceKind))
         this.put(this.renewedResourceKind);
     }
   }
