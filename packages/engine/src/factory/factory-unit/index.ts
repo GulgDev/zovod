@@ -3,6 +3,8 @@ import { Renderer } from "../../render";
 import { ResourceKind } from "../../resource-kind";
 import { sampleFrom } from "./util/sample";
 
+// TODO: separate internal (addTarget/removeTarget, type-specific methods)
+// and public (pause/resume, etc.) FactoryUnit interfaces (?)
 export abstract class FactoryUnit {
   private targetDistribution = new Map<FactoryUnit, number>();
 
