@@ -87,7 +87,7 @@ export class Inventory {
         "The production plant has fewer workforce units than were prompted to be unassigned",
       );
 
-    productionPlant.assignedWorkforceUnits -= units;
+    productionPlant.assignedWorkforceUnits -= units; // FIXME: is this sequantial coupling?
     this.currentUnassignedWorkforce += units;
   }
 }
