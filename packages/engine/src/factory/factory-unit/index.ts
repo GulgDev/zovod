@@ -1,5 +1,5 @@
-import { Renderer } from "../render";
-import { ResourceKind } from "../resource-kind";
+import { Renderer } from "../../render";
+import { ResourceKind } from "../../resource-kind";
 import { sampleFrom } from "./util/sample";
 
 export abstract class FactoryUnit {

@@ -1,11 +1,11 @@
-import { FactoryUnit } from "../factory-units/factory-unit";
-import { FactoryUnitGrid } from "./factory-unit-grid";
+import { FactoryUnit } from "../factory-unit";
+import { FactoryUnitGrid } from "./unit-grid";
 import { FlowGrid } from "./flow-grid";
 import { dist, Point } from "./util/math";
 
 export class FactoryMap {
-  private readonly unitGrid: FactoryUnitGrid = new FactoryUnitGrid();
-  private readonly flowGrid: FlowGrid = new FlowGrid();
+  private readonly unitGrid = new FactoryUnitGrid();
+  private readonly flowGrid = new FlowGrid();
 
   placeUnit(unit: FactoryUnit, x: number, y: number): boolean {
     return this.unitGrid.placeUnit(unit, x, y);
