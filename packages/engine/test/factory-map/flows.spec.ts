@@ -57,6 +57,27 @@ describe("FactoryMap - flow map", () => {
       ).toBeFalse();
     });
 
+    it("fails when the flow segment crosses an existing flow", () => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+
+      expect(
+        map.addFlowSegment([
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [2, -1],
+        ]),
+      ).toBeFalse();
+    });
+
     it("throws when the flow segment target is not a unit cell", () => {
       const map = new FactoryMap();
       map.placeUnit(new UnitMock(), 0, 0);
