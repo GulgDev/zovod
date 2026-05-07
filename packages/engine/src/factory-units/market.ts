@@ -1,4 +1,4 @@
-import { Timer } from "../ticker/timer";
+import { Timer } from "../util/timer";
 import { ContainerUnit } from "./container-unit";
 
 export class Market extends ContainerUnit {
