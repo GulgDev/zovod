@@ -12,11 +12,11 @@ export abstract class FactoryUnit {
     this.targetDistribution.forEach((probability, target) =>
       this.targetDistribution.set(
         target,
-        (probability * (this.targetDistribution.size - 1)) /
-          this.targetDistribution.size,
+        (probability * this.targetDistribution.size) /
+          (this.targetDistribution.size + 1),
       ),
     );
-    this.targetDistribution.set(unit, 1 / (this.targetDistribution.size || 1)); // account for empty distribution
+    this.targetDistribution.set(unit, 1 / (this.targetDistribution.size + 1)); // account for empty distribution
   }
 
   removeTarget(unit: FactoryUnit): void {
