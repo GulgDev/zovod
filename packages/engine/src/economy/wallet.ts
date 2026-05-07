@@ -11,7 +11,7 @@ export class Wallet {
     return this.currentBalance;
   }
 
-  private spend(amount: number): boolean {
+  spend(amount: number): boolean {
     if (this.currentBalance < amount) return false;
     this.currentBalance -= amount;
     return true;
