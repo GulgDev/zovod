@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FactoryMap } from "../../src/factory-map";
+import { FactoryMap } from "../../src/factory/factory-map";
 import { UnitMock } from "./util/unit-mock";
 
 describe("FactoryMap - flow map", () => {

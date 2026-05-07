@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FactoryMap } from "../../src/map";
+import { FactoryMap } from "../../src/factory/factory-map";
 import { UnitMock } from "./util/unit-mock";
 
 // Unit cell coordinates must satisfy (2n, 2m + n)
