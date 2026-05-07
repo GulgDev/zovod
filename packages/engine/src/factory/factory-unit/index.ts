@@ -23,10 +23,6 @@ export abstract class FactoryUnit {
     this.targetDistribution.delete(unit);
   }
 
-  getTargets(): IterableIterator<FactoryUnit> {
-    return this.targetDistribution.keys();
-  }
-
   getTargetProbability(target: FactoryUnit): number {
     if (!this.targetDistribution.has(target)) throw new Error("Invalid target");
 
