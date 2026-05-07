@@ -1,3 +1,4 @@
+import { Game } from "../..";
 import { Renderer } from "../../render";
 import { ResourceKind } from "../../resource-kind";
 import { sampleFrom } from "./util/sample";
@@ -63,12 +64,12 @@ export abstract class FactoryUnit {
     return true;
   }
 
-  protected abstract doUpdate(deltaTime: number): void;
+  protected abstract doUpdate(game: Game, deltaTime: number): void;
 
   paused = false;
 
-  update(deltaTime: number): void {
-    if (!this.paused) this.doUpdate(deltaTime);
+  update(game: Game, deltaTime: number): void {
+    if (!this.paused) this.doUpdate(game, deltaTime);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
