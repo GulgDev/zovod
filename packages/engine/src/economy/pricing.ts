@@ -2,5 +2,5 @@ import { ResourceKind } from "../resource-kind";
 
 export interface Pricing {
   readonly [key: ResourceKind]: { buy: number; sell: number };
-  readonly workForceUnit: { buy: number };
+  readonly workforceUnit: { buy: number };
 }

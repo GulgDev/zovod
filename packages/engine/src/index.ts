@@ -1,12 +1,12 @@
+import { Inventory } from "./economy/inventory";
 import { Pricing } from "./economy/pricing";
-import { Wallet } from "./economy/wallet";
 import { Factory } from "./factory";
 import { Renderer } from "./render";
 
 export class Game {
   readonly factory = new Factory();
 
-  readonly wallet: Wallet;
+  readonly inventory: Inventory;
 
   speed = 1;
 
@@ -15,7 +15,7 @@ export class Game {
     initialBalance: number,
     pricing: Pricing,
   ) {
-    this.wallet = new Wallet(initialBalance, pricing);
+    this.inventory = new Inventory(initialBalance, pricing);
   }
 
   private lastFrameTimestamp: DOMHighResTimeStamp = 0;
