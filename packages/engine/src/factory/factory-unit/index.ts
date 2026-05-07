@@ -21,6 +21,13 @@ export abstract class FactoryUnit {
 
   removeTarget(unit: FactoryUnit): void {
     this.targetDistribution.delete(unit);
+
+    const total = this.targetDistribution
+      .values()
+      .reduce((total, probability) => total + probability, 0);
+    this.targetDistribution.forEach((probability, target) =>
+      this.targetDistribution.set(target, probability / total),
+    );
   }
 
   getTargetProbability(target: FactoryUnit): number {
