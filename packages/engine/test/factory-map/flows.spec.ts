@@ -109,6 +109,33 @@ describe("FactoryMap - flow map", () => {
         ]),
       ).toThrow("Cannot connect");
     });
+
+    it("adds corresponding targets to the distribution", () => {
+      const map = new FactoryMap();
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+
+      expect(unit1.getTargetDistribution().get(unit2)).toBe(1);
+
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      expect(unit1.getTargetDistribution().get(unit2)).toBe(0.5);
+      expect(unit1.getTargetDistribution().get(unit3)).toBe(0.5);
+    });
   });
 
   describe("deleteFlowSegmentAt", () => {
