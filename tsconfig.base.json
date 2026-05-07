@@ -6,6 +6,9 @@
     "incremental": true,
     "declaration": true,
 
+    // code style
+    "noImplicitOverride": true,
+
     // improve build performance
     "skipLibCheck": true
   }
