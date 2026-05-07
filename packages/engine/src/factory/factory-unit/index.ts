@@ -16,7 +16,7 @@ export abstract class FactoryUnit {
           this.targetDistribution.size,
       ),
     );
-    this.targetDistribution.set(unit, 1 / this.targetDistribution.size);
+    this.targetDistribution.set(unit, 1 / (this.targetDistribution.size || 1)); // account for empty distribution
   }
 
   removeTarget(unit: FactoryUnit): void {
