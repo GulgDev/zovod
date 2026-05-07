@@ -43,7 +43,7 @@ export abstract class FactoryUnit {
   setTargetDistribution(distribution: ReadonlyMap<FactoryUnit, number>): void {
     if (
       distribution.size !== this.targetDistribution.size ||
-      !Array.from(this.targetDistribution.keys()).every((target) =>
+      !this.targetDistribution.keys().every((target) =>
         distribution.has(target),
       )
     )
