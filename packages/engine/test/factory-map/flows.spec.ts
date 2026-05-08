@@ -166,5 +166,34 @@ describe("FactoryMap - flow map", () => {
       expect(map.deleteFlowSegmentAt(0, 0)).toBeFalse();
       expect(map.deleteFlowSegmentAt(1, 0)).toBeFalse();
     });
+
+    it("removes corresponding targets from the distribution", () => {
+      const map = new FactoryMap();
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      map.deleteFlowSegmentAt(2, 1);
+
+      expect(unit1.getTargetDistribution().has(unit2)).toBeFalse();
+      expect(unit1.getTargetDistribution().get(unit3)).toBe(1);
+
+      map.deleteFlowSegmentAt(2, -1);
+
+      expect(unit1.getTargetDistribution().has(unit3)).toBeFalse();
+    });
   });
 });
