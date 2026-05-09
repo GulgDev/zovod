@@ -10,7 +10,7 @@ const dummyPricing: Pricing = {
 const resourceA: ResourceKind = 0,
   resourceB: ResourceKind = 1;
 
-describe("Inventory", () => {
+describe("Inventory - money", () => {
   describe("spendMoney", () => {
     it("removes money from the balance", () => {
       const inventory = new Inventory(150, dummyPricing);
