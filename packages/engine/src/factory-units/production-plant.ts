@@ -1,4 +1,4 @@
-import { ResourceKind } from "../resource-kind";
+import type { ResourceKind } from "../resource-kind";
 import { Timer } from "../util/timer";
 import { FactoryUnit } from "../factory/factory-unit";
 import { Game } from "..";

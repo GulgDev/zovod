@@ -1,6 +1,6 @@
-import { ProductionPlant } from "../factory-units/production-plant";
-import { ResourceKind } from "../resource-kind";
-import { Pricing } from "./pricing";
+import type { ProductionPlant } from "../factory-units/production-plant";
+import type { ResourceKind } from "../resource-kind";
+import type { Pricing } from "./pricing";
 
 export class Inventory {
   constructor(

@@ -1,4 +1,4 @@
-import { dist, packCoords, Point, unpackCoords } from "./math";
+import { dist, packCoords, type Point, unpackCoords } from "./math";
 
 export class DirectedGraph {
   private readonly successors = new Map<number, Set<number>>();

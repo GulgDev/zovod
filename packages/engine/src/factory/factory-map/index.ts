@@ -1,7 +1,7 @@
 import { FactoryUnit } from "../factory-unit";
 import { FactoryUnitGrid } from "./unit-grid";
 import { FlowGrid } from "./flow-grid";
-import { dist, Point } from "./util/math";
+import { dist, type Point } from "./util/math";
 
 export class FactoryMap {
   private readonly unitGrid = new FactoryUnitGrid();

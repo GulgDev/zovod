@@ -1,5 +1,5 @@
 import { Game } from "..";
-import { ResourceKind } from "../resource-kind";
+import type { ResourceKind } from "../resource-kind";
 import { ContainerUnit } from "./container-unit";
 
 export class Storage extends ContainerUnit {
