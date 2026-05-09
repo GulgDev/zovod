@@ -1,4 +1,4 @@
-import type { ProductionPlant } from "../factory-units/production-plant";
+import { ProductionPlant } from "../factory-units/production-plant";
 import type { ResourceKind } from "../resource-kind";
 import type { Pricing } from "./pricing";
 
@@ -86,17 +86,28 @@ export class Inventory {
     if (this.currentUnassignedWorkforce < units)
       throw new Error("Not enough unassigned workers");
 
-    productionPlant.assignedWorkforceUnits += units;
     this.currentUnassignedWorkforce -= units;
+    assignedWorkforce.set(
+      productionPlant,
+      Inventory.getAssignedWorkforce(productionPlant) + units,
+    );
   }
 
   unassignWorkforce(productionPlant: ProductionPlant, units: number): void {
-    if (productionPlant.assignedWorkforceUnits < units)
+    const plantAssignedWorkforce =
+      Inventory.getAssignedWorkforce(productionPlant);
+    if (plantAssignedWorkforce < units)
       throw new Error(
         "The production plant has fewer workforce units than were prompted to be unassigned",
       );
 
-    productionPlant.assignedWorkforceUnits -= units; // FIXME: is this sequantial coupling?
     this.currentUnassignedWorkforce += units;
+    assignedWorkforce.set(productionPlant, plantAssignedWorkforce - units);
+  }
+
+  static getAssignedWorkforce(productionPlant: ProductionPlant): number {
+    return assignedWorkforce.get(productionPlant) ?? 0;
   }
 }
+
+const assignedWorkforce = new WeakMap<ProductionPlant, number>();
