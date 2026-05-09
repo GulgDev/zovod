@@ -8,7 +8,8 @@
     "incremental": true,
     "declaration": true,
 
-    // code style
+    // linting
+    "strict": true,
     "noImplicitOverride": true,
 
     // improve build performance
