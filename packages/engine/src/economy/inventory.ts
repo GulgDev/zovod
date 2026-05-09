@@ -50,6 +50,10 @@ export class Inventory {
     return this.pricing.workforceUnit.buy;
   }
 
+  getWorkforceUnitSellPrice(): number {
+    return this.pricing.workforceUnit.sell;
+  }
+
   getMaxAffordableWorkforceUnits(): number {
     return this.getMaxAffordableAmount(this.pricing.workforceUnit.buy);
   }
