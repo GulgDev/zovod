@@ -2,10 +2,9 @@ import type { ResourceKind } from "../resource-kind";
 import { Timer } from "../util/timer";
 import { FactoryUnit } from "../factory/factory-unit";
 import { Game } from "..";
+import { Inventory } from "../economy/inventory";
 
 export class ProductionPlant extends FactoryUnit {
-  assignedWorkforceUnits = 0;
-
   constructor(
     readonly consumedKind: ResourceKind,
     readonly producedKind: ResourceKind,
@@ -16,7 +15,7 @@ export class ProductionPlant extends FactoryUnit {
   }
 
   get isWorking(): boolean {
-    return this.assignedWorkforceUnits >= this.requiredWorkforceUnits;
+    return Inventory.getAssignedWorkforce(this) >= this.requiredWorkforceUnits;
   }
 
   private productionTimer = new Timer();
@@ -31,7 +30,7 @@ export class ProductionPlant extends FactoryUnit {
 
   protected accept(): void {
     this.productionTimer.reset(
-      this.throughputPerWorkforceUnit * this.assignedWorkforceUnits,
+      this.throughputPerWorkforceUnit * Inventory.getAssignedWorkforce(this),
     );
   }
 
