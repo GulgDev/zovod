@@ -41,7 +41,7 @@ describe("Inventory - money", () => {
 
   describe("getResourcePrice", () => {
     it("retrieves the price of the resource", () => {
-      const inventory = new Inventory(50, {
+      const inventory = new Inventory(0, {
         ...dummyPricing,
         [resourceA]: { buy: 100, sell: 0 },
         [resourceB]: { buy: 200, sell: 0 },
@@ -54,7 +54,7 @@ describe("Inventory - money", () => {
 
   describe("getResourceSellPrice", () => {
     it("retrieves the sell price of the resource", () => {
-      const inventory = new Inventory(50, {
+      const inventory = new Inventory(0, {
         ...dummyPricing,
         [resourceA]: { buy: 0, sell: 100 },
         [resourceB]: { buy: 0, sell: 200 },
