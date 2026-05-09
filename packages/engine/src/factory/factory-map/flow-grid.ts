@@ -1,6 +1,6 @@
 import { FactoryUnitGrid } from "./unit-grid";
 import { DirectedGraph } from "./util/directed-graph";
-import { Point } from "./util/math";
+import type { Point } from "./util/math";
 
 export class FlowGrid {
   private readonly graph: DirectedGraph = new DirectedGraph();

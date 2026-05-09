@@ -1,7 +1,7 @@
 import { Inventory } from "./economy/inventory";
-import { Pricing } from "./economy/pricing";
+import type { Pricing } from "./economy/pricing";
 import { Factory } from "./factory";
-import { Renderer } from "./render";
+import type { Renderer } from "./render";
 
 export class Game {
   readonly factory = new Factory();

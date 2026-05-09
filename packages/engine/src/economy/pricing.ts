@@ -1,4 +1,4 @@
-import { ResourceKind } from "../resource-kind";
+import type { ResourceKind } from "../resource-kind";
 
 export interface Price {
   readonly buy: number;

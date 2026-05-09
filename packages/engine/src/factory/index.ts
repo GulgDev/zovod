@@ -1,5 +1,5 @@
 import { Game } from "..";
-import { Renderer } from "../render";
+import type { Renderer } from "../render";
 import { FactoryMap } from "./factory-map";
 
 export class Factory {

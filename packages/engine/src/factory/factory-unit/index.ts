@@ -1,6 +1,6 @@
 import { Game } from "../..";
-import { Renderer } from "../../render";
-import { ResourceKind } from "../../resource-kind";
+import type { Renderer } from "../../render";
+import type { ResourceKind } from "../../resource-kind";
 import { sampleFrom } from "./util/sample";
 
 // TODO: separate internal (addTarget/removeTarget, type-specific methods)
@@ -43,9 +43,9 @@ export abstract class FactoryUnit {
   setTargetDistribution(distribution: ReadonlyMap<FactoryUnit, number>): void {
     if (
       distribution.size !== this.targetDistribution.size ||
-      !this.targetDistribution.keys().every((target) =>
-        distribution.has(target),
-      )
+      !this.targetDistribution
+        .keys()
+        .every((target) => distribution.has(target))
     )
       throw new Error("The new distribution has invalid target list");
 

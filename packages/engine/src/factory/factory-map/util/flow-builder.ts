@@ -1,6 +1,6 @@
 import { FactoryMap } from "..";
 import { FactoryUnitGrid } from "../unit-grid";
-import { dist, Point } from "./math";
+import { dist, type Point } from "./math";
 
 export class FlowBuilder {
   private readonly points: Point[];
