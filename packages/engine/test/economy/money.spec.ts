@@ -77,4 +77,34 @@ describe("Inventory - money", () => {
       expect(inventory.getMaxAffordableResourceAmount(resourceB)).toBe(6);
     });
   });
+
+  describe("getWorkforceUnitPrice", () => {
+    it("retrieves the price of a workforce unit", () => {
+      const inventory = new Inventory(0, {
+        workforceUnit: { buy: 100, sell: 0 },
+      });
+
+      expect(inventory.getWorkforceUnitPrice()).toBe(100);
+    });
+  });
+
+  describe("getWorkforceUnitSellPrice", () => {
+    it("retrieves the sell price of a workforce unit", () => {
+      const inventory = new Inventory(0, {
+        workforceUnit: { buy: 0, sell: 100 },
+      });
+
+      expect(inventory.getWorkforceUnitSellPrice()).toBe(100);
+    });
+  });
+
+  describe("getMaxAffordableWorkforceUnits", () => {
+    it("calculates the max affordable amount of workforce units", () => {
+      const inventory = new Inventory(250, {
+        workforceUnit: { buy: 100, sell: 0 },
+      });
+
+      expect(inventory.getMaxAffordableWorkforceUnits()).toBe(2);
+    });
+  });
 });
