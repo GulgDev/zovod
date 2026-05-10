@@ -1,5 +1,5 @@
-import type { ResourceKind } from "../resource-kind";
-import { FactoryUnit } from "../factory/factory-unit";
+import type { ResourceKind } from "../../resource-kind";
+import { FactoryUnit } from "../../factory/factory-unit";
 
 export abstract class ContainerUnit extends FactoryUnit {
   private slots: ResourceKind[] = [];

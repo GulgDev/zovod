@@ -1,6 +1,6 @@
 import type { Game } from "../game";
 import { Timer } from "../util/timer";
-import { ContainerUnit } from "./container-unit";
+import { ContainerUnit } from "./util/container-unit";
 
 export class Market extends ContainerUnit {
   constructor(
