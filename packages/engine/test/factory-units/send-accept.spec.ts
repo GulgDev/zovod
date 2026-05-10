@@ -9,7 +9,7 @@ const resource: ResourceKind = "resource";
 
 describe("Factory units - send/accept", () => {
   it("returns false when there are no targets", () => {
-    const sender = new UnitMock(1);
+    const sender = new UnitMock();
 
     vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(new Map());
 
@@ -17,8 +17,8 @@ describe("Factory units - send/accept", () => {
   });
 
   it("does not send resources to targets that cannot accept it", () => {
-    const sender = new UnitMock(1),
-      target = new UnitMock(2);
+    const sender = new UnitMock(),
+      target = new UnitMock();
 
     vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
       new Map([[target, 1]]),
@@ -29,8 +29,8 @@ describe("Factory units - send/accept", () => {
   });
 
   it("does not send resources to targets that are paused", () => {
-    const sender = new UnitMock(1),
-      target = new UnitMock(2);
+    const sender = new UnitMock(),
+      target = new UnitMock();
     target.paused = true;
 
     vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
@@ -42,8 +42,8 @@ describe("Factory units - send/accept", () => {
   });
 
   it("calls the `accept` method of the target", () => {
-    const sender = new UnitMock(1),
-      target = new UnitMock(2);
+    const sender = new UnitMock(),
+      target = new UnitMock();
 
     vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
       new Map([[target, 1]]),

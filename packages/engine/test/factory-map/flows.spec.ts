@@ -6,9 +6,9 @@ describe("FactoryMap - flow map", () => {
   describe("addFlowSegment", () => {
     it("adds flow segments", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
-      map.placeUnit(new UnitMock(2), 2, 1);
-      map.placeUnit(new UnitMock(3), 2, -1);
+      map.placeUnit(new UnitMock(), 0, 0);
+      map.placeUnit(new UnitMock(), 2, 1);
+      map.placeUnit(new UnitMock(), 2, -1);
 
       expect(
         map.addFlowSegment([
@@ -36,7 +36,7 @@ describe("FactoryMap - flow map", () => {
 
     it("returns false when the flow segment has empty source or target", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
+      map.placeUnit(new UnitMock(), 0, 0);
 
       expect(
         map.addFlowSegment([
@@ -59,7 +59,7 @@ describe("FactoryMap - flow map", () => {
 
     it("returns false when the flow segment crosses an existing flow", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
+      map.placeUnit(new UnitMock(), 0, 0);
 
       map.addFlowSegment([
         [0, 0],
@@ -80,7 +80,7 @@ describe("FactoryMap - flow map", () => {
 
     it("throws when the flow segment target is not a unit cell", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
+      map.placeUnit(new UnitMock(), 0, 0);
 
       expect(() =>
         map.addFlowSegment([
@@ -112,9 +112,9 @@ describe("FactoryMap - flow map", () => {
 
     it("adds corresponding targets to the distribution", () => {
       const map = new FactoryMap();
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -145,8 +145,8 @@ describe("FactoryMap - flow map", () => {
       ["the end", 2, 1],
     ])("deletes a flow segment at %s", (_, x, y) => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
-      map.placeUnit(new UnitMock(2), 2, 1);
+      map.placeUnit(new UnitMock(), 0, 0);
+      map.placeUnit(new UnitMock(), 2, 1);
       map.addFlowSegment([
         [0, 0],
         [1, 0],
@@ -169,9 +169,9 @@ describe("FactoryMap - flow map", () => {
 
     it("removes corresponding targets from the distribution", () => {
       const map = new FactoryMap();
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
