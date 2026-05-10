@@ -106,12 +106,15 @@ export class Inventory {
       );
 
     this.currentUnassignedWorkforce += units;
-    assignedWorkforce.set(productionPlant, plantAssignedWorkforce - units);
+    Inventory.assignedWorkforce.set(
+      productionPlant,
+      plantAssignedWorkforce - units,
+    );
   }
+
+  private static assignedWorkforce = new WeakMap<ProductionPlant, number>();
 
   static getAssignedWorkforce(productionPlant: ProductionPlant): number {
-    return assignedWorkforce.get(productionPlant) ?? 0;
+    return this.assignedWorkforce.get(productionPlant) ?? 0;
   }
 }
-
-const assignedWorkforce = new WeakMap<ProductionPlant, number>();
