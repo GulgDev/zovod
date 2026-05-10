@@ -29,9 +29,4 @@ export abstract class FactoryUnit {
   update(game: Game, deltaTime: number): void {
     if (!this.paused) this.doUpdate(game, deltaTime);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(renderer: Renderer): void {
-    // TODO
-  }
 }
