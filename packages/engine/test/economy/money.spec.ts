@@ -78,6 +78,43 @@ describe("Inventory - money", () => {
     });
   });
 
+  describe("buyResource", () => {
+    it("spends money", () => {
+      const inventory = new Inventory(250, {
+        ...dummyPricing,
+        [resourceA]: { buy: 100, sell: 0 },
+      });
+
+      expect(inventory.buyResource(resourceA, 2)).toBeTrue();
+
+      expect(inventory.balance).toBe(50);
+    });
+
+    it("fails when there is not enough money", () => {
+      const inventory = new Inventory(250, {
+        ...dummyPricing,
+        [resourceA]: { buy: 100, sell: 0 },
+      });
+
+      expect(inventory.buyResource(resourceA, 3)).toBeFalse();
+
+      expect(inventory.balance).toBe(250);
+    });
+  });
+
+  describe("sellResource", () => {
+    it("earns money", () => {
+      const inventory = new Inventory(0, {
+        ...dummyPricing,
+        [resourceA]: { buy: 0, sell: 100 },
+      });
+
+      inventory.sellResource(resourceA, 2);
+
+      expect(inventory.balance).toBe(200);
+    });
+  });
+
   describe("getWorkforceUnitPrice", () => {
     it("retrieves the price of a workforce unit", () => {
       const inventory = new Inventory(0, {
