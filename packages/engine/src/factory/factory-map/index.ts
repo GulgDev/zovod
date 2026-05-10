@@ -148,6 +148,12 @@ export class FactoryMap {
     unit: FactoryUnit,
     distribution: ReadonlyMap<FactoryUnit, number>,
   ): void {
+    const total = distribution
+      .values()
+      .reduce((total, probability) => total + probability, 0);
+    if (Math.abs(total - 1) > Number.EPSILON)
+      throw new Error("The new distribution is not normalized");
+
     const targetDistribution = this.getTargetDistribution(unit);
     if (
       distribution.size !== targetDistribution.size ||
