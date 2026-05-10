@@ -1,20 +1,16 @@
 import { Inventory } from "./economy/inventory";
 import type { Pricing } from "./economy/pricing";
 import { Factory } from "./factory";
-import type { Renderer } from "./render";
 
-export class Game {
+export class Game extends EventTarget {
   readonly factory = new Factory();
 
   readonly inventory: Inventory;
 
   speed = 1;
 
-  constructor(
-    private readonly renderer: Renderer,
-    initialBalance: number,
-    pricing: Pricing,
-  ) {
+  constructor(initialBalance: number, pricing: Pricing) {
+    super();
     this.inventory = new Inventory(initialBalance, pricing);
   }
 
@@ -27,15 +23,12 @@ export class Game {
     this.lastFrameTimestamp = timestamp;
 
     this.update(deltaTime);
-    this.render();
   };
 
   private update(deltaTime: number): void {
-    this.factory.update(this, deltaTime);
-  }
+    this.dispatchEvent(new CustomEvent("update", { detail: deltaTime }));
 
-  private render(): void {
-    this.factory.render(this.renderer);
+    this.factory.update(this, deltaTime);
   }
 
   start(): void {

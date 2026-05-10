@@ -45,4 +45,14 @@ export class DirectedGraph {
       unpackCoords,
     );
   }
+
+  getAllSegmentRoots(): IterableIterator<Point> {
+    return this.successors
+      .entries()
+      .filter(
+        ([key, successors]) =>
+          !this.predecessors.has(key) || successors.size > 2,
+      )
+      .map(([key]) => unpackCoords(key));
+  }
 }

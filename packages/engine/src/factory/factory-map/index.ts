@@ -105,6 +105,10 @@ export class FactoryMap {
     return this.flowGrid.getFlowTargets(x, y);
   }
 
+  getAllFlowSegments(): IterableIterator<readonly Point[]> {
+    return this.flowGrid.getAllFlowSegments();
+  }
+
   private static targetDistributions = new WeakMap<
     FactoryUnit,
     Map<FactoryUnit, number>
