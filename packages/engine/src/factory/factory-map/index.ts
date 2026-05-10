@@ -17,7 +17,7 @@ export class FactoryMap {
 
     const success = this.unitGrid.removeUnitAt(x, y);
     if (success) {
-      if (unit) source?.removeTarget(unit);
+      if (unit && source) FactoryMap.removeTarget(source, unit);
       this.flowGrid.deleteFlowSegmentAt(x, y);
     }
     return success;
@@ -75,9 +75,10 @@ export class FactoryMap {
 
     if (!this.flowGrid.addFlowSegment(points)) return false;
 
-    (FactoryUnitGrid.isUnitCell(...points[0])
-      ? this.unitGrid.getUnitAt(...points[0])
-      : this.getSourceUnit(...points[0]))!.addTarget(
+    FactoryMap.addTarget(
+      FactoryUnitGrid.isUnitCell(...points[0])
+        ? this.unitGrid.getUnitAt(...points[0])!
+        : this.getSourceUnit(...points[0])!,
       this.unitGrid.getUnitAt(...points.at(-1)!)!,
     );
 
@@ -89,7 +90,8 @@ export class FactoryMap {
       targets = this.getTargetUnits(x, y);
 
     const success = this.flowGrid.deleteFlowSegmentAt(x, y);
-    if (success) for (const target of targets) source.removeTarget(target);
+    if (success)
+      for (const target of targets) FactoryMap.removeTarget(source, target);
     return success;
   }
 
@@ -99,5 +101,58 @@ export class FactoryMap {
 
   getFlowTargets(x: number, y: number): readonly Point[] {
     return this.flowGrid.getFlowTargets(x, y);
+  }
+
+  private static targetDistributions = new WeakMap<
+    FactoryUnit,
+    Map<FactoryUnit, number>
+  >();
+
+  private static addTarget(unit: FactoryUnit, target: FactoryUnit): void {
+    const targetDistribution = this.targetDistributions.getOrInsertComputed(
+      unit,
+      () => new Map(),
+    );
+    targetDistribution.forEach((probability, target) =>
+      targetDistribution.set(
+        target,
+        (probability * targetDistribution.size) / (targetDistribution.size + 1),
+      ),
+    );
+    targetDistribution.set(target, 1 / (targetDistribution.size + 1)); // account for empty distribution
+  }
+
+  private static removeTarget(unit: FactoryUnit, target: FactoryUnit): void {
+    const targetDistribution = this.targetDistributions.get(unit);
+
+    if (!(targetDistribution && targetDistribution.delete(target)))
+      throw new Error("Invalid unit target");
+
+    const total = targetDistribution
+      .values()
+      .reduce((total, probability) => total + probability, 0);
+    targetDistribution.forEach((probability, target) =>
+      targetDistribution.set(target, probability / total),
+    );
+  }
+
+  static getTargetDistribution(
+    unit: FactoryUnit,
+  ): ReadonlyMap<FactoryUnit, number> {
+    return this.targetDistributions.get(unit) ?? new Map();
+  }
+
+  static setTargetDistribution(
+    unit: FactoryUnit,
+    distribution: ReadonlyMap<FactoryUnit, number>,
+  ): void {
+    const targetDistribution = this.getTargetDistribution(unit);
+    if (
+      distribution.size !== targetDistribution.size ||
+      !targetDistribution.keys().every((target) => distribution.has(target))
+    )
+      throw new Error("The new distribution has invalid target list");
+
+    this.targetDistributions.set(unit, new Map(distribution));
   }
 }
