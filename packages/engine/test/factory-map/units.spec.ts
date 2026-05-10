@@ -27,8 +27,8 @@ describe("FactoryMap - unit map", () => {
     it("places and retrieves units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(),
-        unit2 = new DummyUnit();
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2);
 
       expect(map.placeUnit(unit1, 0, 0)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
@@ -42,15 +42,15 @@ describe("FactoryMap - unit map", () => {
     it("fails when placing on an occupied cell", () => {
       const map = new FactoryMap();
 
-      expect(map.placeUnit(new DummyUnit(), 0, 0)).toBeTrue();
-      expect(map.placeUnit(new DummyUnit(), 0, 0)).toBeFalse();
+      expect(map.placeUnit(new DummyUnit(1), 0, 0)).toBeTrue();
+      expect(map.placeUnit(new DummyUnit(2), 0, 0)).toBeFalse();
     });
 
     it("throws for invalid positions", () => {
       const map = new FactoryMap();
 
       invalidPositions.forEach(([x, y]) =>
-        expect(() => map.placeUnit(new DummyUnit(), x, y)).toThrow(
+        expect(() => map.placeUnit(new DummyUnit(1), x, y)).toThrow(
           "Invalid unit position",
         ),
       );
@@ -61,8 +61,8 @@ describe("FactoryMap - unit map", () => {
     it("removes units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(),
-        unit2 = new DummyUnit();
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
@@ -76,7 +76,7 @@ describe("FactoryMap - unit map", () => {
 
     it("fails for empty cells", () => {
       const map = new FactoryMap();
-      map.placeUnit(new DummyUnit(), 0, 0);
+      map.placeUnit(new DummyUnit(1), 0, 0);
 
       expect(map.removeUnitAt(0, 0)).toBeTrue();
       expect(map.removeUnitAt(2, 1)).toBeFalse();
@@ -95,8 +95,8 @@ describe("FactoryMap - unit map", () => {
     it("retrieves all units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(),
-        unit2 = new DummyUnit();
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
