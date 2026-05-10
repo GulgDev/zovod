@@ -15,7 +15,7 @@ describe("Inventory - workforce", () => {
       expect(inventory.balance).toBe(50);
     });
 
-    it("fails when there is not enough money", () => {
+    it("returns false when there is not enough money", () => {
       const inventory = new Inventory(250, {
         workforceUnit: { buy: 100, sell: 0 },
       });

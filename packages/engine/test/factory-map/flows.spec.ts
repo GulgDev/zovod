@@ -34,7 +34,7 @@ describe("FactoryMap - flow map", () => {
       ]);
     });
 
-    it("fails when the flow segment has empty source or target", () => {
+    it("returns false when the flow segment has empty source or target", () => {
       const map = new FactoryMap();
       map.placeUnit(new DummyUnit(1), 0, 0);
 
@@ -57,7 +57,7 @@ describe("FactoryMap - flow map", () => {
       ).toBeFalse();
     });
 
-    it("fails when the flow segment crosses an existing flow", () => {
+    it("returns false when the flow segment crosses an existing flow", () => {
       const map = new FactoryMap();
       map.placeUnit(new DummyUnit(1), 0, 0);
 
@@ -160,7 +160,7 @@ describe("FactoryMap - flow map", () => {
       expect(map.getFlowTargets(2, 0)).toBeEmpty();
     });
 
-    it("fails when flow segment is absent", () => {
+    it("returns false when flow segment is absent", () => {
       const map = new FactoryMap();
 
       expect(map.deleteFlowSegmentAt(0, 0)).toBeFalse();
