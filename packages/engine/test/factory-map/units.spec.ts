@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { FactoryMap } from "../../src/factory/factory-map";
-import { DummyUnit } from "../util/dummy-unit";
+import { UnitMock } from "../util/unit-mock";
 
 // Unit cell coordinates must satisfy (2n, 2m + n)
 const invalidPositions = [
@@ -27,8 +27,8 @@ describe("FactoryMap - unit map", () => {
     it("places and retrieves units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2);
 
       expect(map.placeUnit(unit1, 0, 0)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
@@ -42,15 +42,15 @@ describe("FactoryMap - unit map", () => {
     it("returns false when placing on an occupied cell", () => {
       const map = new FactoryMap();
 
-      expect(map.placeUnit(new DummyUnit(1), 0, 0)).toBeTrue();
-      expect(map.placeUnit(new DummyUnit(2), 0, 0)).toBeFalse();
+      expect(map.placeUnit(new UnitMock(1), 0, 0)).toBeTrue();
+      expect(map.placeUnit(new UnitMock(2), 0, 0)).toBeFalse();
     });
 
     it("throws for invalid positions", () => {
       const map = new FactoryMap();
 
       invalidPositions.forEach(([x, y]) =>
-        expect(() => map.placeUnit(new DummyUnit(1), x, y)).toThrow(
+        expect(() => map.placeUnit(new UnitMock(1), x, y)).toThrow(
           "Invalid unit position",
         ),
       );
@@ -61,8 +61,8 @@ describe("FactoryMap - unit map", () => {
     it("removes units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
@@ -76,7 +76,7 @@ describe("FactoryMap - unit map", () => {
 
     it("returns false for empty cells", () => {
       const map = new FactoryMap();
-      map.placeUnit(new DummyUnit(1), 0, 0);
+      map.placeUnit(new UnitMock(1), 0, 0);
 
       expect(map.removeUnitAt(0, 0)).toBeTrue();
       expect(map.removeUnitAt(2, 1)).toBeFalse();
@@ -95,8 +95,8 @@ describe("FactoryMap - unit map", () => {
     it("retrieves all units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
@@ -113,9 +113,9 @@ describe("FactoryMap - unit map", () => {
     it("changes the target distribution", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2),
-        unit3 = new DummyUnit(3);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2),
+        unit3 = new UnitMock(3);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -149,9 +149,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution is not normalized", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2),
-        unit3 = new DummyUnit(3);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2),
+        unit3 = new UnitMock(3);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -180,9 +180,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when a target is missing from the distribution", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2),
-        unit3 = new DummyUnit(3);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2),
+        unit3 = new UnitMock(3);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -205,9 +205,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution contains an extra target", () => {
       const map = new FactoryMap();
 
-      const unit1 = new DummyUnit(1),
-        unit2 = new DummyUnit(2),
-        unit3 = new DummyUnit(3);
+      const unit1 = new UnitMock(1),
+        unit2 = new UnitMock(2),
+        unit3 = new UnitMock(3);
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.addFlowSegment([
