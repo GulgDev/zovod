@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Inventory } from "../../src/economy/inventory";
-import { Pricing } from "../../src/economy/pricing";
-import { ResourceKind } from "../../src/resource-kind";
+import type { Pricing } from "../../src/economy/pricing";
+import type { ResourceKind } from "../../src/resource-kind";
 
 const dummyPricing: Pricing = {
   workforceUnit: { buy: 0, sell: 0 },

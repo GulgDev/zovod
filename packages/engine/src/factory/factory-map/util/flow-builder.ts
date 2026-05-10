@@ -1,4 +1,4 @@
-import { FactoryMap } from "..";
+import type { FactoryMap } from "..";
 import { FactoryUnitGrid } from "../unit-grid";
 import { dist, type Point } from "./math";
 

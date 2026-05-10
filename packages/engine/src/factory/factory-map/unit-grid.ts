@@ -1,4 +1,4 @@
-import { FactoryUnit } from "../factory-unit";
+import type { FactoryUnit } from "../factory-unit";
 import { packCoords } from "./util/math";
 
 export class FactoryUnitGrid {
