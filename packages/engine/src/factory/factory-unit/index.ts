@@ -1,5 +1,4 @@
 import { Game } from "../..";
-import type { Renderer } from "../../render";
 import type { ResourceKind } from "../../resource-kind";
 import { FactoryMap } from "../factory-map";
 import { sampleFrom } from "./util/sample";
