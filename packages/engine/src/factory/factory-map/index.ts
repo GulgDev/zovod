@@ -35,7 +35,7 @@ export class FactoryMap {
     let current: Point | undefined = [x, y];
     do {
       const next = this.flowGrid.getFlowSource(...current);
-      if (!next) break;
+      if (!next) return;
       current = next;
     } while (current && !FactoryUnitGrid.isUnitCell(...current));
     return (
@@ -90,8 +90,10 @@ export class FactoryMap {
       targets = this.getTargetUnits(x, y);
 
     const success = this.flowGrid.deleteFlowSegmentAt(x, y);
-    if (success)
-      for (const target of targets) FactoryMap.removeTarget(source, target);
+    if (success) {
+      if (source)
+        for (const target of targets) FactoryMap.removeTarget(source, target);
+    }
     return success;
   }
 
