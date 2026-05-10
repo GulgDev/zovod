@@ -126,15 +126,15 @@ describe("FactoryMap - flow map", () => {
         [2, 1],
       ]);
 
-      expect(unit1.getTargetDistribution().get(unit2)).toBe(1);
+      expect(FactoryMap.getTargetDistribution(unit1).get(unit2)).toBe(1);
 
       map.addFlowSegment([
         [2, 0],
         [2, -1],
       ]);
 
-      expect(unit1.getTargetDistribution().get(unit2)).toBe(0.5);
-      expect(unit1.getTargetDistribution().get(unit3)).toBe(0.5);
+      expect(FactoryMap.getTargetDistribution(unit1).get(unit2)).toBe(0.5);
+      expect(FactoryMap.getTargetDistribution(unit1).get(unit3)).toBe(0.5);
     });
   });
 
@@ -188,12 +188,12 @@ describe("FactoryMap - flow map", () => {
 
       map.deleteFlowSegmentAt(2, 1);
 
-      expect(unit1.getTargetDistribution().has(unit2)).toBeFalse();
-      expect(unit1.getTargetDistribution().get(unit3)).toBe(1);
+      expect(FactoryMap.getTargetDistribution(unit1).has(unit2)).toBeFalse();
+      expect(FactoryMap.getTargetDistribution(unit1).get(unit3)).toBe(1);
 
       map.deleteFlowSegmentAt(2, -1);
 
-      expect(unit1.getTargetDistribution().has(unit3)).toBeFalse();
+      expect(FactoryMap.getTargetDistribution(unit1).has(unit3)).toBeFalse();
     });
   });
 });
