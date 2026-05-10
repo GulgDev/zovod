@@ -16,7 +16,7 @@ describe("Factory units - send/accept", () => {
     expect(sender.send(resource)).toBeFalse();
   });
 
-  it("returns false when there are no available acceptors", () => {
+  it("does not send resources to targets that cannot accept it", () => {
     const sender = new UnitMock(1),
       target = new UnitMock(2);
 
@@ -24,6 +24,19 @@ describe("Factory units - send/accept", () => {
       new Map([[target, 1]]),
     );
     target.canAccept.mockReturnValueOnce(false);
+
+    expect(sender.send(resource)).toBeFalse();
+  });
+
+  it("does not send resources to targets that are paused", () => {
+    const sender = new UnitMock(1),
+      target = new UnitMock(2);
+    target.paused = true;
+
+    vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
+      new Map([[target, 1]]),
+    );
+    target.canAccept.mockReturnValueOnce(true);
 
     expect(sender.send(resource)).toBeFalse();
   });

@@ -13,7 +13,7 @@ export abstract class FactoryUnit {
     const distribution = new Map(
       FactoryMap.getTargetDistribution(this)
         .entries()
-        .filter(([target]) => target.canAccept(resource)),
+        .filter(([target]) => !target.paused && target.canAccept(resource)),
     );
     if (distribution.size === 0) return false;
 
