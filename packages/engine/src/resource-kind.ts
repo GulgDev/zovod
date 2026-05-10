@@ -1,1 +1,1 @@
-export type ResourceKind = number;
+export type ResourceKind = string;

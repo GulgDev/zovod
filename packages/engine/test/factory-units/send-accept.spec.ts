@@ -5,7 +5,7 @@ import { FactoryMap } from "../../src/factory/factory-map";
 
 vi.mock("../../src/factory/factory-map");
 
-const resource: ResourceKind = 1;
+const resource: ResourceKind = "resource";
 
 describe("Factory units - send/accept", () => {
   it("returns false when there are no targets", () => {
