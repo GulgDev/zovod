@@ -13,6 +13,7 @@ export default defineConfig(
   {
     rules: {
       "no-unused-vars": "off",
+      "@typescript-eslint/consistent-type-imports": "error",
       "@typescript-eslint/no-unused-vars": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/explicit-module-boundary-types": "error",

@@ -1,4 +1,4 @@
-import { Game } from "..";
+import type { Game } from "..";
 import { Timer } from "../util/timer";
 import { ContainerUnit } from "./container-unit";
 

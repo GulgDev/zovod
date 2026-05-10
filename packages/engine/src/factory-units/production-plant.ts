@@ -1,7 +1,7 @@
 import type { ResourceKind } from "../resource-kind";
 import { Timer } from "../util/timer";
 import { FactoryUnit } from "../factory/factory-unit";
-import { Game } from "..";
+import type { Game } from "..";
 import { Inventory } from "../economy/inventory";
 
 export class ProductionPlant extends FactoryUnit {
