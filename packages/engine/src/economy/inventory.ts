@@ -1,4 +1,4 @@
-import { ProductionPlant } from "../factory-units/production-plant";
+import type { ProductionPlant } from "../factory-units/production-plant";
 import type { ResourceKind } from "../resource-kind";
 import type { Pricing } from "./pricing";
 
