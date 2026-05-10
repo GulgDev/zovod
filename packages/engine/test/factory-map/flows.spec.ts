@@ -196,4 +196,42 @@ describe("FactoryMap - flow map", () => {
       expect(FactoryMap.getTargetDistribution(unit1).has(unit3)).toBeFalse();
     });
   });
+
+  describe("getAllFlowSegments", () => {
+    it("finds all flow segments", () => {
+      const map = new FactoryMap();
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      expect(Array.from(map.getAllFlowSegments())).toIncludeSameMembers([
+        [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+        ],
+        [
+          [2, 0],
+          [2, 1],
+        ],
+        [
+          [2, 0],
+          [2, -1],
+        ],
+      ]);
+    });
+  });
 });
