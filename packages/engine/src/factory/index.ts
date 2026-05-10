@@ -1,4 +1,4 @@
-import type { Game } from "..";
+import type { Game } from "../game";
 import { FactoryMap } from "./factory-map";
 
 export class Factory {
