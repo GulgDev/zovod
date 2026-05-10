@@ -7,8 +7,8 @@ const dummyPricing: Pricing = {
   workforceUnit: { buy: 0, sell: 0 },
 };
 
-const resourceA: ResourceKind = 0,
-  resourceB: ResourceKind = 1;
+const resourceA: ResourceKind = "a",
+  resourceB: ResourceKind = "b";
 
 describe("Inventory - money", () => {
   describe("spendMoney", () => {
