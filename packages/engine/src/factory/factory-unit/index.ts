@@ -1,64 +1,17 @@
 import { Game } from "../..";
 import type { Renderer } from "../../render";
 import type { ResourceKind } from "../../resource-kind";
+import { FactoryMap } from "../factory-map";
 import { sampleFrom } from "./util/sample";
 
-// TODO: separate internal (addTarget/removeTarget, type-specific methods)
-// and public (pause/resume, etc.) FactoryUnit interfaces (?)
 export abstract class FactoryUnit {
-  private targetDistribution = new Map<FactoryUnit, number>();
-
-  addTarget(unit: FactoryUnit): void {
-    this.targetDistribution.forEach((probability, target) =>
-      this.targetDistribution.set(
-        target,
-        (probability * this.targetDistribution.size) /
-          (this.targetDistribution.size + 1),
-      ),
-    );
-    this.targetDistribution.set(unit, 1 / (this.targetDistribution.size + 1)); // account for empty distribution
-  }
-
-  removeTarget(unit: FactoryUnit): void {
-    this.targetDistribution.delete(unit);
-
-    const total = this.targetDistribution
-      .values()
-      .reduce((total, probability) => total + probability, 0);
-    this.targetDistribution.forEach((probability, target) =>
-      this.targetDistribution.set(target, probability / total),
-    );
-  }
-
-  getTargetProbability(target: FactoryUnit): number {
-    if (!this.targetDistribution.has(target)) throw new Error("Invalid target");
-
-    return this.targetDistribution.get(target)!;
-  }
-
-  getTargetDistribution(): ReadonlyMap<FactoryUnit, number> {
-    return this.targetDistribution;
-  }
-
-  setTargetDistribution(distribution: ReadonlyMap<FactoryUnit, number>): void {
-    if (
-      distribution.size !== this.targetDistribution.size ||
-      !this.targetDistribution
-        .keys()
-        .every((target) => distribution.has(target))
-    )
-      throw new Error("The new distribution has invalid target list");
-
-    this.targetDistribution = new Map(distribution);
-  }
-
   protected abstract canAccept(resource: ResourceKind): boolean;
 
   protected abstract accept(resource: ResourceKind): void;
 
   protected send(resource: ResourceKind): boolean {
     const distribution = new Map(
-      this.getTargetDistribution()
+      FactoryMap.getTargetDistribution(this)
         .entries()
         .filter(([target]) => target.canAccept(resource)),
     );
