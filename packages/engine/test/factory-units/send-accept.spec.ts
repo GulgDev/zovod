@@ -39,6 +39,6 @@ describe("Factory units - send/accept", () => {
 
     expect(sender.send(resource)).toBeTrue();
 
-    expect(target.accept).toHaveBeenCalled();
+    expect(target.accept).toHaveBeenCalledExactlyOnceWith(resource);
   });
 });
