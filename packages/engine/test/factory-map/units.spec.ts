@@ -108,4 +108,124 @@ describe("FactoryMap - unit map", () => {
       expect(map.getAllUnits()).toBeEmpty();
     });
   });
+
+  describe("setTargetDistribution", () => {
+    it("changes the target distribution", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2),
+        unit3 = new DummyUnit(3);
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      FactoryMap.setTargetDistribution(
+        unit1,
+        new Map([
+          [unit2, 0.8],
+          [unit3, 0.2],
+        ]),
+      );
+
+      expect(
+        Array.from(FactoryMap.getTargetDistribution(unit1).entries()),
+      ).toIncludeSameMembers([
+        [unit2, 0.8],
+        [unit3, 0.2],
+      ]);
+    });
+
+    it("throws when the distribution is not normalized", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2),
+        unit3 = new DummyUnit(3);
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      expect(() =>
+        FactoryMap.setTargetDistribution(
+          unit1,
+          new Map([
+            [unit2, 1],
+            [unit3, 0.25],
+          ]),
+        ),
+      ).toThrow("The new distribution is not normalized");
+    });
+
+    it("throws when a target is missing from the distribution", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2),
+        unit3 = new DummyUnit(3);
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.placeUnit(unit3, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      expect(() =>
+        FactoryMap.setTargetDistribution(unit1, new Map([[unit2, 1]])),
+      ).toThrow("The new distribution has invalid target list");
+    });
+
+    it("throws when the distribution contains an extra target", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new DummyUnit(1),
+        unit2 = new DummyUnit(2),
+        unit3 = new DummyUnit(3);
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+
+      expect(() =>
+        FactoryMap.setTargetDistribution(
+          unit1,
+          new Map([
+            [unit2, 0.8],
+            [unit3, 0.2],
+          ]),
+        ),
+      ).toThrow("The new distribution has invalid target list");
+    });
+  });
 });
