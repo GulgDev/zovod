@@ -91,7 +91,7 @@ export class Inventory {
       throw new Error("Not enough unassigned workers");
 
     this.currentUnassignedWorkforce -= units;
-    assignedWorkforce.set(
+    Inventory.assignedWorkforce.set(
       productionPlant,
       Inventory.getAssignedWorkforce(productionPlant) + units,
     );
