@@ -51,7 +51,7 @@ export class DirectedGraph {
       .entries()
       .filter(
         ([key, successors]) =>
-          !this.predecessors.has(key) || successors.size > 2,
+          !this.predecessors.has(key) || successors.size >= 2,
       )
       .map(([key]) => unpackCoords(key));
   }

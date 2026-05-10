@@ -70,15 +70,18 @@ export class FlowGrid {
 
   *getAllFlowSegments(): IterableIterator<readonly Point[]> {
     for (const [x, y] of this.graph.getAllSegmentRoots()) {
-      const points: Point[] = [[x, y]];
+      for (const successor of this.graph.getSuccessors(x, y)) {
+        const points: Point[] = [[x, y], successor];
 
-      let successors: readonly Point[];
-      while (
-        (successors = this.graph.getSuccessors(...points.at(-1)!)).length === 1
-      )
-        points.push(successors[0]);
+        let successors: readonly Point[];
+        while (
+          (successors = this.graph.getSuccessors(...points.at(-1)!)).length ===
+          1
+        )
+          points.push(successors[0]);
 
-      yield points;
+        yield points;
+      }
     }
   }
 }
