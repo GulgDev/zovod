@@ -27,8 +27,8 @@ describe("FactoryMap - unit map", () => {
     it("places and retrieves units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
 
       expect(map.placeUnit(unit1, 0, 0)).toBeTrue();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
@@ -42,15 +42,15 @@ describe("FactoryMap - unit map", () => {
     it("returns false when placing on an occupied cell", () => {
       const map = new FactoryMap();
 
-      expect(map.placeUnit(new UnitMock(1), 0, 0)).toBeTrue();
-      expect(map.placeUnit(new UnitMock(2), 0, 0)).toBeFalse();
+      expect(map.placeUnit(new UnitMock(), 0, 0)).toBeTrue();
+      expect(map.placeUnit(new UnitMock(), 0, 0)).toBeFalse();
     });
 
     it("throws for invalid positions", () => {
       const map = new FactoryMap();
 
       invalidPositions.forEach(([x, y]) =>
-        expect(() => map.placeUnit(new UnitMock(1), x, y)).toThrow(
+        expect(() => map.placeUnit(new UnitMock(), x, y)).toThrow(
           "Invalid unit position",
         ),
       );
@@ -61,8 +61,8 @@ describe("FactoryMap - unit map", () => {
     it("removes units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
@@ -76,7 +76,7 @@ describe("FactoryMap - unit map", () => {
 
     it("returns false for empty cells", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(1), 0, 0);
+      map.placeUnit(new UnitMock(), 0, 0);
 
       expect(map.removeUnitAt(0, 0)).toBeTrue();
       expect(map.removeUnitAt(2, 1)).toBeFalse();
@@ -95,8 +95,8 @@ describe("FactoryMap - unit map", () => {
     it("retrieves all units", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
 
@@ -113,9 +113,9 @@ describe("FactoryMap - unit map", () => {
     it("changes the target distribution", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -149,9 +149,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution is not normalized", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -180,9 +180,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when a target is missing from the distribution", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.placeUnit(unit3, 2, -1);
@@ -205,9 +205,9 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution contains an extra target", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(1),
-        unit2 = new UnitMock(2),
-        unit3 = new UnitMock(3);
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock(),
+        unit3 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
       map.addFlowSegment([
