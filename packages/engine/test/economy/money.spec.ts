@@ -20,7 +20,7 @@ describe("Inventory - money", () => {
       expect(inventory.balance).toBe(50);
     });
 
-    it("fails if there is not enough money", () => {
+    it("returns false when there is not enough money", () => {
       const inventory = new Inventory(150, dummyPricing);
 
       expect(inventory.spendMoney(200)).toBeFalse();
@@ -90,7 +90,7 @@ describe("Inventory - money", () => {
       expect(inventory.balance).toBe(50);
     });
 
-    it("fails when there is not enough money", () => {
+    it("returns false when there is not enough money", () => {
       const inventory = new Inventory(250, {
         ...dummyPricing,
         [resourceA]: { buy: 100, sell: 0 },

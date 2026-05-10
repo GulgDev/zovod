@@ -39,7 +39,7 @@ describe("FactoryMap - unit map", () => {
       expect(map.getUnitAt(2, 1)).toBe(unit2);
     });
 
-    it("fails when placing on an occupied cell", () => {
+    it("returns false when placing on an occupied cell", () => {
       const map = new FactoryMap();
 
       expect(map.placeUnit(new DummyUnit(1), 0, 0)).toBeTrue();
@@ -74,7 +74,7 @@ describe("FactoryMap - unit map", () => {
       expect(map.getUnitAt(2, 1)).toBeUndefined();
     });
 
-    it("fails for empty cells", () => {
+    it("returns false for empty cells", () => {
       const map = new FactoryMap();
       map.placeUnit(new DummyUnit(1), 0, 0);
 
