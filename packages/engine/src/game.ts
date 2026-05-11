@@ -1,3 +1,4 @@
+import type { Inventory } from "./economy/inventory";
 import { FactoryMap } from "./factory-map";
 
 /**
@@ -16,8 +17,12 @@ export class Game extends EventTarget {
    */
   speed = 1;
 
-  /** Create a new game instance and start the game loop. */
-  constructor() {
+  /**
+   * Create a new game instance and start the game loop.
+   *
+   * @param inventory - The inventory controller for factory units to use for purchases and sales.
+   */
+  constructor(readonly inventory: Inventory) {
     super();
     this.start();
   }
