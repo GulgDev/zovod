@@ -1,4 +1,4 @@
-import type { FactoryUnit } from "../factory-unit";
+import type { FactoryUnit } from "../factory-units/abstract/factory-unit";
 import { FactoryUnitGrid } from "./unit-grid";
 import { FlowGrid } from "./flow-grid";
 import { dist, type Point } from "./util/math";
