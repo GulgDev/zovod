@@ -28,4 +28,6 @@ export abstract class FactoryUnit {
   update(game: Game, deltaTime: number): void {
     if (!this.paused) this.doUpdate(game, deltaTime);
   }
+
+  remove?(): void;
 }
