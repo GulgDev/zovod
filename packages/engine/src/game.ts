@@ -34,9 +34,8 @@ export class Game extends EventTarget {
   };
 
   /**
-   * Main game loop callback.
-   *
-   * Dispatches a {@link GameUpdateEvent} and updates the factory.
+   * Main game loop function. Dispatches a {@link GameUpdateEvent} and updates
+   * all factory units of the {@link factoryMap}.
    */
   private update(deltaTime: number): void {
     for (const unit of this.factoryMap.getAllUnits())
@@ -45,7 +44,7 @@ export class Game extends EventTarget {
     this.dispatchEvent(new GameUpdateEvent("update", { deltaTime }));
   }
 
-  /** Starts the game loop. */
+  /** Start the game loop. */
   private start(): void {
     this.lastFrameTimestamp = document.timeline.currentTime! as number;
     requestAnimationFrame(this.frameRequestCallback);
