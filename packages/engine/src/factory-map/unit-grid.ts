@@ -16,7 +16,12 @@ export class FactoryUnitGrid {
   removeUnitAt(x: number, y: number): boolean {
     FactoryUnitGrid.validatePosition(x, y);
 
-    return this.units.delete(packCoords(x, y));
+    const key = packCoords(x, y);
+
+    // Clean-up before removal
+    this.units.get(key)?.remove?.(); // used by ProductionPlant to throw when in an invalid state
+
+    return this.units.delete(key);
   }
 
   getUnitAt(x: number, y: number): FactoryUnit | undefined {

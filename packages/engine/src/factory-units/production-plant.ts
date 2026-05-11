@@ -39,4 +39,11 @@ export class ProductionPlant extends FactoryUnit {
 
     if (this.productionTimer.update(deltaTime)) this.send(this.producedKind);
   }
+
+  override remove(): void {
+    if (Inventory.getAssignedWorkforce(this) > 0)
+      throw new Error(
+        "Cannot remove a production plant with workforce assigned to it.",
+      );
+  }
 }
