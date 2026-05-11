@@ -25,7 +25,7 @@ export class Game extends EventTarget {
    * Create a new game instance and start the game loop.
    *
    * @param initialBalance - Initial amount of money that the player has.
-   * @param pricing - A record containing buy/sell prices of all reources and workforce units.
+   * @param pricing - A record containing buy/sell prices of all resources and workforce units.
    */
   constructor(initialBalance: number, pricing: Pricing) {
     super();
