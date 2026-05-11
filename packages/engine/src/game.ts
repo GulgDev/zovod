@@ -1,15 +1,15 @@
 import { Inventory } from "./economy/inventory";
 import type { Pricing } from "./economy/pricing";
-import { Factory } from "./factory";
+import { FactoryMap } from "./factory-map";
 
 /**
- * Core game loop runner and container for the factory manager and the inventory controller.
+ * Core game loop runner and container for the factory map manager and the inventory controller.
  *
  * It acts as a single source of truth for time progression by dispatching {@link GameUpdateEvent}. The
  * speed at which time progresses can be controlled using {@link Game.speed}.
  */
 export class Game extends EventTarget {
-  readonly factory = new Factory();
+  readonly factoryMap = new FactoryMap();
 
   readonly inventory: Inventory;
 
@@ -48,9 +48,10 @@ export class Game extends EventTarget {
    * Dispatches a {@link GameUpdateEvent} and updates the factory.
    */
   private update(deltaTime: number): void {
-    this.dispatchEvent(new GameUpdateEvent("update", { deltaTime }));
+    for (const unit of this.factoryMap.getAllUnits())
+      unit.update(this, deltaTime);
 
-    this.factory.update(this, deltaTime);
+    this.dispatchEvent(new GameUpdateEvent("update", { deltaTime }));
   }
 
   /** Starts the game loop. */

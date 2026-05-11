@@ -1,6 +1,6 @@
 import type { ResourceKind } from "../resource-kind";
-import { Timer } from "../util/timer";
-import { FactoryUnit } from "../factory/factory-unit";
+import { Timer } from "./util/timer";
+import { FactoryUnit } from "./abstract/factory-unit";
 import type { Game } from "../game";
 import { Inventory } from "../economy/inventory";
 

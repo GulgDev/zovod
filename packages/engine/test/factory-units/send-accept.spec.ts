@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { UnitMock } from "../util/unit-mock";
 import type { ResourceKind } from "../../src/resource-kind";
-import { FactoryMap } from "../../src/factory/factory-map";
+import { FactoryMap } from "../../src/factory-map";
 
-vi.mock("../../src/factory/factory-map");
+vi.mock("../../src/factory-map");
 
 const resource: ResourceKind = "resource";
 

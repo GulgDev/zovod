@@ -1,6 +1,6 @@
 import type { Game } from "../game";
 import type { ResourceKind } from "../resource-kind";
-import { ContainerUnit } from "./util/container-unit";
+import { ContainerUnit } from "./abstract/container-unit";
 
 export class Storage extends ContainerUnit {
   renewedResourceKind: ResourceKind | undefined;
