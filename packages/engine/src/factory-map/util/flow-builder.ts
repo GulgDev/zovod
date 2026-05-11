@@ -41,6 +41,7 @@ export class FlowBuilder {
         if (FactoryUnitGrid.isUnitCell(x, y)) {
           [x, y] = this.points.at(-1)!;
 
+          // find the closest available neighbor
           const [closest] = [
             [-1, 0],
             [0, -1],
