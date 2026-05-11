@@ -12,6 +12,7 @@ export class Game extends EventTarget {
   constructor(initialBalance: number, pricing: Pricing) {
     super();
     this.inventory = new Inventory(initialBalance, pricing);
+    this.start();
   }
 
   private lastFrameTimestamp: DOMHighResTimeStamp = 0;
@@ -31,7 +32,7 @@ export class Game extends EventTarget {
     this.factory.update(this, deltaTime);
   }
 
-  start(): void {
+  private start(): void {
     this.lastFrameTimestamp = document.timeline.currentTime! as number;
     requestAnimationFrame(this.frameRequestCallback);
   }
