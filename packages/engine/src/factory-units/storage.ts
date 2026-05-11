@@ -5,7 +5,7 @@ import { ContainerUnit } from "./abstract/container-unit";
 export class Storage extends ContainerUnit {
   renewedResourceKind: ResourceKind | undefined;
 
-  doUpdate(game: Game): void {
+  protected doUpdate(game: Game): void {
     const resource = this.pick();
     if (resource !== undefined && this.send(resource)) this.drop(resource);
 

@@ -14,7 +14,7 @@ export class Market extends ContainerUnit {
 
   private sellTimer: Timer;
 
-  doUpdate(game: Game, deltaTime: number): void {
+  protected doUpdate(game: Game, deltaTime: number): void {
     if (this.sellTimer.update(deltaTime)) {
       for (const resource of this.getContainedResources())
         game.inventory.sellResource(resource);

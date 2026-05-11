@@ -34,7 +34,7 @@ export class ProductionPlant extends FactoryUnit {
     );
   }
 
-  doUpdate(_game: Game, deltaTime: number): void {
+  protected doUpdate(_game: Game, deltaTime: number): void {
     if (!this.isWorking) return;
 
     if (this.productionTimer.update(deltaTime)) this.send(this.producedKind);
