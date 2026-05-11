@@ -1,10 +1,7 @@
-import { Inventory } from "./economy/inventory";
-import type { Pricing } from "./economy/pricing";
 import { FactoryMap } from "./factory-map";
 
 /**
- * Core game loop runner and container for the factory map manager and the
- * inventory controller.
+ * Core game loop runner and container for the factory map manager.
  *
  * It acts as a single source of truth for time progression by dispatching
  * {@link GameUpdateEvent}. The speed at which time progresses can be controlled
@@ -13,23 +10,15 @@ import { FactoryMap } from "./factory-map";
 export class Game extends EventTarget {
   readonly factoryMap = new FactoryMap();
 
-  readonly inventory: Inventory;
-
   /**
    * The speed of time progression. In-game time intervals are calculated by
    * multiplying actual time intervals by this value.
    */
   speed = 1;
 
-  /**
-   * Create a new game instance and start the game loop.
-   *
-   * @param initialBalance - Initial amount of money that the player has.
-   * @param pricing - A record containing buy/sell prices of all resources and workforce units.
-   */
-  constructor(initialBalance: number, pricing: Pricing) {
+  /** Create a new game instance and start the game loop. */
+  constructor() {
     super();
-    this.inventory = new Inventory(initialBalance, pricing);
     this.start();
   }
 
