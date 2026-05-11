@@ -22,6 +22,12 @@ export class FlowGrid {
         `Invalid ending point for the flow segment: (${points.at(-1)![0]}, ${points.at(-1)![1]})`,
       );
 
+    for (let i = 1; i < points.length - 1; ++i)
+      if (FactoryUnitGrid.isUnitCell(...points[i]))
+        throw new Error(
+          `Flow segment cannot traverse through a unit cell (${points[i][0]}, ${points[i][1]})`,
+        );
+
     for (let i = 1; i < points.length; ++i)
       if (this.graph.getPredecessor(...points[i])) return false;
 

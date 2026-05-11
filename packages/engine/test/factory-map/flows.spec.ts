@@ -99,6 +99,22 @@ describe("FactoryMap - flow map", () => {
       ).not.toThrow("Invalid unit position");
     });
 
+    it("throws when the flow segment traverses a unit cell", () => {
+      const map = new FactoryMap();
+
+      expect(() =>
+        map.addFlowSegment([
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [2, 1],
+          [3, 1],
+          [4, 1],
+          [4, 0],
+        ]),
+      ).toThrow("Flow segment cannot traverse through a unit cell");
+    });
+
     it("throws when the flow segment is non-continuous", () => {
       const map = new FactoryMap();
 
