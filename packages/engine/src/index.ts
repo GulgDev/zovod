@@ -1,4 +1,4 @@
-export { Game } from "./game";
+export { Game, type GameUpdateEvent } from "./game";
 
 export type { ResourceKind } from "./resource-kind";
 export type { Pricing } from "./economy/pricing";
