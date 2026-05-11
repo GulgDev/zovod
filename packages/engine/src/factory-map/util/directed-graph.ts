@@ -1,9 +1,21 @@
 import { dist, packCoords, type Point, unpackCoords } from "./math";
 
+/**
+ * A class that stores and manages a directed graph on a 2D square grid, where
+ * each node can have at most one predecessor.
+ *
+ * @internal
+ */
 export class DirectedGraph {
   private readonly successors = new Map<number, Set<number>>();
   private readonly predecessors = new Map<number, number>();
 
+  /**
+   * Create an edge between two cells in von Neumann neighborhood.
+   *
+   * @throws Will throw if the Manhattan distance between the pair of cells is not 1.
+   * @throws Will throw if the successor cell already has a predecessor.
+   */
   addEdge(x1: number, y1: number, x2: number, y2: number): void {
     if (dist(x1, y1, x2, y2) !== 1)
       throw new Error(
@@ -22,6 +34,11 @@ export class DirectedGraph {
     this.successors.getOrInsertComputed(keyFrom, () => new Set()).add(keyTo);
   }
 
+  /**
+   * Delete an edge between two cells.
+   *
+   * @throws Will throw if there exists no edge between the two specified cells.
+   */
   deleteEdge(x1: number, y1: number, x2: number, y2: number): void {
     const key1 = packCoords(x1, y1),
       key2 = packCoords(x2, y2);
@@ -34,11 +51,21 @@ export class DirectedGraph {
     this.predecessors.delete(key2);
   }
 
+  /**
+   * Find the predecessor of a cell/node.
+   *
+   * @returns A tuple containing the coordinates of the predecessor, or `undefined` if there isn't one.
+   */
   getPredecessor(x: number, y: number): Point | undefined {
     const key = this.predecessors.get(packCoords(x, y));
     return key !== undefined ? unpackCoords(key) : undefined;
   }
 
+  /**
+   * Find all successors of a cell/node.
+   *
+   * @returns A read-only array of tuples containing the coordinates of the successors.
+   */
   getSuccessors(x: number, y: number): readonly Point[] {
     return Array.from(
       (this.successors.get(packCoords(x, y)) ?? new Map()).keys(),
@@ -46,6 +73,11 @@ export class DirectedGraph {
     );
   }
 
+  /**
+   * Finds all nodes/cells that are the roots of directed ears of the graph.
+   *
+   * @returns An iterator of tuples containing the coordinates of the root cells.
+   */
   getAllSegmentRoots(): IterableIterator<Point> {
     return this.successors
       .entries()
