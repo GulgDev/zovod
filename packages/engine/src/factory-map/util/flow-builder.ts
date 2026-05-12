@@ -36,7 +36,7 @@ export class FlowBuilder {
           error -= dx;
         }
 
-        if (this.map.getFlowSource(x, y) !== undefined) break;
+        if (this.map.getFlowNodeSource(x, y) !== undefined) break;
 
         if (FactoryUnitGrid.isUnitCell(x, y)) {
           [x, y] = this.points.at(-1)!;
@@ -51,7 +51,7 @@ export class FlowBuilder {
             .map(([offsetX, offsetY]) => [x + offsetX, y + offsetY])
             .filter(
               ([neighborX, neighborY]) =>
-                !this.map.getFlowSource(neighborX, neighborY) &&
+                !this.map.getFlowNodeSource(neighborX, neighborY) &&
                 !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
                 dist(neighborX, neighborY, targetX, targetY) <
                   dist(x, y, targetX, targetY),
