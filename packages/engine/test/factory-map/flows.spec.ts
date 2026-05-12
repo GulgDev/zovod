@@ -34,11 +34,12 @@ describe("FactoryMap - flow map", () => {
       ]);
     });
 
-    it("returns false when the flow segment has an invalid source", () => {
+    it("returns false when the flow segment has an invalid start", () => {
       const map = new FactoryMap();
       map.placeUnit(new UnitMock(), 2, 1);
       map.placeUnit(new UnitMock(), 2, -1);
 
+      // empty unit cell
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -48,6 +49,7 @@ describe("FactoryMap - flow map", () => {
         ]),
       ).toBeFalse();
 
+      // empty non-unit (flow) cell
       expect(
         map.addFlowSegment([
           [2, 0],
@@ -56,10 +58,11 @@ describe("FactoryMap - flow map", () => {
       ).toBeFalse();
     });
 
-    it("returns false when the flow segment has an invalid destination", () => {
+    it("returns false when the flow segment has an invalid end", () => {
       const map = new FactoryMap();
       map.placeUnit(new UnitMock(), 0, 0);
 
+      // empty unit cell
       expect(
         map.addFlowSegment([
           [0, 0],
