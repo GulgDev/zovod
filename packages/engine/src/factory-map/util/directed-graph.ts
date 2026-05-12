@@ -11,7 +11,21 @@ import type { FlowGrid } from "../flow-grid"; // used in JSDoc
  * @internal
  */
 export class DirectedGraph {
+  /**
+   * A map of packed node coordinates to a set of node's packed successors
+   * coordinates.
+   *
+   * @see {@link predecessors} for a reverse-lookup map.
+   * @see {@link packCoords}
+   */
   private readonly successors = new Map<number, Set<number>>();
+
+  /**
+   * A map of packed node coordinates to the node's packed predecessor
+   * coordinates.
+   *
+   * @see {@link packCoords}
+   */
   private readonly predecessors = new Map<number, number>();
 
   /**
