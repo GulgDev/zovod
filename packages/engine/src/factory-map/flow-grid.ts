@@ -54,7 +54,7 @@ export class FlowGrid {
    * empty. That should be verified by the caller.
    *
    * @param points - The array of points forming the flow segment.
-   * @returns `true` if the flow segment was successfully added, otherwise `false` if the flow segment intersects an existing one
+   * @returns `true` if the flow segment was successfully added, otherwise `false` if the flow segment intersects an existing one.
    *
    * @throws Will throw if the flow segment is invalid.
    * @throws Will throw if the starting point is not a unit cell or a part of an existing flow.
@@ -94,7 +94,7 @@ export class FlowGrid {
    * Delete the flow branch placed at the specified point. The flow branch
    * consists of a flow segment along with its successive subtree.
    *
-   * @returns `true` if a flow segment exists at the specified position and its corresponding branch was deleted, or `false` if there isn't one
+   * @returns `true` if a flow segment exists at the specified position and its corresponding branch was deleted, or `false` if there isn't one.
    */
   deleteFlowBranchAt(x: number, y: number): boolean {
     // Check whether the node is empty
