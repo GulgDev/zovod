@@ -52,6 +52,21 @@ export class DirectedGraph {
   }
 
   /**
+   * Delete a branch (i.e. a subtree along with the edge connecting its root
+   * with the parent tree root) recursively.
+   *
+   * @param treeRoot - The coordinates of the tree root. If set to `undefined`, just the subtree is deleted.
+   * @param subtreeRoot - The coordinates of the subtree root.
+   */
+  deleteBranch(treeRoot: Point | undefined, subtreeRoot: Point): void {
+    if (treeRoot) this.deleteEdge(...treeRoot, ...subtreeRoot);
+
+    // Delete the subtree itself
+    for (const successor of this.getSuccessors(...subtreeRoot))
+      this.deleteBranch(subtreeRoot, successor);
+  }
+
+  /**
    * Find the predecessor of a cell/node.
    *
    * @returns A tuple containing the coordinates of the predecessor, or `undefined` if there isn't one.
