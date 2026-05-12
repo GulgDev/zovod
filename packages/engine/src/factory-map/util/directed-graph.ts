@@ -1,8 +1,12 @@
 import { dist, packCoords, type Point, unpackCoords } from "./math";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { FlowGrid } from "../flow-grid"; // used in JSDoc
+
 /**
- * A class that stores and manages a directed graph on a 2D square grid, where
- * each node can have at most one predecessor.
+ * A class that stores and manages a directed graph placed on a 2D square grid,
+ * where each node, defined by its X and Y coordinates, can have at most one
+ * predecessor.
  *
  * @internal
  */
@@ -67,9 +71,9 @@ export class DirectedGraph {
   }
 
   /**
-   * Find the predecessor of a cell/node.
+   * Find the predecessor of a node.
    *
-   * @returns A tuple containing the coordinates of the predecessor, or `undefined` if there isn't one.
+   * @returns The coordinates of the predecessor, or `undefined` if there isn't one.
    */
   getPredecessor(x: number, y: number): Point | undefined {
     const key = this.predecessors.get(packCoords(x, y));
@@ -77,9 +81,9 @@ export class DirectedGraph {
   }
 
   /**
-   * Find all successors of a cell/node.
+   * Find all successors of a node.
    *
-   * @returns A read-only array of tuples containing the coordinates of the successors.
+   * @returns An array of successor coordinates.
    */
   getSuccessors(x: number, y: number): readonly Point[] {
     return Array.from(
@@ -89,9 +93,13 @@ export class DirectedGraph {
   }
 
   /**
-   * Finds all nodes/cells that are the roots of directed ears of the graph.
+   * Finds all nodes that are the roots of directed ears of the graph, i.e. all
+   * the nodes that start a tree by either having no predecessors or having two
+   * or more successors.
    *
-   * @returns An iterator of tuples containing the coordinates of the root cells.
+   * @returns An iterator of root node coordinates.
+   *
+   * @see {@link FlowGrid.getAllFlowSegments} for the primary algorithm.
    */
   getAllSegmentRoots(): IterableIterator<Point> {
     return this.successors
