@@ -53,25 +53,28 @@ export class FlowGrid {
     )
       return false;
 
-    let current: Point | undefined = [x, y],
-      prev: Point;
-    do current = this.graph.getPredecessor(...(prev = current));
+    let branchStart: Point | undefined = [x, y],
+      subtreeRoot: Point;
+    do branchStart = this.graph.getPredecessor(...(subtreeRoot = branchStart));
     while (
-      current &&
-      !FactoryUnitGrid.isUnitCell(...current) &&
-      this.graph.getSuccessors(...current).length < 2
+      branchStart &&
+      !FactoryUnitGrid.isUnitCell(...branchStart) &&
+      this.graph.getSuccessors(...branchStart).length < 2
     );
 
-    if (current) this.graph.deleteEdge(...current, ...prev);
-    this.deleteSubtree(...prev);
+    this.deleteBranch(branchStart, subtreeRoot);
     return true;
   }
 
-  private deleteSubtree(x: number, y: number): void {
-    for (const [successorX, successorY] of this.graph.getSuccessors(x, y)) {
-      this.graph.deleteEdge(x, y, successorX, successorY);
-      this.deleteSubtree(successorX, successorY);
-    }
+  private deleteBranch(
+    branchStart: Point | undefined,
+    subtreeRoot: Point,
+  ): void {
+    if (branchStart) this.graph.deleteEdge(...branchStart, ...subtreeRoot);
+
+    // Delete the subtree itself
+    for (const successor of this.graph.getSuccessors(...subtreeRoot))
+      this.deleteBranch(subtreeRoot, successor);
   }
 
   getFlowSource(x: number, y: number): Point | undefined {
