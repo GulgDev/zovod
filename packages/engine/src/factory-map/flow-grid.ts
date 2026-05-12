@@ -12,7 +12,7 @@ import type { FactoryMap } from "."; // used in JSDoc
  * transfer.
  *
  * This class does not handle any factory unit logic, so all the units cells are
- * assumed to valid for flows.
+ * assumed to be valid for flows.
  * @see {@link FactoryMap} for the orchestration layer connecting both unit and flow logic.
  */
 export class FlowGrid {
