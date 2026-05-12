@@ -18,9 +18,9 @@ describe("FactoryMap - flow map", () => {
           [2, 1],
         ]),
       ).toBeTrue();
-      expect(map.getFlowTargets(0, 0)).toIncludeSameMembers([[1, 0]]);
-      expect(map.getFlowTargets(1, 0)).toIncludeSameMembers([[2, 0]]);
-      expect(map.getFlowTargets(2, 0)).toIncludeSameMembers([[2, 1]]);
+      expect(map.getFlowNodeTargets(0, 0)).toIncludeSameMembers([[1, 0]]);
+      expect(map.getFlowNodeTargets(1, 0)).toIncludeSameMembers([[2, 0]]);
+      expect(map.getFlowNodeTargets(2, 0)).toIncludeSameMembers([[2, 1]]);
 
       expect(
         map.addFlowSegment([
@@ -28,7 +28,7 @@ describe("FactoryMap - flow map", () => {
           [2, -1],
         ]),
       ).toBeTrue();
-      expect(map.getFlowTargets(2, 0)).toIncludeSameMembers([
+      expect(map.getFlowNodeTargets(2, 0)).toIncludeSameMembers([
         [2, 1],
         [2, -1],
       ]);
@@ -150,12 +150,12 @@ describe("FactoryMap - flow map", () => {
     });
   });
 
-  describe("deleteFlowSegmentAt", () => {
+  describe("deleteFlowBranchAt", () => {
     it.each([
       ["the start", 0, 0],
       ["the middle", 1, 0],
       ["the end", 2, 1],
-    ])("deletes a flow segment at %s", (_, x, y) => {
+    ])("deletes the flow branch at %s", (_, x, y) => {
       const map = new FactoryMap();
       map.placeUnit(new UnitMock(), 0, 0);
       map.placeUnit(new UnitMock(), 2, 1);
@@ -166,17 +166,17 @@ describe("FactoryMap - flow map", () => {
         [2, 1],
       ]);
 
-      expect(map.deleteFlowSegmentAt(x, y)).toBeTrue();
-      expect(map.getFlowTargets(0, 0)).toBeEmpty();
-      expect(map.getFlowTargets(1, 0)).toBeEmpty();
-      expect(map.getFlowTargets(2, 0)).toBeEmpty();
+      expect(map.deleteFlowBranchAt(x, y)).toBeTrue();
+      expect(map.getFlowNodeTargets(0, 0)).toBeEmpty();
+      expect(map.getFlowNodeTargets(1, 0)).toBeEmpty();
+      expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
     });
 
-    it("returns false when flow segment is absent", () => {
+    it("returns false when the flow branch is absent", () => {
       const map = new FactoryMap();
 
-      expect(map.deleteFlowSegmentAt(0, 0)).toBeFalse();
-      expect(map.deleteFlowSegmentAt(1, 0)).toBeFalse();
+      expect(map.deleteFlowBranchAt(0, 0)).toBeFalse();
+      expect(map.deleteFlowBranchAt(1, 0)).toBeFalse();
     });
 
     it("removes corresponding targets from the distribution", () => {
@@ -198,12 +198,12 @@ describe("FactoryMap - flow map", () => {
         [2, -1],
       ]);
 
-      map.deleteFlowSegmentAt(2, 1);
+      map.deleteFlowBranchAt(2, 1);
 
       expect(FactoryMap.getTargetDistribution(unit1).has(unit2)).toBeFalse();
       expect(FactoryMap.getTargetDistribution(unit1).get(unit3)).toBe(1);
 
-      map.deleteFlowSegmentAt(2, -1);
+      map.deleteFlowBranchAt(2, -1);
 
       expect(FactoryMap.getTargetDistribution(unit1).has(unit3)).toBeFalse();
     });

@@ -18,7 +18,7 @@ export class FactoryMap {
     const success = this.unitGrid.removeUnitAt(x, y);
     if (success) {
       if (unit && source) FactoryMap.removeTarget(source, unit);
-      this.flowGrid.deleteFlowSegmentAt(x, y);
+      this.flowGrid.deleteFlowBranchAt(x, y);
     }
     return success;
   }
@@ -34,7 +34,7 @@ export class FactoryMap {
   private getSourceUnit(x: number, y: number): FactoryUnit | undefined {
     let current: Point | undefined = [x, y];
     do {
-      const next = this.flowGrid.getFlowSource(...current);
+      const next = this.flowGrid.getFlowNodeSource(...current);
       if (!next) return;
       current = next;
     } while (current && !FactoryUnitGrid.isUnitCell(...current));
@@ -49,7 +49,7 @@ export class FactoryMap {
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
     if (FactoryUnitGrid.isUnitCell(x, y)) yield this.unitGrid.getUnitAt(x, y)!;
 
-    for (const [targetX, targetY] of this.flowGrid.getFlowTargets(x, y))
+    for (const [targetX, targetY] of this.flowGrid.getFlowNodeTargets(x, y))
       yield* this.getTargetUnits(targetX, targetY);
   }
 
@@ -60,7 +60,7 @@ export class FactoryMap {
     // or a (branching) flow node and end in an occupied unit cell
     if (
       !(
-        this.flowGrid.getFlowSource(...points[0]) ||
+        this.flowGrid.getFlowNodeSource(...points[0]) ||
         (FactoryUnitGrid.isUnitCell(...points[0]) &&
           this.unitGrid.getUnitAt(...points[0]))
       )
@@ -87,11 +87,11 @@ export class FactoryMap {
     return true;
   }
 
-  deleteFlowSegmentAt(x: number, y: number): boolean {
+  deleteFlowBranchAt(x: number, y: number): boolean {
     const source = this.getSourceUnit(x, y)!,
       targets = this.getTargetUnits(x, y);
 
-    const success = this.flowGrid.deleteFlowSegmentAt(x, y);
+    const success = this.flowGrid.deleteFlowBranchAt(x, y);
     if (success) {
       if (source)
         for (const target of targets) FactoryMap.removeTarget(source, target);
@@ -99,12 +99,12 @@ export class FactoryMap {
     return success;
   }
 
-  getFlowSource(x: number, y: number): Point | undefined {
-    return this.flowGrid.getFlowSource(x, y);
+  getFlowNodeSource(x: number, y: number): Point | undefined {
+    return this.flowGrid.getFlowNodeSource(x, y);
   }
 
-  getFlowTargets(x: number, y: number): readonly Point[] {
-    return this.flowGrid.getFlowTargets(x, y);
+  getFlowNodeTargets(x: number, y: number): readonly Point[] {
+    return this.flowGrid.getFlowNodeTargets(x, y);
   }
 
   getAllFlowSegments(): IterableIterator<readonly Point[]> {
