@@ -6,9 +6,10 @@ import { dist, type Point } from "./util/math";
 import type { FactoryMap } from "."; // used in JSDoc
 
 /**
- * A class built on top of {@link DirectedGraph} that manages the flow grid. A
- * **flow** is a tree graph placed on the flow grid that connects a source unit
- * with one or more target units.
+ * A class built on top of {@link DirectedGraph} that manages the creation,
+ * deletion and querying of flows. A **flow** is a tree graph placed on a grid
+ * that connects a source unit with one or more target units for resource
+ * transfer.
  *
  * This class does not handle any factory unit logic, so all the units cells are
  * assumed to valid for flows.
