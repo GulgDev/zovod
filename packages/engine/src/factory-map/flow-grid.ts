@@ -26,12 +26,15 @@ export class FlowGrid {
     FlowGrid.validateFlowSegment(points);
 
     if (
-      !FactoryUnitGrid.isUnitCell(...points[0]) &&
-      !this.getFlowSource(...points[0])
+      !(
+        FactoryUnitGrid.isUnitCell(...points[0]) ||
+        this.getFlowSource(...points[0])
+      )
     )
-      return false;
+      throw new Error("Invalid flow segment starting point");
 
-    if (!FactoryUnitGrid.isUnitCell(...points.at(-1)!)) return false;
+    if (!FactoryUnitGrid.isUnitCell(...points.at(-1)!))
+      throw new Error("Invalid flow segment ending point");
 
     for (let i = 1; i < points.length; ++i)
       if (this.graph.getPredecessor(...points[i])) return false;
