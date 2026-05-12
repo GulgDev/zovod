@@ -34,9 +34,10 @@ describe("FactoryMap - flow map", () => {
       ]);
     });
 
-    it("returns false when the flow segment has empty source or target", () => {
+    it("returns false when the flow segment has an invalid source", () => {
       const map = new FactoryMap();
-      map.placeUnit(new UnitMock(), 0, 0);
+      map.placeUnit(new UnitMock(), 2, 1);
+      map.placeUnit(new UnitMock(), 2, -1);
 
       expect(
         map.addFlowSegment([
@@ -49,10 +50,22 @@ describe("FactoryMap - flow map", () => {
 
       expect(
         map.addFlowSegment([
-          [2, 1],
           [2, 0],
-          [1, 0],
+          [2, -1],
+        ]),
+      ).toBeFalse();
+    });
+
+    it("returns false when the flow segment has an invalid destination", () => {
+      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+
+      expect(
+        map.addFlowSegment([
           [0, 0],
+          [1, 0],
+          [2, 0],
+          [2, 1],
         ]),
       ).toBeFalse();
     });
@@ -60,7 +73,8 @@ describe("FactoryMap - flow map", () => {
     it("returns false when the flow segment crosses an existing flow", () => {
       const map = new FactoryMap();
       map.placeUnit(new UnitMock(), 0, 0);
-
+      map.placeUnit(new UnitMock(), 2, 1);
+      map.placeUnit(new UnitMock(), 2, -1);
       map.addFlowSegment([
         [0, 0],
         [1, 0],
@@ -78,28 +92,7 @@ describe("FactoryMap - flow map", () => {
       ).toBeFalse();
     });
 
-    it("throws when the flow segment target is not a unit cell", () => {
-      const map = new FactoryMap();
-      map.placeUnit(new UnitMock(), 0, 0);
-
-      expect(() =>
-        map.addFlowSegment([
-          [0, 0],
-          [1, 0],
-          [2, 0],
-        ]),
-      ).toThrow("Invalid unit position");
-
-      expect(() =>
-        map.addFlowSegment([
-          [1, 0],
-          [2, 0],
-          [2, 1],
-        ]),
-      ).not.toThrow("Invalid unit position");
-    });
-
-    it("throws when the flow segment traverses a unit cell", () => {
+    it("throws when the flow segment traverses through a unit cell", () => {
       const map = new FactoryMap();
 
       expect(() =>
