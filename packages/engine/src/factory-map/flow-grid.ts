@@ -1,32 +1,37 @@
 import { FactoryUnitGrid } from "./unit-grid";
 import { DirectedGraph } from "./util/directed-graph";
-import type { Point } from "./util/math";
+import { dist, type Point } from "./util/math";
 
 export class FlowGrid {
   private readonly graph: DirectedGraph = new DirectedGraph();
 
-  addFlowSegment(points: readonly Point[]): boolean {
+  static validateFlowSegment(points: readonly Point[]): void {
     if (points.length < 2)
       throw new Error("Flow segment must have at least 2 points");
+
+    for (let i = 0; i < points.length - 1; ++i) {
+      const [x1, y1] = points[i],
+        [x2, y2] = points[i + 1];
+      if (dist(x1, y1, x2, y2) !== 1)
+        throw new Error(`Cannot connect (${x1}, ${y1}) and (${x2}, ${y2})`);
+
+      if (i > 0 && FactoryUnitGrid.isUnitCell(x1, y1))
+        throw new Error(
+          `Flow segment cannot traverse through a unit cell (${x1}, ${y1})`,
+        );
+    }
+  }
+
+  addFlowSegment(points: readonly Point[]): boolean {
+    FlowGrid.validateFlowSegment(points);
 
     if (
       !FactoryUnitGrid.isUnitCell(...points[0]) &&
       !this.getFlowSource(...points[0])
     )
-      throw new Error(
-        `Invalid starting point for the flow segment: (${points[0][0]}, ${points[0][1]})`,
-      );
+      return false;
 
-    if (!FactoryUnitGrid.isUnitCell(...points.at(-1)!))
-      throw new Error(
-        `Invalid ending point for the flow segment: (${points.at(-1)![0]}, ${points.at(-1)![1]})`,
-      );
-
-    for (let i = 1; i < points.length - 1; ++i)
-      if (FactoryUnitGrid.isUnitCell(...points[i]))
-        throw new Error(
-          `Flow segment cannot traverse through a unit cell (${points[i][0]}, ${points[i][1]})`,
-        );
+    if (!FactoryUnitGrid.isUnitCell(...points.at(-1)!)) return false;
 
     for (let i = 1; i < points.length; ++i)
       if (this.graph.getPredecessor(...points[i])) return false;
