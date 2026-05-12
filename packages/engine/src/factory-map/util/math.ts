@@ -5,6 +5,8 @@ export type Point = readonly [number, number];
  * Pack two signed 16-bit integers into a single unsigned 32-bit integer.
  *
  * @throws Will throw if the arguments exceed the 16-bit limit.
+ *
+ * @internal
  */
 export function packCoords(x: number, y: number): number {
   if ((x << 16) >> 16 !== x || (y << 16) >> 16 !== y)
@@ -13,7 +15,11 @@ export function packCoords(x: number, y: number): number {
   return (y << 16) | (x & 0xffff);
 }
 
-/** Unpack two signed 16-bit integers from a single unsigned 32-bit integer. */
+/**
+ * Unpack two signed 16-bit integers from a single unsigned 32-bit integer.
+ *
+ * @internal
+ */
 export function unpackCoords(key: number): Point {
   return [
     (key << 16) >> 16, // shift left 16 bits to discard 16 highest bits
