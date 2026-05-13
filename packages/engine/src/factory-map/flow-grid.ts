@@ -65,11 +65,9 @@ export class FlowGrid {
   addFlowSegment(points: readonly Point[]): boolean {
     FlowGrid.validateFlowSegment(points);
 
-    /*
-    The flow segment must start either in an occupied unit cell or from an
-    existing flow. A point is contained in a flow if it has a source, or if it
-    is the start of a flow, i.e. a unit cell
-    */
+    // The flow segment must start either in an occupied unit cell or from an
+    // existing flow. A point is contained in a flow if it has a source, or if it
+    // is the start of a flow, i.e. a unit cell
     if (
       !(
         FactoryUnitGrid.isUnitCell(...points[0]) ||
