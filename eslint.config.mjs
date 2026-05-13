@@ -9,12 +9,14 @@ export default defineConfig(
     ignores: ["packages/*/dist/**"],
   },
   js.configs.recommended,
+  tseslint.configs.strict,
   tseslint.configs.stylistic,
   {
     rules: {
-      "no-unused-vars": "off",
+      // declaration merging is useful for typing EventTarget
+      "@typescript-eslint/no-unsafe-declaration-merging": "off",
+
       "@typescript-eslint/consistent-type-imports": "error",
-      "@typescript-eslint/no-unused-vars": "error",
       "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/explicit-module-boundary-types": "error",
     },

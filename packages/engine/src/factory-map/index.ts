@@ -47,7 +47,8 @@ export class FactoryMap {
   }
 
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
-    if (FactoryUnitGrid.isUnitCell(x, y)) yield this.unitGrid.getUnitAt(x, y)!;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (FactoryUnitGrid.isUnitCell(x, y)) yield this.unitGrid.getUnitAt(x, y)!; // TODO: explain
 
     for (const [targetX, targetY] of this.flowGrid.getFlowNodeTargets(x, y))
       yield* this.getTargetUnits(targetX, targetY);
@@ -56,39 +57,41 @@ export class FactoryMap {
   addFlowSegment(points: readonly Point[]): boolean {
     FlowGrid.validateFlowSegment(points);
 
-    // All flow segments must start in either an occupied unit cell
-    // or a (branching) flow node and end in an occupied unit cell
-    if (
-      !(
-        this.flowGrid.getFlowNodeSource(...points[0]) ||
-        (FactoryUnitGrid.isUnitCell(...points[0]) &&
-          this.unitGrid.getUnitAt(...points[0]))
-      )
-    )
+    const startPoint = points[0];
+    const startUnit = FactoryUnitGrid.isUnitCell(...startPoint)
+      ? this.unitGrid.getUnitAt(...startPoint)
+      : undefined;
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const endPoint = points.at(-1)!; // the array must contain an ending point
+    const endUnit = FactoryUnitGrid.isUnitCell(...endPoint)
+      ? this.unitGrid.getUnitAt(...endPoint)
+      : undefined;
+
+    // All flow segments must start in either an occupied unit cell or a flow
+    // node in a non-unit cell (branching)
+    if (!(startUnit || this.flowGrid.getFlowNodeSource(...startPoint)))
       return false;
 
-    if (
-      !(
-        FactoryUnitGrid.isUnitCell(...points.at(-1)!) &&
-        this.unitGrid.getUnitAt(...points.at(-1)!)
-      )
-    )
-      return false;
+    if (!endUnit) return false;
 
     if (!this.flowGrid.addFlowSegment(points)) return false;
 
     FactoryMap.addTarget(
-      FactoryUnitGrid.isUnitCell(...points[0])
-        ? this.unitGrid.getUnitAt(...points[0])!
-        : this.getSourceUnit(...points[0])!,
-      this.unitGrid.getUnitAt(...points.at(-1)!)!,
+      // The source is the flow tree root, which is either the start of the flow
+      // segment if it's a unit, or the root of the existing flow from which the
+      // new segment starts
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      startUnit ?? this.getSourceUnit(...endPoint)!, // TODO: explain
+      endUnit,
     );
 
     return true;
   }
 
   deleteFlowBranchAt(x: number, y: number): boolean {
-    const source = this.getSourceUnit(x, y)!,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const source = this.getSourceUnit(x, y)!, // TODO: explain
       targets = this.getTargetUnits(x, y);
 
     const success = this.flowGrid.deleteFlowBranchAt(x, y);
