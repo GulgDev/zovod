@@ -16,6 +16,7 @@ export class FlowBuilder {
   lineTo(targetX: number, targetY: number): void {
     const i = this.points.findIndex(([x, y]) => x === targetX && y === targetY);
     if (i === -1) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       let [x, y] = this.points.at(-1)!; // the flow will always contain at least 1 point (the start)
 
       const dx = Math.abs(x - targetX),
@@ -39,6 +40,7 @@ export class FlowBuilder {
         if (this.map.getFlowNodeSource(x, y) !== undefined) break;
 
         if (FactoryUnitGrid.isUnitCell(x, y)) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           [x, y] = this.points.at(-1)!;
 
           // find the closest available neighbor

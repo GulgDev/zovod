@@ -51,7 +51,8 @@ export class Game extends EventTarget {
 
   /** Start the game loop. */
   private start(): void {
-    this.lastFrameTimestamp = document.timeline.currentTime! as number;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.lastFrameTimestamp = document.timeline.currentTime! as number; // document.timeline is always active
     requestAnimationFrame(this.frameRequestCallback);
   }
 }
@@ -59,7 +60,7 @@ export class Game extends EventTarget {
 export interface Game {
   addEventListener<K extends keyof GameEventMap>(
     type: K,
-    listener: (this: Game, ev: GameEventMap[K]) => any,
+    listener: (this: Game, ev: GameEventMap[K]) => void,
     options?: boolean | AddEventListenerOptions,
   ): void;
   addEventListener(
@@ -70,7 +71,7 @@ export interface Game {
 
   removeEventListener<K extends keyof GameEventMap>(
     type: K,
-    listener: (this: Game, ev: GameEventMap[K]) => any,
+    listener: (this: Game, ev: GameEventMap[K]) => void,
     options?: boolean | EventListenerOptions,
   ): void;
   removeEventListener(

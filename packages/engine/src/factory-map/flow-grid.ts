@@ -76,7 +76,12 @@ export class FlowGrid {
     )
       throw new Error("Invalid flow segment starting point");
 
-    if (!FactoryUnitGrid.isUnitCell(...points.at(-1)!))
+    if (
+      !FactoryUnitGrid.isUnitCell(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ...points.at(-1)!, // the array must contain an ending point
+      )
+    )
       throw new Error("Invalid flow segment ending point");
 
     // Check for intersection with existing flows
@@ -149,8 +154,10 @@ export class FlowGrid {
 
         let successors: readonly Point[];
         while (
-          (successors = this.graph.getSuccessors(...points.at(-1)!)).length ===
-          1
+          (successors = this.graph.getSuccessors(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...points.at(-1)!, // the list of point should be non-empty
+          )).length === 1
         )
           points.push(successors[0]);
 
