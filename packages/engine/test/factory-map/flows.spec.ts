@@ -93,6 +93,15 @@ describe("FactoryMap - flow map", () => {
           [2, -1],
         ]),
       ).toBeFalse();
+
+      expect(
+        map.addFlowSegment([
+          [0, 0],
+          [0, 1],
+          [1, 1],
+          [2, 1],
+        ]),
+      ).toBeFalse();
     });
 
     it("throws when the flow segment traverses through a unit cell", () => {
