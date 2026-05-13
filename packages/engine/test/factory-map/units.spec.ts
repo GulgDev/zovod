@@ -89,6 +89,29 @@ describe("FactoryMap - unit map", () => {
         expect(() => map.removeUnitAt(x, y)).toThrow("Invalid unit position"),
       );
     });
+
+    it("removes incoming flows", () => {
+      const map = new FactoryMap();
+
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+
+      map.removeUnitAt(2, 1);
+
+      expect(map.getFlowNodeTargets(0, 0)).toBeEmpty();
+      expect(map.getFlowNodeTargets(1, 0)).toBeEmpty();
+      expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
+      expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
+      expect(FactoryMap.getTargetDistribution(unit1).has(unit2)).toBeFalse();
+    });
   });
 
   describe("getAllUnits", () => {
