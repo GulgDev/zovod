@@ -93,10 +93,14 @@ describe("FactoryMap - unit map", () => {
     it("removes incoming flows", () => {
       const map = new FactoryMap();
 
-      const unit1 = new UnitMock(),
-        unit2 = new UnitMock();
-      map.placeUnit(unit1, 0, 0);
-      map.placeUnit(unit2, 2, 1);
+      //      0   1   2
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
+      const unit$0$0 = new UnitMock(),
+        unit$2$1 = new UnitMock();
+      map.placeUnit(unit$0$0, 0, 0);
+      map.placeUnit(unit$2$1, 2, 1);
       map.addFlowSegment([
         [0, 0],
         [1, 0],
@@ -104,13 +108,20 @@ describe("FactoryMap - unit map", () => {
         [2, 1],
       ]);
 
+      //      0   1   2
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
+      //              ~
       map.removeUnitAt(2, 1);
 
       expect(map.getFlowNodeTargets(0, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(1, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
-      expect(FactoryMap.getTargetDistribution(unit1).has(unit2)).toBeFalse();
+      expect(
+        FactoryMap.getTargetDistribution(unit$0$0).has(unit$2$1),
+      ).toBeFalse();
     });
   });
 
@@ -136,6 +147,12 @@ describe("FactoryMap - unit map", () => {
     it("changes the target distribution", () => {
       const map = new FactoryMap();
 
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       const unit1 = new UnitMock(),
         unit2 = new UnitMock(),
         unit3 = new UnitMock();
@@ -172,6 +189,12 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution is not normalized", () => {
       const map = new FactoryMap();
 
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       const unit1 = new UnitMock(),
         unit2 = new UnitMock(),
         unit3 = new UnitMock();
@@ -203,6 +226,12 @@ describe("FactoryMap - unit map", () => {
     it("throws when a target is missing from the distribution", () => {
       const map = new FactoryMap();
 
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       const unit1 = new UnitMock(),
         unit2 = new UnitMock(),
         unit3 = new UnitMock();
@@ -228,6 +257,12 @@ describe("FactoryMap - unit map", () => {
     it("throws when the distribution contains an extra target", () => {
       const map = new FactoryMap();
 
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       const unit1 = new UnitMock(),
         unit2 = new UnitMock(),
         unit3 = new UnitMock();
