@@ -141,7 +141,7 @@ export class FlowGrid {
   }
 
   /**
-   * Finds an ear decomposition of the flow graph, i.e. splits every flow into a
+   * Find an ear decomposition of the flow graph, i.e. splits every flow into a
    * list of segments &mdash; directed paths of maximal length whose internal
    * vertices have in-degree and out-degree 1 within the flow.
    *
