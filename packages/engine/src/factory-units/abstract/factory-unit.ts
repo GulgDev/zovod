@@ -51,8 +51,8 @@ export abstract class FactoryUnit {
   protected abstract doUpdate(game: Game, deltaTime: number): void;
 
   /**
-   * Determine whether the factory unit is currently paused and does not accept
-   * resources, perform simulation steps and any other actions.
+   * Whether the factory unit is currently paused and does not accept resources,
+   * perform simulation steps and any other actions.
    */
   paused = false;
 
