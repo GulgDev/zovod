@@ -12,15 +12,8 @@ export class FactoryMap {
   }
 
   removeUnitAt(x: number, y: number): boolean {
-    const unit = this.unitGrid.getUnitAt(x, y),
-      source = this.getSourceUnit(x, y);
-
-    const success = this.unitGrid.removeUnitAt(x, y);
-    if (success) {
-      if (unit && source) FactoryMap.removeTarget(source, unit);
-      this.flowGrid.deleteFlowBranchAt(x, y);
-    }
-    return success;
+    this.deleteFlowBranchAt(x, y);
+    return this.unitGrid.removeUnitAt(x, y);
   }
 
   getUnitAt(x: number, y: number): FactoryUnit | undefined {
