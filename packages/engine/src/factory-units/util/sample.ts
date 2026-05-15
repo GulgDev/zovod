@@ -11,7 +11,7 @@ export function sampleFrom<T>(distribution: ReadonlyMap<T, number>): T {
   for (const [item, weight] of distribution.entries())
     if ((threshold -= weight) <= 0) return item;
 
-  // After the loop finished, threshold could still be slightly above zero due
+  // After the loop finishes, threshold could still be slightly above zero due
   // to floating-point error, so return the last item as fallback.
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
