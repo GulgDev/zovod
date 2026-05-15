@@ -40,8 +40,11 @@ export class FactoryMap {
   }
 
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    if (FactoryUnitGrid.isUnitCell(x, y)) yield this.unitGrid.getUnitAt(x, y)!; // TODO: explain
+    if (FactoryUnitGrid.isUnitCell(x, y)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      yield this.unitGrid.getUnitAt(x, y)!; // the unit cell in leaves should be non-empty (by flow definition)
+      return; // do not traverse further; we've reached a leaf of the current tree
+    }
 
     for (const [targetX, targetY] of this.flowGrid.getFlowNodeTargets(x, y))
       yield* this.getTargetUnits(targetX, targetY);
