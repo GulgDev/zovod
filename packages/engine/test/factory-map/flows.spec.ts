@@ -6,10 +6,23 @@ describe("FactoryMap - flow map", () => {
   describe("addFlowSegment", () => {
     it("adds flow segments", () => {
       const map = new FactoryMap();
+
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @   .   .
+      //
+      //  1   .   .   @
       map.placeUnit(new UnitMock(), 0, 0);
       map.placeUnit(new UnitMock(), 2, 1);
       map.placeUnit(new UnitMock(), 2, -1);
 
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @ > . > .
+      //      ~~~~~~~~v
+      //  1   .   .  ~@
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -22,6 +35,12 @@ describe("FactoryMap - flow map", () => {
       expect(map.getFlowNodeTargets(1, 0)).toIncludeSameMembers([[2, 0]]);
       expect(map.getFlowNodeTargets(2, 0)).toIncludeSameMembers([[2, 1]]);
 
+      //      0   1   2
+      // -1   .   .  ~@
+      //             ~^
+      //  0   @ > . >~.
+      //              v
+      //  1   .   .   @
       expect(
         map.addFlowSegment([
           [2, 0],
@@ -36,10 +55,23 @@ describe("FactoryMap - flow map", () => {
 
     it("returns false when the flow segment has an invalid start", () => {
       const map = new FactoryMap();
+
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   #   .   .
+      //
+      //  1   .   .   @
       map.placeUnit(new UnitMock(), 2, 1);
       map.placeUnit(new UnitMock(), 2, -1);
 
       // empty unit cell
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   # > . > .
+      //      ~~~~~~~~v
+      //  1   .   .  ~@
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -50,6 +82,12 @@ describe("FactoryMap - flow map", () => {
       ).toBeFalse();
 
       // empty non-unit (flow) cell
+      //      0   1   2
+      // -1   .   .  ~@
+      //             ~^
+      //  0   #   .  ~.
+      //
+      //  1   .   .   @
       expect(
         map.addFlowSegment([
           [2, 0],
@@ -60,9 +98,18 @@ describe("FactoryMap - flow map", () => {
 
     it("returns false when the flow segment has an invalid end", () => {
       const map = new FactoryMap();
+
+      //      0   1   2
+      //  0   @   .   .
+      //
+      //  1   .   .   #
       map.placeUnit(new UnitMock(), 0, 0);
 
       // empty unit cell
+      //      0   1   2
+      //  0   @ > . > .
+      //      ~~~~~~~~v
+      //  1   .   .  ~#
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -75,6 +122,13 @@ describe("FactoryMap - flow map", () => {
 
     it("returns false when the flow segment crosses an existing flow", () => {
       const map = new FactoryMap();
+
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       map.placeUnit(new UnitMock(), 0, 0);
       map.placeUnit(new UnitMock(), 2, 1);
       map.placeUnit(new UnitMock(), 2, -1);
@@ -85,6 +139,12 @@ describe("FactoryMap - flow map", () => {
         [2, 1],
       ]);
 
+      //      0   1   2
+      // -1   .   .  ~@
+      //             ~^
+      //  0   @ > . >~.
+      //      ~~~~~~~ v
+      //  1   .   .   @
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -94,6 +154,13 @@ describe("FactoryMap - flow map", () => {
         ]),
       ).toBeFalse();
 
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @ > . > .
+      //     ~v       v
+      //  1  ~. > . > @
+      //      ~~~~~~~~~
       expect(
         map.addFlowSegment([
           [0, 0],
@@ -107,6 +174,11 @@ describe("FactoryMap - flow map", () => {
     it("throws when the flow segment traverses through a unit cell", () => {
       const map = new FactoryMap();
 
+      //      0   1   2   3   4
+      //  0   # > . > .   .  ~#
+      //      ~~~~~~~~v      ~^
+      //  1   .   .  ~# > . >~.
+      //              ~~~~~~~
       expect(() =>
         map.addFlowSegment([
           [0, 0],
@@ -123,6 +195,10 @@ describe("FactoryMap - flow map", () => {
     it("throws when the flow segment is non-continuous", () => {
       const map = new FactoryMap();
 
+      //      0   1   2
+      //  0   #   .   .
+      //      ~~~~~~~~
+      //  1   .   .  ~#
       expect(() =>
         map.addFlowSegment([
           [0, 0],
@@ -133,39 +209,79 @@ describe("FactoryMap - flow map", () => {
 
     it("adds corresponding targets to the distribution", () => {
       const map = new FactoryMap();
-      const unit1 = new UnitMock(),
-        unit2 = new UnitMock(),
-        unit3 = new UnitMock();
-      map.placeUnit(unit1, 0, 0);
-      map.placeUnit(unit2, 2, 1);
-      map.placeUnit(unit3, 2, -1);
 
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @   .   .
+      //
+      //  1   .   .   @
+      const unit$0$0 = new UnitMock(),
+        unit$2$1 = new UnitMock(),
+        unit$2$_1 = new UnitMock();
+      map.placeUnit(unit$0$0, 0, 0);
+      map.placeUnit(unit$2$1, 2, 1);
+      map.placeUnit(unit$2$_1, 2, -1);
+
+      //      0   1   2
+      // -1   .   .   @
+      //
+      //  0   @ > . > .
+      //      ~~~~~~~~v
+      //  1   .   .  ~@
       map.addFlowSegment([
         [0, 0],
         [1, 0],
         [2, 0],
         [2, 1],
       ]);
+      expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$1)).toBe(1);
 
-      expect(FactoryMap.getTargetDistribution(unit1).get(unit2)).toBe(1);
-
+      //      0   1   2
+      // -1   .   .  ~@
+      //             ~^
+      //  0   @ > . >~.
+      //              v
+      //  1   .   .   @
       map.addFlowSegment([
         [2, 0],
         [2, -1],
       ]);
-
-      expect(FactoryMap.getTargetDistribution(unit1).get(unit2)).toBe(0.5);
-      expect(FactoryMap.getTargetDistribution(unit1).get(unit3)).toBe(0.5);
+      expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$1)).toBe(
+        0.5,
+      );
+      expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$_1)).toBe(
+        0.5,
+      );
     });
   });
 
   describe("deleteFlowBranchAt", () => {
     it.each([
+      //      0   1   2
+      //  0   @ > . > .
+      //      ~~~     v
+      //  1   .   .   @
       ["the start", 0, 0],
+
+      //      0   1   2
+      //  0   @ > . > .
+      //        ~~~~~ v
+      //  1   .   .   @
       ["the middle", 1, 0],
+
+      //      0   1   2
+      //  0   @ > . > .
+      //             ~v
+      //  1   .   .  ~@
       ["the end", 2, 1],
     ])("deletes the flow branch at %s", (_, x, y) => {
       const map = new FactoryMap();
+
+      //      0   1   2
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
       map.placeUnit(new UnitMock(), 0, 0);
       map.placeUnit(new UnitMock(), 2, 1);
       map.addFlowSegment([
@@ -190,12 +306,19 @@ describe("FactoryMap - flow map", () => {
 
     it("removes corresponding targets from the distribution", () => {
       const map = new FactoryMap();
-      const unit1 = new UnitMock(),
-        unit2 = new UnitMock(),
-        unit3 = new UnitMock();
-      map.placeUnit(unit1, 0, 0);
-      map.placeUnit(unit2, 2, 1);
-      map.placeUnit(unit3, 2, -1);
+
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
+      const unit$0$0 = new UnitMock(),
+        unit$2$1 = new UnitMock(),
+        unit$2$_1 = new UnitMock();
+      map.placeUnit(unit$0$0, 0, 0);
+      map.placeUnit(unit$2$1, 2, 1);
+      map.placeUnit(unit$2$_1, 2, -1);
       map.addFlowSegment([
         [0, 0],
         [1, 0],
@@ -207,26 +330,49 @@ describe("FactoryMap - flow map", () => {
         [2, -1],
       ]);
 
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //             ~v
+      //  1   .   .  ~@
       map.deleteFlowBranchAt(2, 1);
 
-      expect(FactoryMap.getTargetDistribution(unit1).has(unit2)).toBeFalse();
-      expect(FactoryMap.getTargetDistribution(unit1).get(unit3)).toBe(1);
+      expect(
+        FactoryMap.getTargetDistribution(unit$0$0).has(unit$2$1),
+      ).toBeFalse();
+      expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$_1)).toBe(1);
 
+      //      0   1   2
+      // -1   .   .  ~@
+      //             ~^
+      //  0   @ > . > .
+      //
+      //  1   .   .   @
       map.deleteFlowBranchAt(2, -1);
 
-      expect(FactoryMap.getTargetDistribution(unit1).has(unit3)).toBeFalse();
+      expect(
+        FactoryMap.getTargetDistribution(unit$0$0).has(unit$2$_1),
+      ).toBeFalse();
     });
   });
 
   describe("getAllFlowSegments", () => {
     it("finds all flow segments", () => {
       const map = new FactoryMap();
-      const unit1 = new UnitMock(),
-        unit2 = new UnitMock(),
-        unit3 = new UnitMock();
-      map.placeUnit(unit1, 0, 0);
-      map.placeUnit(unit2, 2, 1);
-      map.placeUnit(unit3, 2, -1);
+
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
+      const unit$0$0 = new UnitMock(),
+        unit$2$1 = new UnitMock(),
+        unit$2$_1 = new UnitMock();
+      map.placeUnit(unit$0$0, 0, 0);
+      map.placeUnit(unit$2$1, 2, 1);
+      map.placeUnit(unit$2$_1, 2, -1);
       map.addFlowSegment([
         [0, 0],
         [1, 0],
