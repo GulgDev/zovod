@@ -58,7 +58,7 @@ export class FactoryUnitGrid {
   }
 
   /**
-   * Retrieves the factory unit placed at the specified position.
+   * Retrieve the factory unit placed at the specified position.
    *
    * @returns The factory unit placed at the specified position, or `undefined` if there isn't one.
    */
@@ -69,7 +69,7 @@ export class FactoryUnitGrid {
   }
 
   /**
-   * Finds all factory units placed on the grid.
+   * Find all factory units placed on the grid.
    *
    * @returns An iterator of all placed factory units.
    */
@@ -78,7 +78,7 @@ export class FactoryUnitGrid {
   }
 
   /**
-   * Validates that a cell is a unit cell.
+   * Validate that a cell is a unit cell.
    *
    * @throws Will throw if the cell at the specified position is not a unit cell.
    *
