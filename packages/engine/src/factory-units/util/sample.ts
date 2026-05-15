@@ -1,3 +1,6 @@
+/**
+ * @internal
+ */
 export function sampleFrom<T>(distribution: ReadonlyMap<T, number>): T {
   if (distribution.size === 0)
     throw new Error("Cannot sample from an empty distribution");
