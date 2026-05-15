@@ -145,9 +145,9 @@ export class FlowGrid {
    * list of segments &mdash; directed paths of maximal length whose internal
    * vertices have in-degree and out-degree 1 within the flow.
    *
-   * @returns An iterator of flow segment point coordinate arrays.
+   * @yields The next flow segment as an array of points.
    */
-  *getAllFlowSegments(): IterableIterator<readonly Point[]> {
+  *getAllFlowSegments(): Generator<readonly Point[]> {
     for (const [x, y] of this.graph.getAllSegmentRoots()) {
       for (const successor of this.graph.getSuccessors(x, y)) {
         const points: Point[] = [[x, y], successor];

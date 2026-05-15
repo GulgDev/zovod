@@ -106,8 +106,8 @@ export class FactoryMap {
     return this.flowGrid.getFlowNodeTargets(x, y);
   }
 
-  getAllFlowSegments(): IterableIterator<readonly Point[]> {
-    return this.flowGrid.getAllFlowSegments();
+  *getAllFlowSegments(): Generator<readonly Point[]> {
+    yield* this.flowGrid.getAllFlowSegments();
   }
 
   private static targetDistributions = new WeakMap<
