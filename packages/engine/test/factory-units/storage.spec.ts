@@ -1,6 +1,6 @@
 import { when } from "jest-when";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type MockProxy, mockDeep } from "vitest-mock-extended";
+import { type MockProxy, mock } from "vitest-mock-extended";
 import { Storage } from "../../src/factory-units/storage";
 import type { ResourceKind } from "../../src/resource-kind";
 import { UnitMock } from "../util/unit-mock";
@@ -19,7 +19,7 @@ describe("Factory units - Storage", () => {
     let storage: Storage, sender: UnitMock, target: UnitMock;
 
     beforeEach(() => {
-      game = mockDeep<Game>();
+      game = mock<Game>();
 
       storage = new Storage(2);
 
