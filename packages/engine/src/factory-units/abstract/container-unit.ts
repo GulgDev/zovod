@@ -24,7 +24,7 @@ export abstract class ContainerUnit extends FactoryUnit {
    *
    * @returns An iterator of resource kinds.
    */
-  protected getContainedResources(): IterableIterator<ResourceKind> {
+  getContainedResources(): IterableIterator<ResourceKind> {
     return this.slots.values();
   }
 
