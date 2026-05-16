@@ -1,8 +1,8 @@
 import { when } from "jest-when";
 import { beforeEach, describe, expect, it } from "vitest";
 import { mock, type MockProxy } from "vitest-mock-extended";
-import { FlowBuilder } from "../src/factory-map/util/flow-builder";
-import { type FactoryMap } from "../src/factory-map";
+import { FlowBuilder } from "../../src/factory-map/util/flow-builder";
+import { type FactoryMap } from "../../src/factory-map";
 
 describe("FlowBuilder", () => {
   let factoryMap: MockProxy<FactoryMap>;
