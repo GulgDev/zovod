@@ -36,7 +36,7 @@ describe("Factory units - Market", () => {
       target.canAccept.mockReturnValue(true);
     });
 
-    it("accepts and stores a resource", () => {
+    it("accepts and stores resources", () => {
       expect(sender.send(resource)).toBeTrue();
 
       expect(market.availableSlotCount).toBe(0);
@@ -45,7 +45,7 @@ describe("Factory units - Market", () => {
       ]);
     });
 
-    it("accepts and sells a resource", () => {
+    it("accepts and sells resources", () => {
       sender.send(resource);
 
       market.update(game, 0.5);
