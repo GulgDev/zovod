@@ -14,4 +14,10 @@ export class UnitMock extends FactoryUnit {
   override send(resource: ResourceKind): boolean {
     return super.send(resource);
   }
+
+  override sendOneOf(
+    resources: ReadonlySet<ResourceKind>,
+  ): ResourceKind | undefined {
+    return super.sendOneOf(resources);
+  }
 }
