@@ -64,34 +64,39 @@ export class FlowBuilder {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           [x, y] = this.points.at(-1)!; // the point array will always have at least one element (the start)
 
+          const distanceFromTarget = dist(x, y, targetX, targetY);
+
           // Find the closest available neighbor
-          const [closest] = [
-            [-1, 0],
-            [0, -1],
-            [1, 0],
-            [0, 1],
-          ]
-            .map(([offsetX, offsetY]) => [x + offsetX, y + offsetY])
-            .filter(
+          const [closest] = (
+            [
+              [-1, 0],
+              [0, -1],
+              [1, 0],
+              [0, 1],
+            ] as const
+          )
+            .map(([offsetX, offsetY]) => [x + offsetX, y + offsetY] as const)
+            .map(
               ([neighborX, neighborY]) =>
+                [
+                  [neighborX, neighborY],
+                  dist(neighborX, neighborY, targetX, targetY),
+                ] as const,
+            )
+            .filter(
+              ([[neighborX, neighborY], neighborDistance]) =>
                 !this.map.getFlowNodeSource(neighborX, neighborY) &&
                 !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
-                dist(neighborX, neighborY, targetX, targetY) <
-                  dist(x, y, targetX, targetY),
+                neighborDistance < distanceFromTarget,
             )
-            .reduce<[[number, number] | undefined, number]>(
-              ([closestNeighbor, closestDistance], [neighborX, neighborY]) => {
-                const newDistance = dist(
-                  neighborX,
-                  neighborY,
-                  targetX,
-                  targetY,
-                );
-                return newDistance < closestDistance
-                  ? [[neighborX, neighborY], newDistance]
-                  : [closestNeighbor, closestDistance];
-              },
-              [undefined /* coordinates */, Infinity /* distance */], // closest point
+            .reduce(
+              (
+                [closestNeighbor, closestDistance],
+                [currentNeighbor, currentDistance],
+              ) =>
+                currentDistance < closestDistance
+                  ? [currentNeighbor, currentDistance]
+                  : [closestNeighbor, closestDistance],
             );
           if (!closest) break;
 
