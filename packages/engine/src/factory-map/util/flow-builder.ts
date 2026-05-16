@@ -35,11 +35,11 @@ export class FlowBuilder {
         [x, y] = this.points.at(-1)!;
       }
 
-      const dx = Math.abs(x - targetX),
-        dy = Math.abs(y - targetY);
+      const dx = Math.abs(targetX - x),
+        dy = Math.abs(targetY - y);
 
-      const incrementX = Math.sign(x - targetX),
-        incrementY = Math.sign(y - targetY);
+      const incrementX = Math.sign(targetX - x),
+        incrementY = Math.sign(targetY - y);
 
       let error = 0;
       for (let i = 0; i < dx + dy; ++i) {
