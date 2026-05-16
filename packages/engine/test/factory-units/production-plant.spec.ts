@@ -77,17 +77,17 @@ describe("Factory units - Production plant", () => {
       expect(target.accept).toHaveBeenCalledWith(producedResource);
     });
 
-    it("does not accept a resource of wrong kind", () => {
+    it("does not accept resources of wrong kind", () => {
       expect(sender.send(producedResource)).toBeFalse();
     });
 
-    it("does not accept a resource when not working", () => {
+    it("does not accept resources when not working", () => {
       vi.mocked(Inventory.getAssignedWorkforce).mockReturnValueOnce(0);
 
       expect(sender.send(consumedResource)).toBeFalse();
     });
 
-    it("does not accept a resource while in process of producing", () => {
+    it("does not accept resources while in process of producing", () => {
       sender.send(consumedResource);
 
       expect(sender.send(consumedResource)).toBeFalse();
