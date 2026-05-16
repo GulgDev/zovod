@@ -31,21 +31,66 @@ export abstract class FactoryUnit {
   protected abstract accept(resource: ResourceKind): void;
 
   /**
-   * Send a resource to a randomly chosen target unit.
+   * Check whether a resource can be sent to a specific unit.
+   *
+   * @returns `false` if the target unit is paused or cannot accept the resource, otherwise `true`.
+   */
+  private static canSendTo(target: FactoryUnit, resource: ResourceKind) {
+    return !target.paused && target.canAccept(resource);
+  }
+
+  /**
+   * Try to send a resource to a randomly chosen target unit.
+   *
+   * @returns `true` if the resource was successfully sent to an available target, `false` if no target can accept it.
+   *
+   * @see {@link FactoryMap.setTargetDistribution} for more information on the target distribution.
+   * @see {@link sendOneOf} for underlying implementation.
+   */
+  protected send(resource: ResourceKind): boolean {
+    return this.sendOneOf(new Set([resource])) === resource;
+  }
+
+  /**
+   * Send the most demanded of the specified resources to a randomly chosen
+   * target unit. The resource is selected based on the amount of targets that
+   * can accept it.
+   *
+   * @returns The sent resource kind, or `undefined` if no target can accept any of the specified resources.
    *
    * @see {@link FactoryMap.setTargetDistribution} for more information on the target distribution.
    */
-  protected send(resource: ResourceKind): boolean {
-    const distribution = new Map(
-      FactoryMap.getTargetDistribution(this)
-        .entries()
-        .filter(([target]) => !target.paused && target.canAccept(resource)),
-    );
-    if (distribution.size === 0) return false;
+  protected sendOneOf(
+    resourceKinds: ReadonlySet<ResourceKind>,
+  ): ResourceKind | undefined {
+    // Find a resource kind that can be accepted by the most targets
+    const entryWithMaxTargets = resourceKinds
+      .values()
+      .map(
+        (resourceKind) =>
+          [
+            resourceKind,
+            new Map(
+              FactoryMap.getTargetDistribution(this)
+                .entries()
+                .filter(([target]) =>
+                  FactoryUnit.canSendTo(target, resourceKind),
+                ),
+            ),
+          ] as const,
+      )
+      .filter(([, distribution]) => distribution.size > 0)
+      .reduce((entryWithMaxTargets, currentEntry) =>
+        currentEntry[1].size > entryWithMaxTargets[1].size
+          ? currentEntry
+          : entryWithMaxTargets,
+      );
+    if (!entryWithMaxTargets) return undefined; // there is no resource kind that can be accepted by any of the targets
 
+    const [resourceKind, distribution] = entryWithMaxTargets;
     const target = sampleFrom(distribution);
-    target.accept(resource);
-    return true;
+    target.accept(resourceKind);
+    return resourceKind;
   }
 
   protected abstract doUpdate(game: Game, deltaTime: number): void;
