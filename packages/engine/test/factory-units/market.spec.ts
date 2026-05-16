@@ -1,6 +1,6 @@
 import { when } from "jest-when";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { type MockProxy, mockDeep } from "vitest-mock-extended";
+import { type DeepMockProxy, mockDeep } from "vitest-mock-extended";
 import { Market } from "../../src/factory-units/market";
 import type { ResourceKind } from "../../src/resource-kind";
 import { UnitMock } from "../util/unit-mock";
@@ -13,7 +13,7 @@ const resource: ResourceKind = "resource";
 
 describe("Factory units - Market", () => {
   describe("life cycle", () => {
-    let game: MockProxy<Game>;
+    let game: DeepMockProxy<Game>;
 
     let market: Market, sender: UnitMock, target: UnitMock;
 
