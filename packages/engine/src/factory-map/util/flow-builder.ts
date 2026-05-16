@@ -42,7 +42,7 @@ export class FlowBuilder {
         incrementY = Math.sign(targetY - y);
 
       let error = 0;
-      for (let i = 0; i < dx + dy; ++i) {
+      while (!(x === targetX && y === targetY)) {
         if (Math.abs(error + dy) < Math.abs(error - dx)) {
           // Error will be smaller moving on X
           x += incrementX;
@@ -64,8 +64,6 @@ export class FlowBuilder {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           [x, y] = this.points.at(-1)!; // the point array will always have at least one element (the start)
 
-          const distanceFromTarget = dist(x, y, targetX, targetY);
-
           // Find the closest available neighbor
           const [closest] = (
             [
@@ -76,18 +74,21 @@ export class FlowBuilder {
             ] as const
           )
             .map(([offsetX, offsetY]) => [x + offsetX, y + offsetY] as const)
+            .filter(
+              ([neighborX, neighborY]) =>
+                !this.map.getFlowNodeSource(neighborX, neighborY) &&
+                !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
+                // Ignore points that are already in the path
+                !this.points.some(
+                  ([x, y]) => x === neighborX && y === neighborY,
+                ),
+            )
             .map(
               ([neighborX, neighborY]) =>
                 [
                   [neighborX, neighborY],
                   dist(neighborX, neighborY, targetX, targetY),
                 ] as const,
-            )
-            .filter(
-              ([[neighborX, neighborY], neighborDistance]) =>
-                !this.map.getFlowNodeSource(neighborX, neighborY) &&
-                !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
-                neighborDistance < distanceFromTarget,
             )
             .reduce<readonly [Point | undefined, number]>(
               (
