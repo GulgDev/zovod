@@ -6,10 +6,13 @@ export class Storage extends ContainerUnit {
   renewedResourceKind: ResourceKind | undefined;
 
   protected doUpdate(game: Game): void {
-    const resource = this.pick();
-    if (resource !== undefined && this.send(resource)) this.drop(resource);
+    let sentResource;
+    while (
+      (sentResource = this.sendOneOf(new Set(this.getContainedResources())))
+    )
+      this.drop(sentResource);
 
-    if (resource === undefined && this.renewedResourceKind !== undefined) {
+    if (this.getContainedResources().size === 0 && this.renewedResourceKind !== undefined) {
       // the storage is empty, try to renew resources
 
       if (game.inventory.buyResource(this.renewedResourceKind))

@@ -7,25 +7,38 @@ import { FactoryUnit } from "./factory-unit";
  */
 export abstract class ContainerUnit extends FactoryUnit {
   /**
-   * An array of stored resources.
+   * A map of resource kinds to the amount of slots occupied by resources of
+   * those kinds.
    */
-  private slots: ResourceKind[] = [];
+  private resources = new Map<ResourceKind, number>();
 
-  constructor(private readonly slotCount: number) {
-    super();
-  }
+  /**
+   * @see {@link availableSlotCount}
+   */
+  private remainingSlots: number;
 
+  /**
+   * The amount of slots that are currently available for storing resources.
+   */
   get availableSlotCount(): number {
-    return this.slotCount - this.slots.length;
+    return this.remainingSlots;
   }
 
   /**
-   * Retrieve all resources currently stored.
+   * @param slotCount The maximum total amount of resources that the container can store.
+   */
+  constructor(private readonly slotCount: number) {
+    super();
+    this.remainingSlots = slotCount;
+  }
+
+  /**
+   * Retrieve all resource kinds currently stored.
    *
    * @returns An iterator of resource kinds.
    */
-  getContainedResources(): IterableIterator<ResourceKind> {
-    return this.slots.values();
+  getContainedResources(): ReadonlySet<ResourceKind> {
+    return new Set(this.resources.keys());
   }
 
   /**
@@ -34,18 +47,11 @@ export abstract class ContainerUnit extends FactoryUnit {
    * @throws Will throw if the container does not have any available slots.
    */
   protected put(resource: ResourceKind): void {
-    if (this.availableSlotCount === 0)
+    if (this.remainingSlots === 0)
       throw new Error("The container is already full");
-    this.slots.push(resource);
-  }
 
-  /**
-   * Pick a random resource from the container's slots.
-   *
-   * @returns An arbitrarily chosen resource or `undefined` if the container is empty.
-   */
-  protected pick(): ResourceKind | undefined {
-    return this.slots[0];
+    --this.remainingSlots;
+    this.resources.set(resource, (this.resources.get(resource) ?? 0) + 1);
   }
 
   /**
@@ -54,16 +60,21 @@ export abstract class ContainerUnit extends FactoryUnit {
    * @throws Will throw if there is no resource of the specified kind in the container's slots.
    */
   protected drop(resource: ResourceKind): void {
-    const i = this.slots.indexOf(resource);
-    if (i === -1) throw new Error("No resource to drop");
-    this.slots.splice(i, 1);
+    let count = this.resources.get(resource);
+    if (count === undefined) throw new Error("No resource to drop");
+
+    ++this.remainingSlots;
+    if (--count === 0)
+      this.resources.delete(resource); // don't store 0 in the map
+    else this.resources.set(resource, count);
   }
 
   /**
    * Clear all of the container's slots.
    */
   protected clear(): void {
-    this.slots.length = 0;
+    this.resources.clear();
+    this.remainingSlots = this.slotCount; // reset the remaining slots
   }
 
   protected canAccept(): boolean {
