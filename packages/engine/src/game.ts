@@ -27,7 +27,10 @@ export class Game extends EventTarget {
     this.start();
   }
 
-  private lastFrameTimestamp: DOMHighResTimeStamp = 0;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  private lastFrameTimestamp: DOMHighResTimeStamp = document.timeline
+    .currentTime! as number; // document.timeline is always active
+
   private frameRequestCallback: FrameRequestCallback = (timestamp) => {
     requestAnimationFrame(this.frameRequestCallback);
 
@@ -51,8 +54,6 @@ export class Game extends EventTarget {
 
   /** Start the game loop. */
   private start(): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.lastFrameTimestamp = document.timeline.currentTime! as number; // document.timeline is always active
     requestAnimationFrame(this.frameRequestCallback);
   }
 }
