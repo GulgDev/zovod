@@ -83,10 +83,13 @@ export abstract class FactoryUnit {
           ] as const,
       )
       .filter(([, distribution]) => distribution.size > 0)
-      .reduce((entryWithMaxTargets, currentEntry) =>
-        currentEntry[1].size > entryWithMaxTargets[1].size
-          ? currentEntry
-          : entryWithMaxTargets,
+      .reduce<readonly [ResourceKind, Map<FactoryUnit, number>] | undefined>(
+        (entryWithMaxTargets, currentEntry) =>
+          !entryWithMaxTargets ||
+          currentEntry[1].size > entryWithMaxTargets[1].size
+            ? currentEntry
+            : entryWithMaxTargets,
+        undefined,
       );
     if (!entryWithMaxTargets) return undefined; // there is no resource kind that can be accepted by any of the targets
 

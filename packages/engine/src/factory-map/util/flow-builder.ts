@@ -89,7 +89,7 @@ export class FlowBuilder {
                 !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
                 neighborDistance < distanceFromTarget,
             )
-            .reduce(
+            .reduce<readonly [Point | undefined, number]>(
               (
                 [closestNeighbor, closestDistance],
                 [currentNeighbor, currentDistance],
@@ -97,6 +97,7 @@ export class FlowBuilder {
                 currentDistance < closestDistance
                   ? [currentNeighbor, currentDistance]
                   : [closestNeighbor, closestDistance],
+              [undefined /* coordinates */, Infinity /* distance */], // closest point
             );
           if (!closest) break;
 
