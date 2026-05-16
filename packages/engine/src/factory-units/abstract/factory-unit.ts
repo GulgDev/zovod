@@ -35,7 +35,10 @@ export abstract class FactoryUnit {
    *
    * @returns `false` if the target unit is paused or cannot accept the resource, otherwise `true`.
    */
-  private static canSendTo(target: FactoryUnit, resource: ResourceKind) {
+  private static canSendTo(
+    target: FactoryUnit,
+    resource: ResourceKind,
+  ): boolean {
     return !target.paused && target.canAccept(resource);
   }
 
