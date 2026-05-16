@@ -66,5 +66,13 @@ describe("Factory units - Market", () => {
 
       expect(sender.send(resource)).toBeFalse();
     });
+
+    it("does not send resources", () => {
+      sender.send(resource);
+
+      market.update(game, 1);
+
+      expect(target.accept).not.toHaveBeenCalled();
+    });
   });
 });
