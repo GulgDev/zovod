@@ -130,5 +130,18 @@ describe("Factory units - Market", () => {
 
       expect(target.accept).not.toHaveBeenCalled();
     });
+
+    it("sells resources periodically", () => {
+      sender.send(resourceA);
+      market.update(game, 1);
+
+      sender.send(resourceA);
+      market.update(game, 1);
+
+      expect(market.availableSlotCount).toBe(2);
+      expect(Array.from(market.getContainedResources())).toBeEmpty();
+      expect(game.inventory.sellResource).toHaveBeenCalledTimes(2);
+      expect(game.inventory.sellResource).toHaveBeenCalledWith(resourceA, 1);
+    });
   });
 });
