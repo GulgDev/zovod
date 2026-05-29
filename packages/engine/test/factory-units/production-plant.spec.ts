@@ -77,6 +77,17 @@ describe("Factory units - Production plant", () => {
       expect(target.accept).toHaveBeenCalledWith(producedResource);
     });
 
+    it("waits for the target to be able to accept before sending", () => {
+      expect(sender.send(consumedResource)).toBeTrue();
+
+      target.canAccept.mockReturnValueOnce(false);
+      plant.update(game, 1);
+      expect(target.accept).not.toHaveBeenCalled();
+
+      plant.update(game, 0);
+      expect(target.accept).toHaveBeenCalledWith(producedResource);
+    });
+
     it("does not accept resources of wrong kind", () => {
       expect(sender.send(producedResource)).toBeFalse();
     });
@@ -96,6 +107,19 @@ describe("Factory units - Production plant", () => {
       expect(sender.send(consumedResource)).toBeFalse();
 
       plant.update(game, 0.5);
+      expect(sender.send(consumedResource)).toBeTrue();
+    });
+
+    it("does not accept more resources until free", () => {
+      target.canAccept.mockReturnValue(false);
+
+      expect(sender.send(consumedResource)).toBeTrue();
+      
+      plant.update(game, 1);
+      expect(sender.send(consumedResource)).toBeFalse();
+      
+      target.canAccept.mockReturnValue(true);
+      plant.update(game, 0);
       expect(sender.send(consumedResource)).toBeTrue();
     });
   });
