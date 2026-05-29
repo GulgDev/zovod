@@ -9,7 +9,8 @@ import type { Game } from "../../src/game"; // used for mocks
 
 vi.mock("../../src/factory-map");
 
-const resource: ResourceKind = "resource";
+const resourceA: ResourceKind = "a",
+  resourceB: ResourceKind = "b";
 
 describe("Factory units - Market", () => {
   describe("life cycle", () => {
@@ -20,7 +21,7 @@ describe("Factory units - Market", () => {
     beforeEach(() => {
       game = mockDeep<Game>();
 
-      market = new Market(1, 1);
+      market = new Market(2, 1);
 
       sender = new UnitMock();
       target = new UnitMock();
@@ -36,39 +37,94 @@ describe("Factory units - Market", () => {
       target.canAccept.mockReturnValue(true);
     });
 
-    it("accepts and stores resources", () => {
-      expect(sender.send(resource)).toBeTrue();
+    it("accepts and stores different resources kind", () => {
+      expect(sender.send(resourceA)).toBeTrue();
+
+      expect(market.availableSlotCount).toBe(1);
+      expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
+        [resourceA, 1],
+      ]);
+
+      expect(sender.send(resourceB)).toBeTrue();
 
       expect(market.availableSlotCount).toBe(0);
       expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
-        resource,
+        [resourceA, 1],
+        [resourceB, 1],
       ]);
     });
 
-    it("accepts and sells resources", () => {
-      sender.send(resource);
+    it("accepts and stores same resource kind", () => {
+      expect(sender.send(resourceA)).toBeTrue();
+
+      expect(market.availableSlotCount).toBe(1);
+      expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
+        [resourceA, 1],
+      ]);
+
+      expect(sender.send(resourceA)).toBeTrue();
+
+      expect(market.availableSlotCount).toBe(0);
+      expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
+        [resourceA, 2],
+      ]);
+    });
+
+    it("accepts and sells different resource kinds", () => {
+      sender.send(resourceA);
+      sender.send(resourceB);
 
       market.update(game, 0.5);
+
+      expect(market.availableSlotCount).toBe(0);
       expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
-        resource,
+        [resourceA, 1],
+        [resourceB, 1],
       ]);
       expect(game.inventory.sellResource).not.toHaveBeenCalled();
 
       market.update(game, 0.5);
+
+      expect(market.availableSlotCount).toBe(2);
       expect(Array.from(market.getContainedResources())).toBeEmpty();
+
+      expect(game.inventory.sellResource).toHaveBeenCalledTimes(2);
+      expect(game.inventory.sellResource).toHaveBeenCalledWith(resourceA, 1);
+      expect(game.inventory.sellResource).toHaveBeenCalledWith(resourceB, 1);
+    });
+
+    it("accepts and sells same resource kind", () => {
+      sender.send(resourceA);
+      sender.send(resourceA);
+
+      market.update(game, 0.5);
+
+      expect(market.availableSlotCount).toBe(0);
+      expect(Array.from(market.getContainedResources())).toIncludeSameMembers([
+        [resourceA, 2],
+      ]);
+      expect(game.inventory.sellResource).not.toHaveBeenCalled();
+
+      market.update(game, 0.5);
+
+      expect(market.availableSlotCount).toBe(2);
+      expect(Array.from(market.getContainedResources())).toBeEmpty();
+
       expect(game.inventory.sellResource).toHaveBeenCalledExactlyOnceWith(
-        resource,
+        resourceA,
+        2,
       );
     });
 
     it("does not accept resources when full", () => {
-      sender.send(resource);
+      sender.send(resourceA);
+      sender.send(resourceB);
 
-      expect(sender.send(resource)).toBeFalse();
+      expect(sender.send(resourceA)).toBeFalse();
     });
 
     it("does not send resources", () => {
-      sender.send(resource);
+      sender.send(resourceA);
 
       market.update(game, 1);
 

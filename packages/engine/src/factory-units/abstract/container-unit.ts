@@ -33,12 +33,11 @@ export abstract class ContainerUnit extends FactoryUnit {
   }
 
   /**
-   * Retrieve all resource kinds currently stored.
-   *
-   * @returns An iterator of resource kinds.
+   * Retrieve a map of currently stored resource kinds and their respective
+   * resource amounts.
    */
-  getContainedResources(): ReadonlySet<ResourceKind> {
-    return new Set(this.resources.keys());
+  getContainedResources(): ReadonlyMap<ResourceKind, number> {
+    return this.resources;
   }
 
   /**
