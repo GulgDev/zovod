@@ -20,15 +20,18 @@ export class ProductionPlant extends FactoryUnit {
 
   private productionTimer = new Timer();
 
+  /**
+   * Determines whether there's currently a resource that is awaiting to be sent
+   * whenever there is a target available.
+   */
+  private pending = false;
+
   protected canAccept(resource: ResourceKind): boolean {
-    return (
-      this.isWorking &&
-      this.productionTimer.expired &&
-      resource === this.consumedKind
-    );
+    return this.isWorking && !this.pending && resource === this.consumedKind;
   }
 
   protected accept(): void {
+    this.pending = true;
     this.productionTimer.reset(
       this.throughputPerWorkforceUnit * Inventory.getAssignedWorkforce(this),
     );
@@ -37,7 +40,10 @@ export class ProductionPlant extends FactoryUnit {
   protected doUpdate(_game: Game, deltaTime: number): void {
     if (!this.isWorking) return;
 
-    if (this.productionTimer.update(deltaTime)) this.send(this.producedKind);
+    this.productionTimer.update(deltaTime);
+    if (this.productionTimer.expired && this.pending) {
+      if (this.send(this.producedKind)) this.pending = false;
+    }
   }
 
   override remove(): void {
