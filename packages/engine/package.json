@@ -1,6 +1,5 @@
 {
   "name": "@zovod/engine",
-  "version": "0.0.1",
   "private": true,
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js"
