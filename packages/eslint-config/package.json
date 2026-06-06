@@ -1,0 +1,7 @@
+{
+  "name": "@zovod/eslint-config",
+  "private": "true",
+  "exports": {
+    "./base": "./eslint.config.base.mjs"
+  }
+}
