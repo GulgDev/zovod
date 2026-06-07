@@ -4,7 +4,7 @@
   "packageManager": "pnpm@11.5.2",
   "scripts": {
     "build": "turbo run build",
-    "lint": "turbo run check-types lint",
+    "lint": "turbo run check lint",
     "dev": "turbo run dev",
     "test": "vitest run",
     "test:watch": "vitest --watch"

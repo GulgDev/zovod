@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
-    "check-types": "tsc --noEmit",
+    "check": "tsc --noEmit",
     "lint": "eslint src",
     "dev": "tsc --watch"
   },

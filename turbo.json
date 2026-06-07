@@ -4,8 +4,8 @@
     "build": {
       "outputs": ["dist/**", "*.tsbuildinfo"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "check": {
+      "dependsOn": ["^check"]
     },
     "lint": {
       "dependsOn": ["^lint"]
