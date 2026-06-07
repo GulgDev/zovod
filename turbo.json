@@ -2,7 +2,8 @@
   "$schema": "https://turborepo.dev/schema.json",
   "tasks": {
     "build": {
-      "outputs": ["dist/**", "*.tsbuildinfo"]
+      "outputs": ["dist/**", "*.tsbuildinfo"],
+      "env": ["VITE_BASE_PATH"]
     },
     "check": {
       "dependsOn": ["^check"]
