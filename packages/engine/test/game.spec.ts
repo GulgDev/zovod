@@ -39,7 +39,7 @@ describe("Game", () => {
     expect(unit.doUpdate).toHaveBeenCalledExactlyOnceWith(game, 2);
   });
 
-  it("dispatched the update event with the corresponding deltaTime values", () => {
+  it("dispatches the update event with the corresponding deltaTime values", () => {
     const game = new Game(inventory);
 
     const listenerMock = vi.fn<(this: Game, ev: GameUpdateEvent) => void>();
