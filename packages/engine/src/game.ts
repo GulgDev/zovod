@@ -58,6 +58,7 @@ export class Game extends EventTarget {
   }
 }
 
+// Typed events
 export interface Game {
   addEventListener<K extends keyof GameEventMap>(
     type: K,
