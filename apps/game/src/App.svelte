@@ -1,7 +1,7 @@
 <script lang="ts">
-  import GameScene from "./lib/GameScene.svelte";
+  import FactoryMap from "./lib/factory-map/FactoryMap.svelte";
   import UIOverlay from "./lib/ui/UIOverlay.svelte";
 </script>
 
-<GameScene></GameScene>
+<FactoryMap></FactoryMap>
 <UIOverlay></UIOverlay>
