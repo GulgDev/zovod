@@ -45,10 +45,10 @@
 
   <!-- Units -->
   <FactoryUnit x={0} y={0} unit={{ active: false } as any} />
-  <FactoryUnit x={1} y={0} unit={{ active: true } as any} />
-  <FactoryUnit x={2} y={0} unit={{ active: false } as any} />
-  <FactoryUnit x={0} y={1} unit={{ active: true } as any} />
-  <FactoryUnit x={1} y={1} unit={{ active: false } as any} />
   <FactoryUnit x={2} y={1} unit={{ active: true } as any} />
+  <FactoryUnit x={4} y={0} unit={{ active: false } as any} />
+  <FactoryUnit x={0} y={2} unit={{ active: true } as any} />
+  <FactoryUnit x={2} y={3} unit={{ active: false } as any} />
+  <FactoryUnit x={4} y={2} unit={{ active: true } as any} />
   <use href="#grid-tile" filter="url(#glow)" />
 </svg>
