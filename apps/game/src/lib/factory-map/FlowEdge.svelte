@@ -77,7 +77,7 @@
       `${cx + FLOW_EDGE_RADIUS * UNIT_VECTORS[to][0]} ${cy + FLOW_EDGE_RADIUS * UNIT_VECTORS[to][1]} ` +
       // segment from round part to ending edge
       `L ${x1} ${y1}`}
-  fill="transparent"
+  fill="none"
   stroke="#f0d8aa"
   stroke-linecap="round"
   stroke-width="0.04"

@@ -15,7 +15,7 @@
     <use
       id="grid-tile-empty"
       href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
-      style:--fill="transparent"
+      style:--fill="none"
       style:--stroke="#f7eacd"
     />
 
