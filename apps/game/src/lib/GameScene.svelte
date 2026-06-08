@@ -26,30 +26,6 @@
   preserveAspectRatio="xMinYMin slice"
 >
   <defs>
-    <!--
-      SVG doesn't support inset borders, so we use a hack here: define a
-      shape, and use it as its own clip path, doubling the stroke width.
-    -->
-    <rect
-      id="grid-tile-shape"
-      width={TILE_SIZE}
-      height={TILE_SIZE}
-      rx={TILE_BORDER_RADIUS}
-      ry={TILE_BORDER_RADIUS}
-    />
-    <clipPath id="grid-tile-clip">
-      <use href="#grid-tile-shape" />
-    </clipPath>
-
-    <use
-      id="grid-tile-empty"
-      href="#grid-tile-shape"
-      clip-path="url(#grid-tile-clip)"
-      fill="transparent"
-      stroke="#f7eacd"
-      stroke-width={TILE_BORDER_SIZE * 2}
-    />
-
     <filter id="glow">
       <!-- inner shadow -->
       <feGaussianBlur stdDeviation={TILE_SIZE * 0.1} result="offset-blur" />
@@ -73,10 +49,12 @@
     </filter>
 
     <use
-      id="grid-tile"
-      href="#grid-tile-shape"
-      clip-path="url(#grid-tile-clip)"
-      stroke-width={TILE_BORDER_SIZE * 2}
+      id="grid-tile-empty"
+      href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
+      width={TILE_SIZE}
+      height={TILE_SIZE}
+      style:--fill="transparent"
+      style:--stroke="#f7eacd"
     />
 
     <pattern
