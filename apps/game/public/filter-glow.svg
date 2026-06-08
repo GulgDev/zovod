@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="filter-glow-green">
+      <!-- inner shadow -->
+      <feGaussianBlur stdDeviation="0.04" result="offset-blur" />
+      <feComposite
+        operator="out"
+        in="SourceGraphic"
+        in2="offset-blur"
+        result="inverse"
+      />
+      <feFlood flood-color="#d7e088" result="color" />
+      <feComposite operator="in" in="color" in2="inverse" result="shadow" />
+      <feComposite operator="over" in="shadow" in2="SourceGraphic" />
+
+      <!-- outer shadow -->
+      <feDropShadow
+        dx="0"
+        dy="0"
+        stdDeviation="0.04"
+        flood-color="#d7e088"
+        flood-opacity="0.6"
+      />
+    </filter>
+
+    <filter id="filter-glow-red">
+      <!-- inner shadow -->
+      <feGaussianBlur stdDeviation="0.04" result="offset-blur" />
+      <feComposite
+        operator="out"
+        in="SourceGraphic"
+        in2="offset-blur"
+        result="inverse"
+      />
+      <feFlood flood-color="#ffbcaa" result="color" />
+      <feComposite operator="in" in="color" in2="inverse" result="shadow" />
+      <feComposite operator="over" in="shadow" in2="SourceGraphic" />
+
+      <!-- outer shadow -->
+      <feDropShadow
+        dx="0"
+        dy="0"
+        stdDeviation="0.04"
+        flood-color="#ffbcaa"
+        flood-opacity="0.6"
+      />
+    </filter>
+  </defs>
+</svg>

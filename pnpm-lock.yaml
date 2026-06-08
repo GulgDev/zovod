@@ -51,6 +51,9 @@ importers:
       '@types/node':
         specifier: ^24.12.3
         version: 24.13.1
+      '@zovod/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
       '@zovod/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config

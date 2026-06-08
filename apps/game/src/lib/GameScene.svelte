@@ -1,4 +1,6 @@
 <script lang="ts">
+  import FactoryUnit from "./FactoryUnit.svelte";
+
   // Sizes and offsets
   const TILE_SIZE = 1,
     TILE_GAP = TILE_SIZE * 0.45;
@@ -22,28 +24,6 @@
   preserveAspectRatio="xMinYMin slice"
 >
   <defs>
-    <filter id="glow">
-      <!-- inner shadow -->
-      <feGaussianBlur stdDeviation={TILE_SIZE * 0.1} result="offset-blur" />
-      <feComposite
-        operator="out"
-        in="SourceGraphic"
-        in2="offset-blur"
-        result="inverse"
-      />
-      <feFlood flood-color="#d7e088" result="color" />
-      <feComposite operator="in" in="color" in2="inverse" result="shadow" />
-      <feComposite operator="over" in="shadow" in2="SourceGraphic" />
-
-      <feDropShadow
-        dx="0"
-        dy="0"
-        stdDeviation={TILE_SIZE * 0.04}
-        flood-color="#d7e088"
-        flood-opacity="0.6"
-      />
-    </filter>
-
     <use
       id="grid-tile-empty"
       href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
@@ -78,5 +58,6 @@
   <rect fill="url(#background-grid-pattern)" width="100%" height="100%" />
 
   <!-- Units -->
+  <FactoryUnit x={0} y={0} unit={{ active: false } as any} />
   <use href="#grid-tile" filter="url(#glow)" />
 </svg>
