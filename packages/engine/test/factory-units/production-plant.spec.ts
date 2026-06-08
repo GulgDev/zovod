@@ -15,7 +15,7 @@ const consumedResource: ResourceKind = "consumed",
   producedResource: ResourceKind = "produced";
 
 describe("Factory units - Production plant", () => {
-  describe("isWorking", () => {
+  describe("active", () => {
     it("set to true when the assigned workforce meets the requirment", () => {
       const plant = new ProductionPlant(
         consumedResource,
@@ -25,7 +25,7 @@ describe("Factory units - Production plant", () => {
       );
 
       vi.mocked(Inventory.getAssignedWorkforce).mockReturnValueOnce(2);
-      expect(plant.isWorking).toBeTrue();
+      expect(plant.active).toBeTrue();
     });
 
     it("set to false when the assigned workforce does not meet the requirment", () => {
@@ -37,7 +37,7 @@ describe("Factory units - Production plant", () => {
       );
 
       vi.mocked(Inventory.getAssignedWorkforce).mockReturnValueOnce(1);
-      expect(plant.isWorking).toBeFalse();
+      expect(plant.active).toBeFalse();
     });
   });
 
@@ -114,10 +114,10 @@ describe("Factory units - Production plant", () => {
       target.canAccept.mockReturnValue(false);
 
       expect(sender.send(consumedResource)).toBeTrue();
-      
+
       plant.update(game, 1);
       expect(sender.send(consumedResource)).toBeFalse();
-      
+
       target.canAccept.mockReturnValue(true);
       plant.update(game, 0);
       expect(sender.send(consumedResource)).toBeTrue();

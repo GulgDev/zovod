@@ -14,8 +14,11 @@ export class ProductionPlant extends FactoryUnit {
     super();
   }
 
-  get isWorking(): boolean {
-    return Inventory.getAssignedWorkforce(this) >= this.requiredWorkforceUnits;
+  override get active(): boolean {
+    return (
+      super.active &&
+      Inventory.getAssignedWorkforce(this) >= this.requiredWorkforceUnits
+    );
   }
 
   private productionTimer = new Timer();
@@ -27,7 +30,7 @@ export class ProductionPlant extends FactoryUnit {
   private pending = false;
 
   protected canAccept(resource: ResourceKind): boolean {
-    return this.isWorking && !this.pending && resource === this.consumedKind;
+    return !this.pending && resource === this.consumedKind;
   }
 
   protected accept(): void {
@@ -38,8 +41,6 @@ export class ProductionPlant extends FactoryUnit {
   }
 
   protected doUpdate(_game: Game, deltaTime: number): void {
-    if (!this.isWorking) return;
-
     this.productionTimer.update(deltaTime);
     if (this.productionTimer.expired && this.pending) {
       if (this.send(this.producedKind)) this.pending = false;

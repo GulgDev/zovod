@@ -39,7 +39,7 @@ export abstract class FactoryUnit {
     target: FactoryUnit,
     resource: ResourceKind,
   ): boolean {
-    return !target.paused && target.canAccept(resource);
+    return target.active && target.canAccept(resource);
   }
 
   /**
@@ -102,10 +102,37 @@ export abstract class FactoryUnit {
   protected abstract doUpdate(game: Game, deltaTime: number): void;
 
   /**
-   * Whether the factory unit is currently paused and does not accept resources,
-   * perform simulation steps and any other actions.
+   * Whether the factory unit is currently active and participates in update
+   * cycles.
    */
-  paused = false;
+  get active(): boolean {
+    return !this.paused;
+  }
+
+  private paused = false;
+
+  /**
+   * Pause the factory unit. Paused factory units do not accept resources or
+   * perform simulation steps.
+   *
+   * @see {@link resume}
+   */
+  pause(): void {
+    this.paused = true;
+  }
+
+  /**
+   * Resume the factory unit and allow it to accept resources and perform
+   * simulation steps.
+   *
+   * Note that even if the factory unit is not paused, it can be inactive due to
+   * other reasons.
+   *
+   * @see {@link pause}
+   */
+  resume(): void {
+    this.paused = false;
+  }
 
   /**
    * Perform a simulation step on the factory unit. If {@link paused} is set to
@@ -115,7 +142,7 @@ export abstract class FactoryUnit {
    * @param deltaTime - Time (in seconds) passed since the last game update.
    */
   update(game: Game, deltaTime: number): void {
-    if (!this.paused) this.doUpdate(game, deltaTime);
+    if (this.active) this.doUpdate(game, deltaTime);
   }
 
   /**
