@@ -1,20 +1,6 @@
 <script lang="ts">
   import FactoryUnit from "./FactoryUnit.svelte";
-
-  // Sizes and offsets
-  const TILE_SIZE = 1,
-    TILE_GAP = TILE_SIZE * 0.45;
-
-  // Offset odd columns vertically so that the gaps connect the centers of
-  // surrounding tiles:
-  // ######  ######
-  //         ######
-  // ######  ######
-  // ######
-  // ######  ######
-  //         ######
-  // ######  ######
-  const ODD_COLUMN_Y_OFFSET = (TILE_SIZE + TILE_GAP) / 2;
+  import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
 </script>
 
 <svg
@@ -59,5 +45,10 @@
 
   <!-- Units -->
   <FactoryUnit x={0} y={0} unit={{ active: false } as any} />
+  <FactoryUnit x={1} y={0} unit={{ active: true } as any} />
+  <FactoryUnit x={2} y={0} unit={{ active: false } as any} />
+  <FactoryUnit x={0} y={1} unit={{ active: true } as any} />
+  <FactoryUnit x={1} y={1} unit={{ active: false } as any} />
+  <FactoryUnit x={2} y={1} unit={{ active: true } as any} />
   <use href="#grid-tile" filter="url(#glow)" />
 </svg>
