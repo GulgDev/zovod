@@ -13,10 +13,6 @@
   //         ######
   // ######  ######
   const ODD_COLUMN_Y_OFFSET = (TILE_SIZE + TILE_GAP) / 2;
-
-  // Border parameters
-  const TILE_BORDER_SIZE = TILE_SIZE * 0.035,
-    TILE_BORDER_RADIUS = TILE_SIZE * 0.07;
 </script>
 
 <svg
@@ -86,11 +82,3 @@
   <!-- Units -->
   <use href="#grid-tile" filter="url(#glow)" />
 </svg>
-
-<style>
-  #grid-tile {
-    fill: #f7eacd;
-    stroke: #d7e088 /* #f0d8aa */;
-    box-shadow: 0 0 6.5px #d7e088;
-  }
-</style>
