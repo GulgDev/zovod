@@ -1,6 +1,6 @@
 <script lang="ts">
   // Sizes and offsets
-  const TILE_SIZE = 1 / 8,
+  const TILE_SIZE = 1,
     TILE_GAP = TILE_SIZE * 0.45;
 
   // Offset odd columns vertically so that the gaps connect the centers of
@@ -18,7 +18,7 @@
 <svg
   width="100%"
   height="100%"
-  viewBox="0 0 1 1"
+  viewBox="0 0 8 8"
   preserveAspectRatio="xMinYMin slice"
 >
   <defs>
@@ -47,8 +47,6 @@
     <use
       id="grid-tile-empty"
       href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
-      width={TILE_SIZE}
-      height={TILE_SIZE}
       style:--fill="transparent"
       style:--stroke="#f7eacd"
     />

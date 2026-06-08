@@ -15,14 +15,13 @@
       <use href="#grid-tile-shape" />
     </clipPath>
 
-    <symbol id="grid-tile" viewBox="0 0 1 1">
-      <use
-        href="#grid-tile-shape"
-        clip-path="url(#grid-tile-clip)"
-        fill="var(--fill)"
-        stroke="var(--stroke)"
-        stroke-width="0.08"
-      />
-    </symbol>
+    <use
+      id="grid-tile"
+      href="#grid-tile-shape"
+      clip-path="url(#grid-tile-clip)"
+      fill="var(--fill)"
+      stroke="var(--stroke)"
+      stroke-width="0.08"
+    />
   </defs>
 </svg>
