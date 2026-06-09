@@ -37,6 +37,7 @@
   }}
 />
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <svg
   width="100%"
   height="100%"
