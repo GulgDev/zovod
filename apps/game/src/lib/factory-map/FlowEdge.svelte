@@ -80,4 +80,10 @@
   stroke="#f0d8aa"
   stroke-linecap="round"
   stroke-width="0.04"
+  marker-end={isFactoryUnitCell(
+    x + UNIT_VECTORS[to][0],
+    y + UNIT_VECTORS[to][1],
+  )
+    ? `url(${import.meta.env.BASE_URL}arrow-marker.svg#arrow-marker)` // add a marker at the flow end
+    : null}
 />

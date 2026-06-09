@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker
+      id="arrow-marker"
+      overflow="visible"
+      orient="auto-start-reverse">
+      <path
+        d="M -2 -2 L 0 0 L -2 2"
+        fill="none"
+        stroke="context-stroke"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1" />
+    </marker>
+  </defs>
+</svg>

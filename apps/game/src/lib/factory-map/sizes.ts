@@ -15,4 +15,4 @@ export const TILE_SIZE = 1,
 export const ODD_COLUMN_Y_OFFSET = (TILE_SIZE + TILE_GAP) / 2;
 
 export const FLOW_EDGE_RADIUS = 0.2,
-  FLOW_UNIT_PADDING = 0.025;
+  FLOW_UNIT_PADDING = 0.02;
