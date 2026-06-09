@@ -41,6 +41,10 @@ importers:
         version: 4.0.0(typescript@6.0.3)(vitest@4.1.8(@types/node@24.13.1)(vite@8.0.13(@types/node@24.13.1)))
 
   apps/game:
+    dependencies:
+      '@zovod/engine':
+        specifier: workspace:*
+        version: link:../../packages/engine
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.1.2
@@ -51,9 +55,6 @@ importers:
       '@types/node':
         specifier: ^24.12.3
         version: 24.13.1
-      '@zovod/engine':
-        specifier: workspace:*
-        version: link:../../packages/engine
       '@zovod/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
