@@ -15,10 +15,22 @@
   let viewportWidth = $state<number>(),
     viewportHeight = $state<number>();
 
+  const pxPerViewportUnit = $derived(
+    viewportWidth !== undefined && viewportHeight !== undefined
+      ? Math.max(viewportWidth, viewportHeight) / VIEWPORT_SIZE
+      : undefined,
+  );
+
   let offsetX = $state(0),
     offsetY = $state(0);
+  let scale = $state(1);
 
   // mouse events
+
+  const SCALE_FACTOR = 1.1;
+
+  const MIN_SCALE = 0.4,
+    MAX_SCALE = 1;
 
   let isMouseDown = $state(false);
 
@@ -43,7 +55,8 @@
   height="100%"
   bind:clientWidth={viewportWidth}
   bind:clientHeight={viewportHeight}
-  viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE} {VIEWPORT_SIZE}"
+  viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE /
+    scale}"
   preserveAspectRatio="xMinYMin slice"
   onmousedown={(ev): void => {
     isMouseDown = true;
@@ -57,17 +70,24 @@
         /* eslint-disable @typescript-eslint/no-non-null-assertion */
         offsetX =
           originOffsetX! +
-          ((ev.clientX - originMouseX!) /
-            Math.max(viewportWidth!, viewportHeight!)) *
-            VIEWPORT_SIZE;
+          (ev.clientX - originMouseX!) / pxPerViewportUnit! / scale;
         offsetY =
           originOffsetY! +
-          ((ev.clientY - originMouseY!) /
-            Math.max(viewportWidth!, viewportHeight!)) *
-            VIEWPORT_SIZE;
+          (ev.clientY - originMouseY!) / pxPerViewportUnit! / scale;
         /* eslint-enable @typescript-eslint/no-non-null-assertion */
       }
     : undefined}
+  onwheel={(ev): void => {
+    const newScale = Math.max(
+      Math.min(scale * SCALE_FACTOR ** Math.sign(-ev.deltaY), MAX_SCALE),
+      MIN_SCALE,
+    );
+    /* eslint-disable @typescript-eslint/no-non-null-assertion */
+    offsetX += (ev.clientX / pxPerViewportUnit!) * (1 / newScale - 1 / scale);
+    offsetY += (ev.clientY / pxPerViewportUnit!) * (1 / newScale - 1 / scale);
+    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+    scale = newScale;
+  }}
 >
   <defs>
     <use
