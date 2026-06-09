@@ -1,6 +1,6 @@
 <script lang="ts">
   import { DIRECTION } from "./direction";
-  import FactoryUnit from "./FactoryUnit.svelte";
+  import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
   import FlowEdge from "./FlowEdge.svelte";
   import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
 </script>
@@ -46,12 +46,12 @@
   <rect fill="url(#background-grid-pattern)" width="100%" height="100%" />
 
   <!-- Units -->
-  <FactoryUnit x={0} y={0} unit={{ active: false } as any} />
-  <FactoryUnit x={2} y={1} unit={{ active: true } as any} />
-  <FactoryUnit x={4} y={0} unit={{ active: false } as any} />
-  <FactoryUnit x={0} y={2} unit={{ active: true } as any} />
-  <FactoryUnit x={2} y={3} unit={{ active: false } as any} />
-  <FactoryUnit x={4} y={2} unit={{ active: true } as any} />
+  <FactoryUnitDisplay x={0} y={0} unit={{ active: false } as any} />
+  <FactoryUnitDisplay x={2} y={1} unit={{ active: true } as any} />
+  <FactoryUnitDisplay x={4} y={0} unit={{ active: false } as any} />
+  <FactoryUnitDisplay x={0} y={2} unit={{ active: true } as any} />
+  <FactoryUnitDisplay x={2} y={3} unit={{ active: false } as any} />
+  <FactoryUnitDisplay x={4} y={2} unit={{ active: true } as any} />
   <FlowEdge x={0} y={1} from={DIRECTION.S} to={DIRECTION.E} />
   <FlowEdge x={1} y={1} from={DIRECTION.W} to={DIRECTION.N} />
   <FlowEdge x={1} y={0} from={DIRECTION.S} to={DIRECTION.W} />

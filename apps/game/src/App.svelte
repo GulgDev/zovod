@@ -1,7 +1,7 @@
 <script lang="ts">
-  import FactoryMap from "./lib/factory-map/FactoryMap.svelte";
+  import FactoryMapView from "./lib/factory-map/FactoryMapView.svelte";
   import UIOverlay from "./lib/ui/UIOverlay.svelte";
 </script>
 
-<FactoryMap></FactoryMap>
+<FactoryMapView></FactoryMapView>
 <UIOverlay></UIOverlay>
