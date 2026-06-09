@@ -1,8 +1,61 @@
 <script lang="ts">
-  import { DIRECTION } from "./direction";
+  import { Storage, type FactoryMap, type FactoryUnit } from "@zovod/engine";
+  import { directionFrom, type Direction } from "./direction";
   import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
   import FlowEdge from "./FlowEdge.svelte";
   import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
+
+  const { map }: { map: FactoryMap } = $props();
+
+  let factoryUnits = $state<[readonly [number, number], FactoryUnit][]>();
+
+  function updateFactoryUnits(): void {
+    factoryUnits = Array.from(map.getAllUnitsWithCoords());
+  }
+
+  $effect(() => {
+    map.addEventListener("unitchange", updateFactoryUnits);
+    updateFactoryUnits();
+  });
+
+  let flowEdges = $state<
+    { x: number; y: number; from: Direction; to: Direction }[]
+  >([]);
+
+  function updateFlowEdges(): void {
+    flowEdges = Array.from(map.getAllFlowEdges()).flatMap(
+      ([[x1, y1], [x2, y2]]) =>
+        map.getFlowNodeTargets(x2, y2).map(([x3, y3]) => ({
+          x: x2,
+          y: y2,
+          from: directionFrom(x2, y2, x1, y1),
+          to: directionFrom(x2, y2, x3, y3),
+        })),
+    );
+  }
+
+  $effect(() => {
+    map.addEventListener("flowchange", updateFlowEdges);
+    updateFlowEdges();
+  });
+
+  $effect(() => {
+    //      0   1   2
+    // -1   .   .   @
+    //
+    //  0   @ > . > .
+    //              v
+    //  1   .   .   @
+    map.placeUnit(new Storage(5), 0, 0);
+    map.placeUnit(new Storage(4), 2, 1);
+    map.placeUnit(new Storage(3), 2, -1);
+    map.addFlowSegment([
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+    ]);
+  });
 </script>
 
 <svg
@@ -45,14 +98,11 @@
   <rect fill="#fffbf2" width="100%" height="100%" />
   <rect fill="url(#background-grid-pattern)" width="100%" height="100%" />
 
-  <!-- Units -->
-  <FactoryUnitDisplay x={0} y={0} unit={{ active: false } as any} />
-  <FactoryUnitDisplay x={2} y={1} unit={{ active: true } as any} />
-  <FactoryUnitDisplay x={4} y={0} unit={{ active: false } as any} />
-  <FactoryUnitDisplay x={0} y={2} unit={{ active: true } as any} />
-  <FactoryUnitDisplay x={2} y={3} unit={{ active: false } as any} />
-  <FactoryUnitDisplay x={4} y={2} unit={{ active: true } as any} />
-  <FlowEdge x={0} y={1} from={DIRECTION.S} to={DIRECTION.E} />
-  <FlowEdge x={1} y={1} from={DIRECTION.W} to={DIRECTION.N} />
-  <FlowEdge x={1} y={0} from={DIRECTION.S} to={DIRECTION.W} />
+  {#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
+    <FactoryUnitDisplay {x} {y} {unit} />
+  {/each}
+
+  {#each flowEdges as edge ((edge.y << 16) | (edge.x & 0xffff))}
+    <FlowEdge {...edge} />
+  {/each}
 </svg>
