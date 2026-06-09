@@ -1,5 +1,7 @@
 // Sizes and offsets of factory map elements
 
+export const VIEWPORT_SIZE = 8;
+
 export const TILE_SIZE = 1,
   TILE_GAP = TILE_SIZE * 0.45;
 

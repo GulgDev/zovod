@@ -3,7 +3,6 @@
   import { directionFrom, type Direction } from "./direction";
   import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
   import FlowEdge from "./FlowEdge.svelte";
-  import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -58,51 +57,10 @@
   });
 </script>
 
-<svg
-  width="100%"
-  height="100%"
-  viewBox="0 0 8 8"
-  preserveAspectRatio="xMinYMin slice"
->
-  <defs>
-    <use
-      id="grid-tile-empty"
-      href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
-      style:--fill="none"
-      style:--stroke="#f7eacd"
-    />
+{#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
+  <FactoryUnitDisplay {x} {y} {unit} />
+{/each}
 
-    <pattern
-      id="background-grid-pattern"
-      x="0"
-      y="0"
-      width={(TILE_SIZE + TILE_GAP) * 2}
-      height={TILE_SIZE + TILE_GAP}
-      patternUnits="userSpaceOnUse"
-    >
-      <use href="#grid-tile-empty" x="0" y="0"></use>
-      <use
-        href="#grid-tile-empty"
-        x={TILE_SIZE + TILE_GAP}
-        y={ODD_COLUMN_Y_OFFSET - (TILE_SIZE + TILE_GAP)}
-      ></use>
-      <use
-        href="#grid-tile-empty"
-        x={TILE_SIZE + TILE_GAP}
-        y={ODD_COLUMN_Y_OFFSET}
-      ></use>
-    </pattern>
-  </defs>
-
-  <!-- Background -->
-  <rect fill="#fffbf2" width="100%" height="100%" />
-  <rect fill="url(#background-grid-pattern)" width="100%" height="100%" />
-
-  {#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
-    <FactoryUnitDisplay {x} {y} {unit} />
-  {/each}
-
-  {#each flowEdges as edge ((edge.y << 16) | (edge.x & 0xffff))}
-    <FlowEdge {...edge} />
-  {/each}
-</svg>
+{#each flowEdges as edge ((edge.y << 16) | (edge.x & 0xffff))}
+  <FlowEdge {...edge} />
+{/each}
