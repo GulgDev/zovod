@@ -101,6 +101,15 @@ export class FactoryMap extends EventTarget {
   }
 
   /**
+   * Find all factory units placed on the grid and retrieve their positions.
+   *
+   * @returns An iterator of all placed factory units along with their coordinates.
+   */
+  getAllUnitsWithCoords(): IterableIterator<[Point, FactoryUnit]> {
+    return this.unitGrid.getAllUnitsWithCoords();
+  }
+
+  /**
    * Find the factory unit that is the root of the flow tree at the specified
    * position. If a cell position containing a factory unit is passed, the
    * source unit for that target is returned.

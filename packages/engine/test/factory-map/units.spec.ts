@@ -150,6 +150,25 @@ describe("FactoryMap - unit map", () => {
     });
   });
 
+  describe("getAllUnitsWithCoords", () => {
+    it("retrieves all units with their respective coordinates", () => {
+      const unit1 = new UnitMock(),
+        unit2 = new UnitMock();
+      map.placeUnit(unit1, 0, 0);
+      map.placeUnit(unit2, 2, 1);
+
+      expect([...map.getAllUnitsWithCoords()]).toIncludeSameMembers([
+        [[0, 0], unit1],
+        [[2, 1], unit2],
+      ]);
+
+      map.removeUnitAt(0, 0);
+      map.removeUnitAt(2, 1);
+
+      expect(map.getAllUnitsWithCoords()).toBeEmpty();
+    });
+  });
+
   describe("setTargetDistribution", () => {
     it("changes the target distribution", () => {
       //      0   1   2

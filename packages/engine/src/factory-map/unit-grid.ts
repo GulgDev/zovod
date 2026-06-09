@@ -1,5 +1,5 @@
 import type { FactoryUnit } from "../factory-units/abstract/factory-unit";
-import { packCoords } from "./util/math";
+import { packCoords, unpackCoords, type Point } from "./util/math";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { FactoryMap } from "."; // used in JSDoc
@@ -75,6 +75,15 @@ export class FactoryUnitGrid {
    */
   getAllUnits(): IterableIterator<FactoryUnit> {
     return this.units.values();
+  }
+
+  /**
+   * Find all factory units placed on the grid and retrieve their positions.
+   *
+   * @returns An iterator of all placed factory units along with their coordinates.
+   */
+  getAllUnitsWithCoords(): IterableIterator<[Point, FactoryUnit]> {
+    return this.units.entries().map(([key, unit]) => [unpackCoords(key), unit]);
   }
 
   /**
