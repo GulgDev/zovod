@@ -3,6 +3,8 @@
 export const TILE_SIZE = 1,
   TILE_GAP = TILE_SIZE * 0.45;
 
+export const ICON_SIZE = 0.4;
+
 // Offset odd columns vertically so that the gaps connect the centers of
 // surrounding tiles:
 // ######  ######
