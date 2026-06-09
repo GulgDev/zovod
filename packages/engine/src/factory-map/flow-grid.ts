@@ -141,6 +141,15 @@ export class FlowGrid {
   }
 
   /**
+   * Find all edges of the flow graph.
+   *
+   * @yields The starting and ending points of the next found edge.
+   */
+  *getAllFlowEdges(): Generator<readonly [Point, Point]> {
+    yield* this.graph.getAllEdges();
+  }
+
+  /**
    * Find an ear decomposition of the flow graph, i.e. splits every flow into a
    * list of segments &mdash; directed paths of maximal length whose internal
    * vertices have in-degree and out-degree 1 within the flow.

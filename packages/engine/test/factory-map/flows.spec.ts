@@ -373,6 +373,41 @@ describe("FactoryMap - flow map", () => {
     });
   });
 
+  describe("getAllFlowEdges", () => {
+    it("find all flow edges", () => {
+      //      0   1   2
+      // -1   .   .   @
+      //              ^
+      //  0   @ > . > .
+      //              v
+      //  1   .   .   @
+      const unit$0$0 = new UnitMock(),
+        unit$2$1 = new UnitMock(),
+        unit$2$_1 = new UnitMock();
+      map.placeUnit(unit$0$0, 0, 0);
+      map.placeUnit(unit$2$1, 2, 1);
+      map.placeUnit(unit$2$_1, 2, -1);
+      map.addFlowSegment([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [2, 1],
+      ]);
+      map.addFlowSegment([
+        [2, 0],
+        [2, -1],
+      ]);
+
+      // prettier-ignore
+      expect(Array.from(map.getAllFlowEdges())).toIncludeSameMembers([
+        [[0, 0], [1, 0]],
+        [[1, 0], [2, 0]],
+        [[2, 0], [2, 1]],
+        [[2, 0], [2, -1]],
+      ]);
+    });
+  });
+
   describe("getAllFlowSegments", () => {
     it("finds all flow segments", () => {
       //      0   1   2

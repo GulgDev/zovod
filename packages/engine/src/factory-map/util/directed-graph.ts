@@ -107,6 +107,21 @@ export class DirectedGraph {
   }
 
   /**
+   * Finds all edges of the graph.
+   *
+   * @returns An iterator of starting and ending points of the edges.
+   */
+  getAllEdges(): IterableIterator<readonly [Point, Point]> {
+    return this.successors
+      .entries()
+      .flatMap(([key1, successors]) =>
+        successors
+          .values()
+          .map((key2) => [unpackCoords(key1), unpackCoords(key2)]),
+      );
+  }
+
+  /**
    * Finds all nodes that are the roots of directed ears of the graph, i.e. all
    * the nodes that start a tree by either having no predecessors or having two
    * or more successors.
