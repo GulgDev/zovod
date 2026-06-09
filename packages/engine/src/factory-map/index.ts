@@ -1,5 +1,5 @@
 import type { FactoryUnit } from "../factory-units/abstract/factory-unit";
-import { FactoryUnitGrid } from "./unit-grid";
+import { FactoryUnitGrid, type FactoryUnitEvent } from "./unit-grid";
 import { FlowGrid } from "./flow-grid";
 import type { Point } from "./util/math";
 
@@ -35,12 +35,14 @@ import type { Point } from "./util/math";
  * 3   .   .   #   .
  * ```
  */
-export class FactoryMap {
+export class FactoryMap extends EventTarget {
   private readonly unitGrid = new FactoryUnitGrid();
   private readonly flowGrid = new FlowGrid();
 
   /**
    * Place a factory unit at the specified position.
+   *
+   * Dispatches a `unitchange` event upon success.
    *
    * @throws Will throw if the specified position does not point to a unit cell.
    *
@@ -49,12 +51,17 @@ export class FactoryMap {
    * @see {@link FactoryUnitGrid.placeUnit}
    */
   placeUnit(unit: FactoryUnit, x: number, y: number): boolean {
-    return this.unitGrid.placeUnit(unit, x, y);
+    if (!this.unitGrid.placeUnit(unit, x, y)) return false;
+
+    this.dispatchEvent(new Event("unitchange"));
+    return true;
   }
 
   /**
    * Remove the factory unit at the specified position with its incoming flow
    * branches. It is removed from the target list of its source unit.
+   *
+   * Dispatches a `unitchange` event upon success.
    *
    * @throws Will throw if the specified position does not point to a unit cell.
    * @throws Will throw if the unit to be removed is in an invalid state (cannot be removed).
@@ -65,7 +72,10 @@ export class FactoryMap {
    */
   removeUnitAt(x: number, y: number): boolean {
     this.deleteFlowBranchAt(x, y);
-    return this.unitGrid.removeUnitAt(x, y);
+    if (!this.unitGrid.removeUnitAt(x, y)) return false;
+
+    this.dispatchEvent(new Event("unitchange"));
+    return true;
   }
 
   /**
@@ -98,17 +108,17 @@ export class FactoryMap {
    * @throws Will throw if there's no flow tree at the specified position.
    */
   private getSourceUnit(x: number, y: number): FactoryUnit {
-    if (!this.flowGrid.getFlowNodeSource(x, y))
+    if (!this.getFlowNodeSource(x, y))
       throw new Error("The specified cell is not a part of a flow tree.");
 
     let current: Point = [x, y];
     do
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      current = this.flowGrid.getFlowNodeSource(...current)!; // only the root flow node can have no source
+      current = this.getFlowNodeSource(...current)!; // only the root flow node can have no source
     while (!FactoryUnitGrid.isUnitCell(...current));
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    return this.unitGrid.getUnitAt(...current)!; // we should eventually get to a non-empty unit cell by definition of a flow
+    return this.getUnitAt(...current)!; // we should eventually get to a non-empty unit cell by definition of a flow
   }
 
   /**
@@ -118,11 +128,11 @@ export class FactoryMap {
   private *getTargetUnits(x: number, y: number): Generator<FactoryUnit> {
     if (FactoryUnitGrid.isUnitCell(x, y)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      yield this.unitGrid.getUnitAt(x, y)!; // the unit cell in leaves should be non-empty (by flow definition)
+      yield this.getUnitAt(x, y)!; // the unit cell in leaves should be non-empty (by flow definition)
       return; // do not traverse further; we've reached a leaf of the current tree
     }
 
-    for (const [targetX, targetY] of this.flowGrid.getFlowNodeTargets(x, y))
+    for (const [targetX, targetY] of this.getFlowNodeTargets(x, y))
       yield* this.getTargetUnits(targetX, targetY);
   }
 
@@ -130,6 +140,8 @@ export class FactoryMap {
    * Add a flow segment from an existing flow to a factory unit, or create a new
    * flow connecting two units. The destination unit cell is added to the
    * source as a target.
+   *
+   * Dispatches a `flowchange` event upon success.
    *
    * @param points - The array of points forming the flow segment.
    * @returns `true` if the flow segment was successfully added, otherwise `false` if the flow segment intersects an existing one or has empty unit cells on either ends.
@@ -145,19 +157,18 @@ export class FactoryMap {
 
     const startPoint = points[0];
     const startUnit = FactoryUnitGrid.isUnitCell(...startPoint)
-      ? this.unitGrid.getUnitAt(...startPoint)
+      ? this.getUnitAt(...startPoint)
       : undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const endPoint = points.at(-1)!; // the array must contain an ending point
     const endUnit = FactoryUnitGrid.isUnitCell(...endPoint)
-      ? this.unitGrid.getUnitAt(...endPoint)
+      ? this.getUnitAt(...endPoint)
       : undefined;
 
     // All flow segments must start in either an occupied unit cell or a flow
     // node in a non-unit cell (branching)
-    if (!(startUnit || this.flowGrid.getFlowNodeSource(...startPoint)))
-      return false;
+    if (!(startUnit || this.getFlowNodeSource(...startPoint))) return false;
 
     if (!endUnit) return false;
 
@@ -171,6 +182,7 @@ export class FactoryMap {
       endUnit,
     );
 
+    this.dispatchEvent(new Event("flowchange"));
     return true;
   }
 
@@ -179,6 +191,8 @@ export class FactoryMap {
    * consists of a flow segment along with its successive subtree. The leaf
    * units of that branch are removed from the target list of the flow root
    * unit.
+   *
+   * Dispatches a `flowchange` event upon success.
    *
    * @returns `true` if a flow segment exists at the specified position and its corresponding branch was deleted, or `false` if there isn't one.
    *
@@ -190,12 +204,13 @@ export class FactoryMap {
         : undefined, // if the flow node has no source, there is no flow tree to find the source unit for
       targets = this.getTargetUnits(x, y);
 
-    const success = this.flowGrid.deleteFlowBranchAt(x, y);
-    if (success) {
-      if (source)
-        for (const target of targets) FactoryMap.removeTarget(source, target);
-    }
-    return success;
+    if (!this.flowGrid.deleteFlowBranchAt(x, y)) return false;
+
+    if (source)
+      for (const target of targets) FactoryMap.removeTarget(source, target);
+
+    this.dispatchEvent(new Event("flowchange"));
+    return true;
   }
 
   /**
@@ -323,4 +338,34 @@ export class FactoryMap {
 
     this.targetDistributions.set(unit, new Map(distribution));
   }
+}
+
+// Typed events
+export interface FactoryMap {
+  addEventListener<K extends keyof FactoryMapEventMap>(
+    type: K,
+    listener: (this: FactoryMap, ev: FactoryMapEventMap[K]) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+  addEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | AddEventListenerOptions,
+  ): void;
+
+  removeEventListener<K extends keyof FactoryMapEventMap>(
+    type: K,
+    listener: (this: FactoryMap, ev: FactoryMapEventMap[K]) => void,
+    options?: boolean | EventListenerOptions,
+  ): void;
+  removeEventListener(
+    type: string,
+    listener: EventListenerOrEventListenerObject,
+    options?: boolean | EventListenerOptions,
+  ): void;
+}
+
+interface FactoryMapEventMap {
+  unitchange: Event;
+  flowchange: Event;
 }

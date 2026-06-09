@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { FactoryMap } from "../../src/factory-map";
 import { UnitMock } from "../util/unit-mock";
+import {
+  map,
+  unitChangeListener,
+  flowChangeListener,
+} from "./util/with-factory-map";
 
 // Unit cell coordinates must satisfy (2n, 2m + n)
 const invalidPositions = [
@@ -15,8 +20,6 @@ const invalidPositions = [
 describe("FactoryMap - unit map", () => {
   describe("getUnitAt", () => {
     it("throws for invalid positions", () => {
-      const map = new FactoryMap();
-
       invalidPositions.forEach(([x, y]) =>
         expect(() => map.getUnitAt(x, y)).toThrow("Invalid unit position"),
       );
@@ -25,74 +28,79 @@ describe("FactoryMap - unit map", () => {
 
   describe("placeUnit", () => {
     it("places and retrieves units", () => {
-      const map = new FactoryMap();
-
       const unit1 = new UnitMock(),
         unit2 = new UnitMock();
 
       expect(map.placeUnit(unit1, 0, 0)).toBeTrue();
+
+      expect(unitChangeListener).toHaveBeenCalled();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
       expect(map.getUnitAt(2, 1)).toBeUndefined();
 
+      unitChangeListener.mockClear();
       expect(map.placeUnit(unit2, 2, 1)).toBeTrue();
+
+      expect(unitChangeListener).toHaveBeenCalled();
       expect(map.getUnitAt(0, 0)).toBe(unit1);
       expect(map.getUnitAt(2, 1)).toBe(unit2);
     });
 
     it("returns false when placing on an occupied cell", () => {
-      const map = new FactoryMap();
+      map.placeUnit(new UnitMock(), 0, 0);
+      unitChangeListener.mockClear();
 
-      expect(map.placeUnit(new UnitMock(), 0, 0)).toBeTrue();
       expect(map.placeUnit(new UnitMock(), 0, 0)).toBeFalse();
+
+      expect(unitChangeListener).not.toHaveBeenCalled();
     });
 
     it("throws for invalid positions", () => {
-      const map = new FactoryMap();
-
-      invalidPositions.forEach(([x, y]) =>
+      invalidPositions.forEach(([x, y]) => {
         expect(() => map.placeUnit(new UnitMock(), x, y)).toThrow(
           "Invalid unit position",
-        ),
-      );
+        );
+
+        expect(unitChangeListener).not.toHaveBeenCalled();
+      });
     });
   });
 
   describe("removeUnitAt", () => {
     it("removes units", () => {
-      const map = new FactoryMap();
-
       const unit1 = new UnitMock(),
         unit2 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
       map.placeUnit(unit2, 2, 1);
+      unitChangeListener.mockClear();
 
       expect(map.removeUnitAt(0, 0)).toBeTrue();
+
+      expect(unitChangeListener).toHaveBeenCalled();
       expect(map.getUnitAt(0, 0)).toBeUndefined();
       expect(map.getUnitAt(2, 1)).toBe(unit2);
 
+      unitChangeListener.mockClear();
       expect(map.removeUnitAt(2, 1)).toBeTrue();
+
+      expect(unitChangeListener).toHaveBeenCalled();
+      expect(map.getUnitAt(0, 0)).toBeUndefined();
       expect(map.getUnitAt(2, 1)).toBeUndefined();
     });
 
     it("returns false for empty cells", () => {
-      const map = new FactoryMap();
-      map.placeUnit(new UnitMock(), 0, 0);
-
-      expect(map.removeUnitAt(0, 0)).toBeTrue();
-      expect(map.removeUnitAt(2, 1)).toBeFalse();
+      expect(map.removeUnitAt(0, 0)).toBeFalse();
+      expect(unitChangeListener).not.toHaveBeenCalled();
     });
 
     it("throws for invalid positions", () => {
-      const map = new FactoryMap();
+      invalidPositions.forEach(([x, y]) => {
+        expect(() => map.removeUnitAt(x, y)).toThrow("Invalid unit position");
 
-      invalidPositions.forEach(([x, y]) =>
-        expect(() => map.removeUnitAt(x, y)).toThrow("Invalid unit position"),
-      );
+        expect(unitChangeListener).not.toHaveBeenCalled();
+      });
     });
 
     it("removes incoming flows", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       //  0   @ > . > .
       //              v
@@ -115,6 +123,7 @@ describe("FactoryMap - unit map", () => {
       //              ~
       map.removeUnitAt(2, 1);
 
+      expect(flowChangeListener).toHaveBeenCalled();
       expect(map.getFlowNodeTargets(0, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(1, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
@@ -127,8 +136,6 @@ describe("FactoryMap - unit map", () => {
 
   describe("getAllUnits", () => {
     it("retrieves all units", () => {
-      const map = new FactoryMap();
-
       const unit1 = new UnitMock(),
         unit2 = new UnitMock();
       map.placeUnit(unit1, 0, 0);
@@ -145,8 +152,6 @@ describe("FactoryMap - unit map", () => {
 
   describe("setTargetDistribution", () => {
     it("changes the target distribution", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //
@@ -187,8 +192,6 @@ describe("FactoryMap - unit map", () => {
     });
 
     it("throws when the distribution is not normalized", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //              ^
@@ -224,8 +227,6 @@ describe("FactoryMap - unit map", () => {
     });
 
     it("throws when a target is missing from the distribution", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //              ^

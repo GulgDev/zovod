@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { FactoryMap } from "../../src/factory-map";
 import { UnitMock } from "../util/unit-mock";
+import {
+  map,
+  unitChangeListener,
+  flowChangeListener,
+} from "./util/with-factory-map";
 
 describe("FactoryMap - flow map", () => {
   describe("addFlowSegment", () => {
     it("adds flow segments", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //
@@ -31,9 +34,13 @@ describe("FactoryMap - flow map", () => {
           [2, 1],
         ]),
       ).toBeTrue();
+
+      expect(flowChangeListener).toHaveBeenCalled();
       expect(map.getFlowNodeTargets(0, 0)).toIncludeSameMembers([[1, 0]]);
       expect(map.getFlowNodeTargets(1, 0)).toIncludeSameMembers([[2, 0]]);
       expect(map.getFlowNodeTargets(2, 0)).toIncludeSameMembers([[2, 1]]);
+
+      flowChangeListener.mockClear();
 
       //      0   1   2
       // -1   .   .  ~@
@@ -47,6 +54,8 @@ describe("FactoryMap - flow map", () => {
           [2, -1],
         ]),
       ).toBeTrue();
+
+      expect(flowChangeListener).toHaveBeenCalled();
       expect(map.getFlowNodeTargets(2, 0)).toIncludeSameMembers([
         [2, 1],
         [2, -1],
@@ -54,8 +63,6 @@ describe("FactoryMap - flow map", () => {
     });
 
     it("returns false when the flow segment has an invalid start", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //
@@ -81,6 +88,8 @@ describe("FactoryMap - flow map", () => {
         ]),
       ).toBeFalse();
 
+      expect(flowChangeListener).not.toHaveBeenCalled();
+
       // empty non-unit (flow) cell
       //      0   1   2
       // -1   .   .  ~@
@@ -94,11 +103,11 @@ describe("FactoryMap - flow map", () => {
           [2, -1],
         ]),
       ).toBeFalse();
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("returns false when the flow segment has an invalid end", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       //  0   @   .   .
       //
@@ -118,11 +127,11 @@ describe("FactoryMap - flow map", () => {
           [2, 1],
         ]),
       ).toBeFalse();
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("returns false when the flow segment crosses an existing flow", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //
@@ -138,6 +147,7 @@ describe("FactoryMap - flow map", () => {
         [2, 0],
         [2, 1],
       ]);
+      flowChangeListener.mockClear();
 
       //      0   1   2
       // -1   .   .  ~@
@@ -154,6 +164,8 @@ describe("FactoryMap - flow map", () => {
         ]),
       ).toBeFalse();
 
+      expect(flowChangeListener).not.toHaveBeenCalled();
+
       //      0   1   2
       // -1   .   .   @
       //
@@ -169,11 +181,11 @@ describe("FactoryMap - flow map", () => {
           [2, 1],
         ]),
       ).toBeFalse();
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("throws when the flow segment traverses through a unit cell", () => {
-      const map = new FactoryMap();
-
       //      0   1   2   3   4
       //  0   # > . > .   .  ~#
       //      ~~~~~~~~v      ~^
@@ -190,11 +202,11 @@ describe("FactoryMap - flow map", () => {
           [4, 0],
         ]),
       ).toThrow("Flow segment cannot traverse through a unit cell");
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("throws when the flow segment is non-continuous", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       //  0   #   .   .
       //      ~~~~~~~~
@@ -205,11 +217,11 @@ describe("FactoryMap - flow map", () => {
           [2, 1],
         ]),
       ).toThrow("Cannot connect");
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("adds corresponding targets to the distribution", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //
@@ -235,6 +247,7 @@ describe("FactoryMap - flow map", () => {
         [2, 0],
         [2, 1],
       ]);
+
       expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$1)).toBe(1);
 
       //      0   1   2
@@ -247,6 +260,7 @@ describe("FactoryMap - flow map", () => {
         [2, 0],
         [2, -1],
       ]);
+
       expect(FactoryMap.getTargetDistribution(unit$0$0).get(unit$2$1)).toBe(
         0.5,
       );
@@ -276,8 +290,6 @@ describe("FactoryMap - flow map", () => {
       //  1   .   .  ~@
       ["the end", 2, 1],
     ])("deletes the flow branch at %s", (_, x, y) => {
-      const map = new FactoryMap();
-
       //      0   1   2
       //  0   @ > . > .
       //              v
@@ -290,23 +302,27 @@ describe("FactoryMap - flow map", () => {
         [2, 0],
         [2, 1],
       ]);
+      flowChangeListener.mockClear();
 
       expect(map.deleteFlowBranchAt(x, y)).toBeTrue();
+
+      expect(flowChangeListener).toHaveBeenCalled();
       expect(map.getFlowNodeTargets(0, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(1, 0)).toBeEmpty();
       expect(map.getFlowNodeTargets(2, 0)).toBeEmpty();
     });
 
     it("returns false when the flow branch is absent", () => {
-      const map = new FactoryMap();
-
       expect(map.deleteFlowBranchAt(0, 0)).toBeFalse();
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
+
       expect(map.deleteFlowBranchAt(1, 0)).toBeFalse();
+
+      expect(flowChangeListener).not.toHaveBeenCalled();
     });
 
     it("removes corresponding targets from the distribution", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //              ^
@@ -359,8 +375,6 @@ describe("FactoryMap - flow map", () => {
 
   describe("getAllFlowSegments", () => {
     it("finds all flow segments", () => {
-      const map = new FactoryMap();
-
       //      0   1   2
       // -1   .   .   @
       //              ^
