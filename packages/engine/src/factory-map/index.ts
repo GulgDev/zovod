@@ -1,5 +1,5 @@
 import type { FactoryUnit } from "../factory-units/abstract/factory-unit";
-import { FactoryUnitGrid, type FactoryUnitEvent } from "./unit-grid";
+import { FactoryUnitGrid } from "./unit-grid";
 import { FlowGrid } from "./flow-grid";
 import type { Point } from "./util/math";
 
