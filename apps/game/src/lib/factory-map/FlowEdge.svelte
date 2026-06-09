@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { isFactoryUnitCell } from "@zovod/engine";
   import { UNIT_VECTORS, type Direction } from "./direction";
   import {
     FLOW_EDGE_RADIUS,
@@ -49,10 +50,8 @@
     let edgeX = left + width * ((unitX + 1) / 2), // remap -1..1 -> 0..1
       edgeY = top + height * ((unitY + 1) / 2);
 
-    // if the edge connects to a unit tile, add padding
-    const destX = x + unitX,
-      destY = y + unitY;
-    if (destX % 2 === 0 && (destY - destX / 2) % 2 === 0) {
+    // if the edge connects to a factory unit tile, add padding
+    if (isFactoryUnitCell(x + unitX, y + unitY)) {
       edgeX -= unitX * FLOW_UNIT_PADDING;
       edgeY -= unitY * FLOW_UNIT_PADDING;
     }

@@ -1,6 +1,9 @@
 export { Game, type GameUpdateEvent } from "./game";
 export { Inventory } from "./economy/inventory";
 
+import { FactoryUnitGrid } from "./factory-map/unit-grid";
+export const { isUnitCell: isFactoryUnitCell } = FactoryUnitGrid;
+
 export { FlowBuilder } from "./factory-map/util/flow-builder";
 
 export type { ResourceKind } from "./resource-kind";
