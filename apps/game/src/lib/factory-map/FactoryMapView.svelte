@@ -4,7 +4,12 @@
   import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
   import FlowEdge from "./FlowEdge.svelte";
 
-  const { map }: { map: FactoryMap } = $props();
+  const {
+    map,
+    // mouse position in viewport coordinate space
+    mouseX,
+    mouseY,
+  }: { map: FactoryMap; mouseX: number; mouseY: number } = $props();
 
   let factoryUnits = $state<[readonly [number, number], FactoryUnit][]>();
 

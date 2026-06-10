@@ -32,6 +32,10 @@
   const MIN_SCALE = 0.4,
     MAX_SCALE = 1;
 
+  // mouse position in viewport coordinate space
+  let mouseX = $state(0),
+    mouseY = $state(0);
+
   let dragState = $state<
     | { dragging: false; dragX?: undefined; dragY?: undefined }
     | {
@@ -65,10 +69,11 @@
     dragState = { dragging: true, dragX: x, dragY: y };
   }}
   onmousemove={(ev): void => {
+    ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
+
     if (dragging) {
-      const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
-      offsetX += x - dragX;
-      offsetY += y - dragY;
+      offsetX += mouseX - dragX;
+      offsetY += mouseY - dragY;
     }
   }}
   onwheel={(ev): void => {
@@ -121,7 +126,7 @@
     height="100%"
   />
 
-  <FactoryMapView {map} />
+  <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
 
 <style>
