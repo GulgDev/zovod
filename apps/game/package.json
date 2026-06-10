@@ -12,10 +12,12 @@
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tsconfig/svelte": "^5.0.8",
     "@types/node": "^24.12.3",
+    "@vitejs/plugin-legacy": "^8.0.2",
     "@zovod/eslint-config": "workspace:*",
     "eslint-plugin-svelte": "^3.19.0",
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
+    "terser": "^5.48.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.12"
   },
