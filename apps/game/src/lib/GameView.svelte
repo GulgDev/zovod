@@ -32,16 +32,23 @@
   const MIN_SCALE = 0.4,
     MAX_SCALE = 1;
 
-  let isMouseDown = $state(false);
-
-  // camera offset at the drag start
-  let moveOffsetX = $state<number>(),
-    moveOffsetY = $state<number>();
+  let dragState = $state<
+    | { dragging: false; dragX?: undefined; dragY?: undefined }
+    | {
+        dragging: true;
+        // camera offset at the drag start
+        dragX: number;
+        dragY: number;
+      }
+  >({
+    dragging: false,
+  });
+  const { dragging, dragX, dragY } = $derived(dragState);
 </script>
 
 <svelte:document
   onmouseup={(): void => {
-    isMouseDown = false;
+    dragState = { dragging: false };
   }}
 />
 
@@ -54,22 +61,16 @@
     scale}"
   preserveAspectRatio="xMinYMin slice"
   onmousedown={(ev): void => {
-    isMouseDown = true;
-    ({ x: moveOffsetX, y: moveOffsetY } = screenToViewportPoint(
-      ev.clientX,
-      ev.clientY,
-    ));
+    const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
+    dragState = { dragging: true, dragX: x, dragY: y };
   }}
-  onmousemove={isMouseDown
-    ? (ev): void => {
-        // move offset must be set when isMouseDown is true
-        /* eslint-disable @typescript-eslint/no-non-null-assertion */
-        const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
-        offsetX += x - moveOffsetX!;
-        offsetY += y - moveOffsetY!;
-        /* eslint-enable @typescript-eslint/no-non-null-assertion */
-      }
-    : undefined}
+  onmousemove={(ev): void => {
+    if (dragging) {
+      const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
+      offsetX += x - dragX;
+      offsetY += y - dragY;
+    }
+  }}
   onwheel={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
     const newScale = Math.max(
