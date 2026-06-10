@@ -10,16 +10,16 @@
 
   const { map }: { map: FactoryMap } = $props();
 
+  let svg = $state<SVGSVGElement>();
+
   // camera
 
-  let viewportWidth = $state<number>(),
-    viewportHeight = $state<number>();
-
-  const pxPerViewportUnit = $derived(
-    viewportWidth !== undefined && viewportHeight !== undefined
-      ? Math.max(viewportWidth, viewportHeight) / VIEWPORT_SIZE
-      : undefined,
-  );
+  function screenToViewportPoint(x: number, y: number): DOMPointReadOnly {
+    const screenCTM = svg?.getScreenCTM();
+    if (!screenCTM)
+      throw new Error("Viewport is not connected to the DOM yet.");
+    return new DOMPointReadOnly(x, y).matrixTransform(screenCTM.inverse());
+  }
 
   let offsetX = $state(0),
     offsetY = $state(0);
@@ -35,12 +35,8 @@
   let isMouseDown = $state(false);
 
   // camera offset at the drag start
-  let originOffsetX = $state<number>(),
-    originOffsetY = $state<number>();
-
-  // mouse position at the drag start
-  let originMouseX = $state<number>(),
-    originMouseY = $state<number>();
+  let moveOffsetX = $state<number>(),
+    moveOffsetY = $state<number>();
 </script>
 
 <svelte:document
@@ -51,41 +47,37 @@
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <svg
+  bind:this={svg}
   width="100%"
   height="100%"
-  bind:clientWidth={viewportWidth}
-  bind:clientHeight={viewportHeight}
   viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE /
     scale}"
   preserveAspectRatio="xMinYMin slice"
   onmousedown={(ev): void => {
     isMouseDown = true;
-    originMouseX = ev.clientX;
-    originMouseY = ev.clientY;
-    originOffsetX = offsetX;
-    originOffsetY = offsetY;
+    ({ x: moveOffsetX, y: moveOffsetY } = screenToViewportPoint(
+      ev.clientX,
+      ev.clientY,
+    ));
   }}
   onmousemove={isMouseDown
     ? (ev): void => {
+        // move offset must be set when isMouseDown is true
         /* eslint-disable @typescript-eslint/no-non-null-assertion */
-        offsetX =
-          originOffsetX! +
-          (ev.clientX - originMouseX!) / pxPerViewportUnit! / scale;
-        offsetY =
-          originOffsetY! +
-          (ev.clientY - originMouseY!) / pxPerViewportUnit! / scale;
+        const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
+        offsetX += x - moveOffsetX!;
+        offsetY += y - moveOffsetY!;
         /* eslint-enable @typescript-eslint/no-non-null-assertion */
       }
     : undefined}
   onwheel={(ev): void => {
+    const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
     const newScale = Math.max(
       Math.min(scale * SCALE_FACTOR ** Math.sign(-ev.deltaY), MAX_SCALE),
       MIN_SCALE,
     );
-    /* eslint-disable @typescript-eslint/no-non-null-assertion */
-    offsetX += (ev.clientX / pxPerViewportUnit!) * (1 / newScale - 1 / scale);
-    offsetY += (ev.clientY / pxPerViewportUnit!) * (1 / newScale - 1 / scale);
-    /* eslint-enable @typescript-eslint/no-non-null-assertion */
+    offsetX += (x + offsetX) * (scale / newScale - 1);
+    offsetY += (y + offsetY) * (scale / newScale - 1);
     scale = newScale;
   }}
 >
