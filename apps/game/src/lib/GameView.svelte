@@ -3,7 +3,6 @@
   import FactoryMapView from "./factory-map/FactoryMapView.svelte";
   import { VIEWPORT_SIZE } from "./factory-map/sizes";
   import Background from "./factory-map/Background.svelte";
-  import { cursor } from "./cursor.svelte";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -55,7 +54,6 @@
   viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE /
     scale}"
   preserveAspectRatio="xMinYMin slice"
-  style:cursor
   onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
     dragState = { pointerId: ev.pointerId, x, y };
