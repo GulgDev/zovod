@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     isFactoryUnitCell,
-    Storage,
     type FactoryMap,
     type FactoryUnit,
   } from "@zovod/engine";
