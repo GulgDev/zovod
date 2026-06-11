@@ -1,12 +1,8 @@
 <script lang="ts">
   import type { FactoryMap } from "@zovod/engine";
   import FactoryMapView from "./factory-map/FactoryMapView.svelte";
-  import {
-    ODD_COLUMN_Y_OFFSET,
-    TILE_GAP,
-    TILE_SIZE,
-    VIEWPORT_SIZE,
-  } from "./factory-map/sizes";
+  import { VIEWPORT_SIZE } from "./factory-map/sizes";
+  import Background from "./factory-map/Background.svelte";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -81,45 +77,7 @@
     scale = newScale;
   }}
 >
-  <defs>
-    <use
-      id="grid-tile-empty"
-      href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
-      style:--fill="none"
-      style:--stroke="#f7eacd"
-    />
-
-    <pattern
-      id="background-grid-pattern"
-      x="0"
-      y="0"
-      width={(TILE_SIZE + TILE_GAP) * 2}
-      height={TILE_SIZE + TILE_GAP}
-      patternUnits="userSpaceOnUse"
-    >
-      <use href="#grid-tile-empty" x="0" y="0"></use>
-      <use
-        href="#grid-tile-empty"
-        x={TILE_SIZE + TILE_GAP}
-        y={ODD_COLUMN_Y_OFFSET - (TILE_SIZE + TILE_GAP)}
-      ></use>
-      <use
-        href="#grid-tile-empty"
-        x={TILE_SIZE + TILE_GAP}
-        y={ODD_COLUMN_Y_OFFSET}
-      ></use>
-    </pattern>
-  </defs>
-
-  <!-- Background -->
-  <rect
-    fill="url(#background-grid-pattern)"
-    x={-offsetX}
-    y={-offsetY}
-    width="100%"
-    height="100%"
-  />
-
+  <Background {offsetX} {offsetY} />
   <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
 
