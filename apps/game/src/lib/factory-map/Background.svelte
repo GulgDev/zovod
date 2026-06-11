@@ -20,17 +20,17 @@
     height={TILE_SIZE + TILE_GAP}
     patternUnits="userSpaceOnUse"
   >
-    <use href="#grid-tile-empty" x="0" y="0"></use>
+    <use href="#grid-tile-empty" x="0" y="0" />
     <use
       href="#grid-tile-empty"
       x={TILE_SIZE + TILE_GAP}
       y={ODD_COLUMN_Y_OFFSET - (TILE_SIZE + TILE_GAP)}
-    ></use>
+    />
     <use
       href="#grid-tile-empty"
       x={TILE_SIZE + TILE_GAP}
       y={ODD_COLUMN_Y_OFFSET}
-    ></use>
+    />
   </pattern>
 </defs>
 
