@@ -2,8 +2,9 @@
   import { isFactoryUnitCell, type FactoryMap } from "@zovod/engine";
   import FactoryUnits from "./factory-units/FactoryUnits.svelte";
   import FactoryFlows from "./flows/FactoryFlows.svelte";
-  import { ICON_SIZE, ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
+  import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
   import { floorDiv, floorMod } from "../math";
+  import FactoryUnitTile from "./factory-units/FactoryUnitTile.svelte";
 
   const {
     map,
@@ -67,29 +68,10 @@
 <FactoryFlows {map} />
 
 {#if isFactoryUnitCell(tileColumn, tileRow) && !map.getUnitAt(tileColumn, tileRow)}
-  <image
-    x={(tileColumn / 2) * (TILE_SIZE + TILE_GAP) +
-      TILE_SIZE / 2 -
-      ICON_SIZE / 2}
-    y={(tileRow / 2) * (TILE_SIZE + TILE_GAP) +
-      ODD_COLUMN_Y_OFFSET * (tileColumn % 2) +
-      TILE_SIZE / 2 -
-      ICON_SIZE / 2}
-    width={ICON_SIZE}
-    height={ICON_SIZE}
-    // see FactoryUnitDisplay.svelte for preserveAspectRation
-    preserveAspectRatio="none"
-    href="{import.meta.env.BASE_URL}factory-unit/place.svg"
-  />
-
-  <!-- TODO: replace this hack -->
-  <rect
-    x={(tileColumn / 2) * (TILE_SIZE + TILE_GAP)}
-    y={(tileRow / 2) * (TILE_SIZE + TILE_GAP) +
-      ODD_COLUMN_Y_OFFSET * (tileColumn % 2)}
-    width={TILE_SIZE}
-    height={TILE_SIZE}
-    fill="transparent"
-    style:cursor="pointer"
+  <FactoryUnitTile
+    x={tileColumn}
+    y={tileRow}
+    icon="{import.meta.env.BASE_URL}factory-unit/place.svg"
+    style="cursor: pointer;"
   />
 {/if}
