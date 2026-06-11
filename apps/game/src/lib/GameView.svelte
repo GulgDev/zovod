@@ -51,8 +51,7 @@
   bind:this={svg}
   width="100%"
   height="100%"
-  viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE /
-    scale}"
+  viewBox="{offsetX} {offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE / scale}"
   preserveAspectRatio="xMinYMin slice"
   onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
@@ -62,8 +61,8 @@
     ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
 
     if (dragState) {
-      offsetX += mouseX - dragState.x;
-      offsetY += mouseY - dragState.y;
+      offsetX += dragState.x - mouseX;
+      offsetY += dragState.y - mouseY;
     }
   }}
   onwheel={(ev): void => {
@@ -72,8 +71,8 @@
       Math.min(scale * SCALE_FACTOR ** Math.sign(-ev.deltaY), MAX_SCALE),
       MIN_SCALE,
     );
-    offsetX += (x + offsetX) * (scale / newScale - 1);
-    offsetY += (y + offsetY) * (scale / newScale - 1);
+    offsetX = x - (x - offsetX) * (scale / newScale);
+    offsetY = y - (y - offsetY) * (scale / newScale);
     scale = newScale;
   }}
 >

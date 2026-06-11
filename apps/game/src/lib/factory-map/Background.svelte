@@ -22,8 +22,8 @@
 
 <rect
   fill="url(#background-grid-pattern)"
-  x={-offsetX}
-  y={-offsetY}
+  x={offsetX}
+  y={offsetY}
   width="100%"
   height="100%"
 />
