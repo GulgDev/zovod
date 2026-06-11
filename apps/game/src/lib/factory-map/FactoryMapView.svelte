@@ -1,12 +1,7 @@
 <script lang="ts">
-  import {
-    isFactoryUnitCell,
-    type FactoryMap,
-    type FactoryUnit,
-  } from "@zovod/engine";
-  import { directionFrom, type Direction } from "./direction";
-  import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
-  import FlowEdge from "./FlowEdge.svelte";
+  import { isFactoryUnitCell, type FactoryMap } from "@zovod/engine";
+  import FactoryUnits from "./factory-units/FactoryUnits.svelte";
+  import FactoryFlows from "./flows/FactoryFlows.svelte";
   import { ICON_SIZE, ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
   import { floorDiv, floorMod } from "../math";
 
@@ -16,38 +11,6 @@
     mouseX,
     mouseY,
   }: { map: FactoryMap; mouseX: number; mouseY: number } = $props();
-
-  let factoryUnits = $state<[readonly [number, number], FactoryUnit][]>();
-
-  function updateFactoryUnits(): void {
-    factoryUnits = Array.from(map.getAllUnitsWithCoords());
-  }
-
-  $effect(() => {
-    map.addEventListener("unitchange", updateFactoryUnits);
-    updateFactoryUnits();
-  });
-
-  let flowEdges = $state<
-    { x: number; y: number; from: Direction; to: Direction }[]
-  >([]);
-
-  function updateFlowEdges(): void {
-    flowEdges = Array.from(map.getAllFlowEdges()).flatMap(
-      ([[x1, y1], [x2, y2]]) =>
-        map.getFlowNodeTargets(x2, y2).map(([x3, y3]) => ({
-          x: x2,
-          y: y2,
-          from: directionFrom(x2, y2, x1, y1),
-          to: directionFrom(x2, y2, x3, y3),
-        })),
-    );
-  }
-
-  $effect(() => {
-    map.addEventListener("flowchange", updateFlowEdges);
-    updateFlowEdges();
-  });
 
   // Convert viewport coordinates to tile coordinates, where the integer part
   // is the cell index (column and row), and the fractional part is the
@@ -100,13 +63,8 @@
     tileRow = $derived(Math.floor(tileY));
 </script>
 
-{#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
-  <FactoryUnitDisplay {x} {y} {unit} />
-{/each}
-
-{#each flowEdges as edge ((edge.y << 16) | (edge.x & 0xffff))}
-  <FlowEdge {...edge} />
-{/each}
+<FactoryUnits {map} />
+<FactoryFlows {map} />
 
 {#if isFactoryUnitCell(tileColumn, tileRow) && !map.getUnitAt(tileColumn, tileRow)}
   <image

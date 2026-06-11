@@ -6,7 +6,7 @@
     FLOW_UNIT_PADDING,
     TILE_GAP,
     TILE_SIZE,
-  } from "./sizes";
+  } from "../sizes";
 
   const {
     x,

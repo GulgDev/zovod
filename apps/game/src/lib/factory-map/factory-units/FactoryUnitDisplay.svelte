@@ -5,7 +5,7 @@
     Storage,
     type FactoryUnit,
   } from "@zovod/engine";
-  import { ICON_SIZE, ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
+  import { ICON_SIZE, ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "../sizes";
 
   const { x, y, unit }: { x: number; y: number; unit: FactoryUnit } = $props();
 
