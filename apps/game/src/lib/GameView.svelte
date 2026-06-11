@@ -36,23 +36,17 @@
   let mouseX = $state(0),
     mouseY = $state(0);
 
-  let dragState = $state<
-    | { dragging: false; dragX?: undefined; dragY?: undefined }
-    | {
-        dragging: true;
-        // camera offset at the drag start
-        dragX: number;
-        dragY: number;
-      }
-  >({
-    dragging: false,
-  });
-  const { dragging, dragX, dragY } = $derived(dragState);
+  let dragState = $state<{
+    pointerId: number;
+    // camera offset at the drag start
+    x: number;
+    y: number;
+  }>();
 </script>
 
 <svelte:document
-  onmouseup={(): void => {
-    dragState = { dragging: false };
+  onpointerup={(ev): void => {
+    if (ev.pointerId === dragState?.pointerId) dragState = undefined;
   }}
 />
 
@@ -64,16 +58,16 @@
   viewBox="{-offsetX} {-offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE /
     scale}"
   preserveAspectRatio="xMinYMin slice"
-  onmousedown={(ev): void => {
+  onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
-    dragState = { dragging: true, dragX: x, dragY: y };
+    dragState = { pointerId: ev.pointerId, x, y };
   }}
-  onmousemove={(ev): void => {
+  onpointermove={(ev): void => {
     ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
 
-    if (dragging) {
-      offsetX += mouseX - dragX;
-      offsetY += mouseY - dragY;
+    if (dragState) {
+      offsetX += mouseX - dragState.x;
+      offsetY += mouseY - dragState.y;
     }
   }}
   onwheel={(ev): void => {
