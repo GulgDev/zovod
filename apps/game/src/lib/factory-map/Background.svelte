@@ -1,17 +1,11 @@
 <script lang="ts">
-  import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
+  import FactoryUnitTile from "./factory-units/FactoryUnitTile.svelte";
+  import { TILE_GAP, TILE_SIZE } from "./sizes";
 
   let { offsetX, offsetY }: { offsetX: number; offsetY: number } = $props();
 </script>
 
 <defs>
-  <use
-    id="grid-tile-empty"
-    href="{import.meta.env.BASE_URL}grid-tile.svg#grid-tile"
-    style:--fill="none"
-    style:--stroke="#f7eacd"
-  />
-
   <pattern
     id="background-grid-pattern"
     x="0"
@@ -20,17 +14,9 @@
     height={TILE_SIZE + TILE_GAP}
     patternUnits="userSpaceOnUse"
   >
-    <use href="#grid-tile-empty" x="0" y="0" />
-    <use
-      href="#grid-tile-empty"
-      x={TILE_SIZE + TILE_GAP}
-      y={ODD_COLUMN_Y_OFFSET - (TILE_SIZE + TILE_GAP)}
-    />
-    <use
-      href="#grid-tile-empty"
-      x={TILE_SIZE + TILE_GAP}
-      y={ODD_COLUMN_Y_OFFSET}
-    />
+    <FactoryUnitTile x={0} y={0} stroke="#f7eacd" />
+    <FactoryUnitTile x={2} y={-1} stroke="#f7eacd" />
+    <FactoryUnitTile x={2} y={1} stroke="#f7eacd" />
   </pattern>
 </defs>
 
