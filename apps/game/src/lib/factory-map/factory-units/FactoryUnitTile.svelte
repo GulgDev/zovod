@@ -16,10 +16,10 @@
     stroke?: string;
     icon?: string;
   } & SVGAttributes<SVGImageElement | SVGUseElement> = $props();
-</script>
 
-{const left = (x / 2) * (TILE_SIZE + TILE_GAP),
-  top = (y / 2) * (TILE_SIZE + TILE_GAP)}
+  const left = $derived((x / 2) * (TILE_SIZE + TILE_GAP)),
+    top = $derived((y / 2) * (TILE_SIZE + TILE_GAP));
+</script>
 
 <use
   x={left}
