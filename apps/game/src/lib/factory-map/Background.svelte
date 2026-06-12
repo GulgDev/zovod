@@ -2,7 +2,7 @@
   import FactoryUnitTile from "./factory-units/FactoryUnitTile.svelte";
   import { TILE_GAP, TILE_SIZE } from "./sizes";
 
-  let { offsetX, offsetY }: { offsetX: number; offsetY: number } = $props();
+  const { offsetX, offsetY }: { offsetX: number; offsetY: number } = $props();
 </script>
 
 <defs>
