@@ -13,273 +13,285 @@ describe("FlowBuilder", () => {
     factoryMap.getFlowNodeSource.mockReturnValue(undefined);
   });
 
-  it("connects two points with a straight line", () => {
-    //      0   1   2   3   4
-    //  0   #   .   .   .   #
-    //      ~
-    const builder = new FlowBuilder(factoryMap, 0, 0);
+  describe("lineTo", () => {
+    it("connects two points with a straight line", () => {
+      //      0   1   2   3   4
+      //  0   #   .   .   .   #
+      //      ~
+      const builder = new FlowBuilder(factoryMap, 0, 0);
 
-    //      0   1   2   3   4
-    //  0   #   .   .   .   #
-    //                      ~
-    builder.lineTo(4, 0);
+      //      0   1   2   3   4
+      //  0   #   .   .   .   #
+      //                      ~
+      builder.lineTo(4, 0);
 
-    //      0   1   2   3   4
-    //  0   # > . > . > . > #
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-      [2, 0],
-      [3, 0],
-      [4, 0],
-    ]);
-  });
-
-  it("connects two points with a polyline", () => {
-    //      0   1   2
-    //  0   #   .   .
-    //      ~
-    //  1   .   .   #
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-
-    //      0   1   2
-    //  0   #   .   .
-    //
-    //  1   .   .   #
-    //              ~
-    builder.lineTo(2, 1);
-
-    //      0   1   2
-    //  0   # > .   .
-    //          v
-    //  1   .   . > #
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-      [1, 1],
-      [2, 1],
-    ]);
-  });
-
-  it("returns to a point that's already in the path", () => {
-    //      0   1   2   3   4
-    //  0   # > . > . > . > #
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-    builder.lineTo(4, 0);
-
-    //      0   1   2   3   4
-    //  0   # > . > . > . > #
-    //              ~
-    builder.lineTo(2, 0);
-
-    //      0   1   2   3   4
-    //  0   # > . > .   .   #
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-      [2, 0],
-    ]);
-  });
-
-  it("does not overlay the existing path", () => {
-    //      0   1
-    // -1   .   .
-    //
-    //  0   # > .
-    //      ~~~~v
-    //  1   .  ~.
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-    builder.lineTo(1, 0);
-    builder.lineTo(1, 1);
-
-    //      0   1
-    // -1   .   .
-    //          ~
-    //  0   # > .
-    //          v
-    //  1   .   .
-    builder.lineTo(1, -1);
-
-    //      0   1
-    // -1   .   .
-    //          ^
-    //  0   # > .
-    //
-    //  1   .   .
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-      [1, -1],
-    ]);
-  });
-
-  it("returns to a point that is closer to the destination", () => {
-    //      0   1   2
-    //  0   # > . > .
-    //      ~~~~~~~~v
-    //  1   .   .  ~#
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-    builder.lineTo(2, 0);
-    builder.lineTo(2, 1);
-
-    //      0   1   2
-    //  0   # > . > .
-    //              v
-    //  1   .   .   #
-    //          ~
-    builder.lineTo(1, 1);
-
-    //      0   1   2
-    //  0   # > .   .
-    //          v
-    //  1   .   .   #
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-      [1, 1],
-    ]);
-  });
-
-  it("goes around unit cells", () => {
-    //      0   1   2   3   4   5
-    //  0   #   .   .   .   #   .
-    //      ~
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-
-    //      0   1   2   3   4   5
-    //  0   #   .   .   .   #   .
-    //                          ~
-    builder.lineTo(5, 0);
-
-    // There are two equivalent valid results
-    expect(builder.points).toBeOneOf([
-      //      0   1   2   3   4   5
-      // -1   .   .   #   . > . > .
-      //                  ^       v
-      //  0   # > . > . > .   #   .
-      [
+      //      0   1   2   3   4
+      //  0   # > . > . > . > #
+      expect(builder.points).toEqual([
         [0, 0],
         [1, 0],
         [2, 0],
         [3, 0],
-        [3, -1],
-        [4, -1],
-        [5, -1],
-        [5, 0],
-      ],
+        [4, 0],
+      ]);
+    });
+
+    it("connects two points with a polyline", () => {
+      //      0   1   2
+      //  0   #   .   .
+      //      ~
+      //  1   .   .   #
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+
+      //      0   1   2
+      //  0   #   .   .
+      //
+      //  1   .   .   #
+      //              ~
+      builder.lineTo(2, 1);
+
+      //      0   1   2
+      //  0   # > .   .
+      //          v
+      //  1   .   . > #
+      expect(builder.points).toEqual([
+        [0, 0],
+        [1, 0],
+        [1, 1],
+        [2, 1],
+      ]);
+    });
+
+    it("returns to a point that's already in the path", () => {
+      //      0   1   2   3   4
+      //  0   # > . > . > . > #
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+      builder.lineTo(4, 0);
+
+      //      0   1   2   3   4
+      //  0   # > . > . > . > #
+      //              ~
+      builder.lineTo(2, 0);
+
+      //      0   1   2   3   4
+      //  0   # > . > .   .   #
+      expect(builder.points).toEqual([
+        [0, 0],
+        [1, 0],
+        [2, 0],
+      ]);
+    });
+
+    it("does not overlay the existing path", () => {
+      //      0   1
+      // -1   .   .
+      //
+      //  0   # > .
+      //      ~~~~v
+      //  1   .  ~.
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+      builder.lineTo(1, 0);
+      builder.lineTo(1, 1);
+
+      //      0   1
+      // -1   .   .
+      //          ~
+      //  0   # > .
+      //          v
+      //  1   .   .
+      builder.lineTo(1, -1);
+
+      //      0   1
+      // -1   .   .
+      //          ^
+      //  0   # > .
+      //
+      //  1   .   .
+      expect(builder.points).toEqual([
+        [0, 0],
+        [1, 0],
+        [1, -1],
+      ]);
+    });
+
+    it("returns to a point that is closer to the destination", () => {
+      //      0   1   2
+      //  0   # > . > .
+      //      ~~~~~~~~v
+      //  1   .   .  ~#
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+      builder.lineTo(2, 0);
+      builder.lineTo(2, 1);
+
+      //      0   1   2
+      //  0   # > . > .
+      //              v
+      //  1   .   .   #
+      //          ~
+      builder.lineTo(1, 1);
+
+      //      0   1   2
+      //  0   # > .   .
+      //          v
+      //  1   .   .   #
+      expect(builder.points).toEqual([
+        [0, 0],
+        [1, 0],
+        [1, 1],
+      ]);
+    });
+
+    it("goes around unit cells", () => {
+      //      0   1   2   3   4   5
+      //  0   #   .   .   .   #   .
+      //      ~
+      const builder = new FlowBuilder(factoryMap, 0, 0);
 
       //      0   1   2   3   4   5
-      //  0   # > . > . > .   #   .
-      //                 v        ^
-      //  1   .   .   #   . > . > .
-      [
+      //  0   #   .   .   .   #   .
+      //                          ~
+      builder.lineTo(5, 0);
+
+      // There are two equivalent valid results
+      expect(builder.points).toBeOneOf([
+        //      0   1   2   3   4   5
+        // -1   .   .   #   . > . > .
+        //                  ^       v
+        //  0   # > . > . > .   #   .
+        [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [3, -1],
+          [4, -1],
+          [5, -1],
+          [5, 0],
+        ],
+
+        //      0   1   2   3   4   5
+        //  0   # > . > . > .   #   .
+        //                 v        ^
+        //  1   .   .   #   . > . > .
+        [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [3, 1],
+          [4, 1],
+          [5, 1],
+          [5, 0],
+        ],
+      ]);
+    });
+
+    it("goes around ending unit cells when continuing the path", () => {
+      //      0   1   2   3   4
+      //  0   # > . > . > . > #
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+      builder.lineTo(4, 0);
+
+      //      0   1   2   3   4   5
+      //  0   # > . > . > . > #   .
+      //                          ~
+      builder.lineTo(5, 0);
+
+      // There are two equivalent valid results
+      expect(builder.points).toBeOneOf([
+        //      0   1   2   3   4   5
+        // -1   .   .   .   . > . > .
+        //                  ^       v
+        //  0   # > . > . > .   #   .
+        [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [3, -1],
+          [4, -1],
+          [5, -1],
+          [5, 0],
+        ],
+
+        //      0   1   2   3   4   5
+        //  0   # > . > . > .   #   .
+        //                 v        ^
+        //  1   .   .   #   . > . > .
+        [
+          [0, 0],
+          [1, 0],
+          [2, 0],
+          [3, 0],
+          [3, 1],
+          [4, 1],
+          [5, 1],
+          [5, 0],
+        ],
+      ]);
+    });
+
+    it("stops at cells occupied by existing flows", () => {
+      //      0   1   2   3   4
+      // -1   .   .  ~#   .   .
+      //             ~v
+      //  0   #   .  ~.   .   #
+      when(factoryMap.getFlowNodeSource)
+        .calledWith(2, 0)
+        .mockReturnValueOnce([2, -1]);
+
+      //      0   1   2   3   4
+      // -1   .   .   #   .   .
+      //              v
+      //  0   #   .   .   .   #
+      //      ~
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+
+      //      0   1   2   3   4
+      // -1   .   .   #   .   .
+      //              v
+      //  0   #   .   .   .   #
+      //                      ~
+      builder.lineTo(4, 0);
+
+      //      0   1   2   3   4
+      // -1   .   .   #   .   .
+      //              v
+      //  0   # > .   .   .   #
+      //      ~~~~~
+      expect(builder.points).toEqual([
+        [0, 0],
+        [1, 0],
+      ]);
+    });
+  });
+
+  describe("build", () => {
+    it("adds the flow segment on the map", () => {
+      //      0   1   2   3   4
+      //  0   # > . > . > . > #
+      const builder = new FlowBuilder(factoryMap, 0, 0);
+      builder.lineTo(4, 0);
+
+      factoryMap.addFlowSegment.mockReturnValueOnce(true);
+
+      expect(builder.build()).toBeTrue();
+
+      expect(factoryMap.addFlowSegment).toHaveBeenCalledExactlyOnceWith([
         [0, 0],
         [1, 0],
         [2, 0],
         [3, 0],
-        [3, 1],
-        [4, 1],
-        [5, 1],
-        [5, 0],
-      ],
-    ]);
-  });
+        [4, 0],
+      ]);
+    });
 
-  it("goes around ending unit cells when continuing the path", () => {
-    //      0   1   2   3   4
-    //  0   # > . > . > . > #
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-    builder.lineTo(4, 0);
+    it("returns false for paths shorter than 2 points", () => {
+      const builder = new FlowBuilder(factoryMap, 0, 0);
 
-    //      0   1   2   3   4   5
-    //  0   # > . > . > . > #   .
-    //                          ~
-    builder.lineTo(5, 0);
+      factoryMap.addFlowSegment.mockReturnValueOnce(true);
 
-    // There are two equivalent valid results
-    expect(builder.points).toBeOneOf([
-      //      0   1   2   3   4   5
-      // -1   .   .   .   . > . > .
-      //                  ^       v
-      //  0   # > . > . > .   #   .
-      [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [3, -1],
-        [4, -1],
-        [5, -1],
-        [5, 0],
-      ],
-
-      //      0   1   2   3   4   5
-      //  0   # > . > . > .   #   .
-      //                 v        ^
-      //  1   .   .   #   . > . > .
-      [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [3, 1],
-        [4, 1],
-        [5, 1],
-        [5, 0],
-      ],
-    ]);
-  });
-
-  it("stops at cells occupied by existing flows", () => {
-    //      0   1   2   3   4
-    // -1   .   .  ~#   .   .
-    //             ~v
-    //  0   #   .  ~.   .   #
-    when(factoryMap.getFlowNodeSource)
-      .calledWith(2, 0)
-      .mockReturnValueOnce([2, -1]);
-
-    //      0   1   2   3   4
-    // -1   .   .   #   .   .
-    //              v
-    //  0   #   .   .   .   #
-    //      ~
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-
-    //      0   1   2   3   4
-    // -1   .   .   #   .   .
-    //              v
-    //  0   #   .   .   .   #
-    //                      ~
-    builder.lineTo(4, 0);
-
-    //      0   1   2   3   4
-    // -1   .   .   #   .   .
-    //              v
-    //  0   # > .   .   .   #
-    //      ~~~~~
-    expect(builder.points).toEqual([
-      [0, 0],
-      [1, 0],
-    ]);
-  });
-
-  it("builds the flow segment on the map", () => {
-    //      0   1   2   3   4
-    //  0   # > . > . > . > #
-    const builder = new FlowBuilder(factoryMap, 0, 0);
-    builder.lineTo(4, 0);
-
-    factoryMap.addFlowSegment.mockReturnValueOnce(true);
-
-    expect(builder.build()).toBeTrue();
-
-    expect(factoryMap.addFlowSegment).toHaveBeenCalledExactlyOnceWith([
-      [0, 0],
-      [1, 0],
-      [2, 0],
-      [3, 0],
-      [4, 0],
-    ]);
+      expect(builder.build()).toBeFalse();
+    });
   });
 });

@@ -160,8 +160,11 @@ export class FlowBuilder {
 
   /**
    * Build the flow segment on the map.
+   *
+   * @returns `true` if the flow segment is valid and was successfully added, `false` otherwise.
    */
   build(): boolean {
+    if (this.currentPoints.length < 2) return false;
     return this.map.addFlowSegment(this.currentPoints);
   }
 }
