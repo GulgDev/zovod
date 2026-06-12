@@ -16,7 +16,11 @@
   );
 </script>
 
-<svelte:window onblur={closeCallback} onwheel={closeCallback} />
+<svelte:window
+  onpointerdown={closeCallback}
+  onblur={closeCallback}
+  onwheel={closeCallback}
+/>
 
 <svelte:document
   onkeydown={open
@@ -33,12 +37,14 @@
   <menu
     style:left={rect && `${rect.right}px`}
     style:top={rect && `${rect.top}px`}
+    onpointerdown={(ev): void => {
+      ev.stopPropagation();
+    }}
     onclick={(ev): void => {
       if (ev.target instanceof Element && ev.target.closest("button")) {
         open = false;
       }
     }}
-    onblur={closeCallback}
   >
     {@render children()}
   </menu>
