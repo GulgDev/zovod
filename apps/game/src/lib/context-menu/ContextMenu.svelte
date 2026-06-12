@@ -29,9 +29,15 @@
 />
 
 {#if open}
+  <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
   <menu
     style:left={rect && `${rect.right}px`}
     style:top={rect && `${rect.top}px`}
+    onclick={(ev): void => {
+      if (ev.target instanceof Element && ev.target.closest("button")) {
+        open = false;
+      }
+    }}
     onblur={closeCallback}
   >
     {@render children()}
