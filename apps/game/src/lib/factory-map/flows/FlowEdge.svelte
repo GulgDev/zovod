@@ -13,7 +13,7 @@
     y,
     from,
     to,
-  }: { x: number; y: number; from: Direction; to: Direction } = $props();
+  }: { x: number; y: number; from: Direction; to?: Direction } = $props();
 
   // The idea is to find a bounding box for the flow edge, which is always
   // either a vertical or a horizontal rectangle:
@@ -60,11 +60,11 @@
   }
 
   const [x0, y0] = $derived(findEdgeCenter(from)),
-    [x1, y1] = $derived(findEdgeCenter(to));
+    [x1, y1] = $derived(to !== undefined ? findEdgeCenter(to) : [cx, cy]);
 </script>
 
 <path
-  d={(to - from + 4) % 2 === 0
+  d={to === undefined || (to - from + 4) % 2 === 0
     ? // straight line
       `M ${x0} ${y0} L ${x1} ${y1}`
     : // rounded line
@@ -80,10 +80,8 @@
   stroke="#f0d8aa"
   stroke-linecap="round"
   stroke-width="0.04"
-  marker-end={isFactoryUnitCell(
-    x + UNIT_VECTORS[to][0],
-    y + UNIT_VECTORS[to][1],
-  )
+  marker-end={to === undefined ||
+  isFactoryUnitCell(x + UNIT_VECTORS[to][0], y + UNIT_VECTORS[to][1])
     ? `url(${import.meta.env.BASE_URL}arrow-marker.svg#arrow-marker)` // add a marker at the flow end
     : null}
 />

@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { isFactoryUnitCell, type FactoryMap } from "@zovod/engine";
+  import {
+    FlowBuilder,
+    isFactoryUnitCell,
+    type FactoryMap,
+  } from "@zovod/engine";
   import { directionFrom, type Direction } from "./direction";
   import FlowEdge from "./FlowEdge.svelte";
   import { TILE_GAP, TILE_SIZE } from "../sizes";
@@ -62,11 +66,22 @@
         }
       }
   });
+
+  let flowBuilderState = $state<{ pointerId: number; builder: FlowBuilder }>(),
+    edgesToBeBuilt = $state<
+      {
+        x: number;
+        y: number;
+        from: Direction;
+        to?: Direction;
+      }[]
+    >([]);
 </script>
 
-{#if unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1])}
+{#if !flowBuilderState && unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1])}
   {const [unitX, unitY] = $derived(unitPosition)}
 
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <image
     x={(unitX / 2) * (TILE_SIZE + TILE_GAP) +
       (tileColumn - unitX) * (TILE_SIZE / 2 + TILE_GAP / 4) +
@@ -81,9 +96,59 @@
     preserveAspectRatio="none"
     href="{import.meta.env.BASE_URL}flow/add.svg"
     style:cursor="pointer"
+    onpointerdown={(ev): void => {
+      ev.stopPropagation();
+      flowBuilderState = {
+        pointerId: ev.pointerId,
+        builder: new FlowBuilder(map, unitX, unitY),
+      };
+    }}
   />
 {/if}
 
-{#each flowEdges as edge ((edge.y << 16) | (edge.x & 0xffff))}
+<svelte:document
+  onpointerup={flowBuilderState &&
+    ((ev): void => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { pointerId, builder } = flowBuilderState!;
+      if (ev.pointerId !== pointerId) return;
+
+      builder.build();
+      flowBuilderState = undefined;
+      edgesToBeBuilt = [];
+    })}
+  onpointermove={flowBuilderState &&
+    ((ev): void => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { pointerId, builder } = flowBuilderState!;
+      if (ev.pointerId !== pointerId) return;
+
+      builder.lineTo(tileColumn, tileRow);
+
+      edgesToBeBuilt = builder.points
+        .slice(
+          1,
+          isFactoryUnitCell(
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            ...builder.points.at(-1)!, // there's always at least one point
+          )
+            ? -1
+            : undefined,
+        )
+        .flatMap(([x2, y2], i) => {
+          // i = original index - 1
+          const prev = builder.points[i],
+            next = builder.points.at(i + 2);
+          return {
+            x: x2,
+            y: y2,
+            from: directionFrom(x2, y2, ...prev),
+            to: next && directionFrom(x2, y2, ...next),
+          };
+        });
+    })}
+/>
+
+{#each [...edgesToBeBuilt, ...flowEdges] as edge ((edge.y << 16) | (edge.x & 0xffff))}
   <FlowEdge {...edge} />
 {/each}
