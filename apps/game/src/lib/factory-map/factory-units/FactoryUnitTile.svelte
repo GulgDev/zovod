@@ -46,3 +46,9 @@
     {...props}
   />
 {/if}
+
+<style>
+  image {
+    pointer-events: none;
+  }
+</style>

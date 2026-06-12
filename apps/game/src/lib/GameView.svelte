@@ -3,6 +3,7 @@
   import FactoryMapView from "./factory-map/FactoryMapView.svelte";
   import { VIEWPORT_SIZE } from "./factory-map/sizes";
   import Background from "./factory-map/Background.svelte";
+  import { contextMenu } from "./context-menu.svelte";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -79,6 +80,8 @@
   <Background {offsetX} {offsetY} />
   <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
+
+{@render contextMenu.current?.()}
 
 <style>
   svg {

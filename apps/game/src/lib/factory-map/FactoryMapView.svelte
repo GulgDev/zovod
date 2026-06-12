@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isFactoryUnitCell, type FactoryMap } from "@zovod/engine";
+  import { isFactoryUnitCell, Storage, type FactoryMap } from "@zovod/engine";
   import FactoryUnits from "./factory-units/FactoryUnits.svelte";
   import FactoryFlows from "./flows/FactoryFlows.svelte";
   import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
@@ -64,14 +64,5 @@
     tileRow = $derived(Math.floor(tileY));
 </script>
 
-<FactoryUnits {map} />
+<FactoryUnits {map} {tileColumn} {tileRow} />
 <FactoryFlows {map} />
-
-{#if isFactoryUnitCell(tileColumn, tileRow) && !map.getUnitAt(tileColumn, tileRow)}
-  <FactoryUnitTile
-    x={tileColumn}
-    y={tileRow}
-    icon="{import.meta.env.BASE_URL}factory-unit/place.svg"
-    style="cursor: pointer;"
-  />
-{/if}
