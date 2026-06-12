@@ -38,7 +38,7 @@ export class FlowBuilder {
       let [x, y] = this.currentPoints.at(-1)!; // the flow will always contain at least 1 point (the start)
 
       // If the last point is a unit cell, ignore it
-      if (this.currentPoints.length > 1) {
+      if (this.currentPoints.length > 1 && FactoryUnitGrid.isUnitCell(x, y)) {
         this.currentPoints.pop();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         [x, y] = this.currentPoints.at(-1)!;
