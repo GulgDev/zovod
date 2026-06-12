@@ -1,6 +1,10 @@
 <script lang="ts">
   import { isFactoryUnitCell } from "@zovod/engine";
   import { UNIT_VECTORS, type Direction } from "./direction";
+  import ContextMenu from "../../context-menu/ContextMenu.svelte";
+  import ContextMenuItem from "../../context-menu/ContextMenuItem.svelte";
+  import Portal from "../../util/Portal.svelte";
+  import { contextMenu } from "../../context-menu.svelte";
   import {
     FLOW_EDGE_RADIUS,
     FLOW_UNIT_PADDING,
@@ -9,11 +13,18 @@
   } from "../sizes";
 
   const {
+    onremove,
     x,
     y,
     from,
     to,
-  }: { x: number; y: number; from: Direction; to?: Direction } = $props();
+  }: {
+    onremove?: () => void;
+    x: number;
+    y: number;
+    from: Direction;
+    to?: Direction;
+  } = $props();
 
   // The idea is to find a bounding box for the flow edge, which is always
   // either a vertical or a horizontal rectangle:
@@ -61,8 +72,14 @@
 
   const [x0, y0] = $derived(findEdgeCenter(from)),
     [x1, y1] = $derived(to !== undefined ? findEdgeCenter(to) : [cx, cy]);
+
+  let contextMenuState = $state<{
+    left: number;
+    top: number;
+  }>();
 </script>
 
+<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <path
   d={to === undefined || (to - from + 4) % 2 === 0
     ? // straight line
@@ -84,4 +101,26 @@
   isFactoryUnitCell(x + UNIT_VECTORS[to][0], y + UNIT_VECTORS[to][1])
     ? `url(${import.meta.env.BASE_URL}arrow-marker.svg#arrow-marker)` // add a marker at the flow end
     : null}
+  onclick={(ev): void => {
+    contextMenuState = { left: ev.clientX, top: ev.clientY };
+  }}
 />
+
+{#if contextMenuState}
+  <Portal bind:target={contextMenu.current}>
+    <ContextMenu
+      bind:open={
+        (): boolean => contextMenuState !== undefined,
+        (open): void => {
+          if (!open) contextMenuState = undefined;
+        }
+      }
+      left={contextMenuState.left}
+      top={contextMenuState.top}
+    >
+      {#if onremove}
+        <ContextMenuItem onclick={onremove}>Убрать поток</ContextMenuItem>
+      {/if}
+    </ContextMenu>
+  </Portal>
+{/if}

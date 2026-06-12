@@ -152,5 +152,10 @@
 />
 
 {#each [...edgesToBeBuilt, ...flowEdges] as edge ((edge.y << 16) | (edge.x & 0xffff))}
-  <FlowEdge {...edge} />
+  <FlowEdge
+    onremove={(): void => {
+      map.deleteFlowBranchAt(edge.x, edge.y);
+    }}
+    {...edge}
+  />
 {/each}
