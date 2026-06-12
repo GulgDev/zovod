@@ -80,7 +80,7 @@
     >([]);
 </script>
 
-{#if !flowBuilderState && unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1])}
+{#if !flowBuilderState && unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1]) && map.getFlowNodeSource(tileColumn, tileRow) === undefined}
   {const [unitX, unitY] = $derived(unitPosition)}
 
   <!-- svelte-ignore a11y_no_static_element_interactions -->
