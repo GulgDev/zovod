@@ -28,14 +28,9 @@
     updateFactoryUnits();
   });
 
-  let menuRect = $state<DOMRect>();
+  let menuOpen = $state(false),
+    menuRect = $state<DOMRect>();
 </script>
-
-<svelte:document
-  onmousedown={(): void => {
-    menuRect = undefined;
-  }}
-/>
 
 {#key factoryUnits}
   {#if isFactoryUnitCell(tileColumn, tileRow) && !map.getUnitAt(tileColumn, tileRow)}
@@ -45,19 +40,18 @@
       icon="{import.meta.env.BASE_URL}factory-unit/place.svg"
       style="cursor: pointer;"
       onclick={(ev): void => {
+        menuOpen = true;
         menuRect = ev.currentTarget.getBoundingClientRect();
       }}
     />
   {/if}
 {/key}
 
-{#if menuRect}
-  <Portal bind:target={contextMenu.current}>
-    <ContextMenu rect={menuRect}>
-      <ContextMenuItem>Menu item</ContextMenuItem>
-    </ContextMenu>
-  </Portal>
-{/if}
+<Portal bind:target={contextMenu.current}>
+  <ContextMenu bind:open={menuOpen} rect={menuRect}>
+    <ContextMenuItem>Menu item</ContextMenuItem>
+  </ContextMenu>
+</Portal>
 
 {#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
   <FactoryUnitDisplay {x} {y} {unit} />
