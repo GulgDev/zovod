@@ -65,4 +65,4 @@
 </script>
 
 <FactoryUnits {map} {tileColumn} {tileRow} />
-<FactoryFlows {map} />
+<FactoryFlows {map} {tileX} {tileY} />
