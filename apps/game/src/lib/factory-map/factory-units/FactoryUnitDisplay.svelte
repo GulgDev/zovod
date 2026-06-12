@@ -6,8 +6,11 @@
     type FactoryUnit,
   } from "@zovod/engine";
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
+  import FactoryUnitModal from "./FactoryUnitModal.svelte";
 
   const { x, y, unit }: { x: number; y: number; unit: FactoryUnit } = $props();
+
+  let modalOpen = $state(false);
 </script>
 
 <FactoryUnitTile
@@ -27,4 +30,10 @@
   filter="url({import.meta.env.BASE_URL}filter-glow.svg#filter-glow-{unit.active
     ? 'green'
     : 'red'})"
+  style="cursor: pointer;"
+  onclick={(): void => {
+    modalOpen = true;
+  }}
 />
+
+<FactoryUnitModal bind:open={modalOpen} />
