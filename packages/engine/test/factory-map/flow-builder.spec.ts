@@ -26,7 +26,7 @@ describe("FlowBuilder", () => {
 
     //      0   1   2   3   4
     //  0   # > . > . > . > #
-    expect(builder.build()).toEqual([
+    expect(builder.points).toEqual([
       [0, 0],
       [1, 0],
       [2, 0],
@@ -53,7 +53,7 @@ describe("FlowBuilder", () => {
     //  0   # > .   .
     //          v
     //  1   .   . > #
-    expect(builder.build()).toEqual([
+    expect(builder.points).toEqual([
       [0, 0],
       [1, 0],
       [1, 1],
@@ -74,7 +74,7 @@ describe("FlowBuilder", () => {
 
     //      0   1   2   3   4
     //  0   # > . > .   .   #
-    expect(builder.build()).toEqual([
+    expect(builder.points).toEqual([
       [0, 0],
       [1, 0],
       [2, 0],
@@ -93,7 +93,7 @@ describe("FlowBuilder", () => {
     builder.lineTo(5, 0);
 
     // There are two equivalent valid results
-    expect(builder.build()).toBeOneOf([
+    expect(builder.points).toBeOneOf([
       //      0   1   2   3   4   5
       // -1   .   .   .   . > . > .
       //                  ^       v
@@ -138,7 +138,7 @@ describe("FlowBuilder", () => {
     builder.lineTo(5, 0);
 
     // There are two equivalent valid results
-    expect(builder.build()).toBeOneOf([
+    expect(builder.points).toBeOneOf([
       //      0   1   2   3   4   5
       // -1   .   .   .   . > . > .
       //                  ^       v
@@ -199,9 +199,28 @@ describe("FlowBuilder", () => {
     //              v
     //  0   # > .   .   .   #
     //      ~~~~~
-    expect(builder.build()).toEqual([
+    expect(builder.points).toEqual([
       [0, 0],
       [1, 0],
+    ]);
+  });
+
+  it("builds the flow segment on the map", () => {
+    //      0   1   2   3   4
+    //  0   # > . > . > . > #
+    const builder = new FlowBuilder(factoryMap, 0, 0);
+    builder.lineTo(4, 0);
+
+    factoryMap.addFlowSegment.mockReturnValueOnce(true);
+
+    expect(builder.build()).toBeTrue();
+
+    expect(factoryMap.addFlowSegment).toHaveBeenCalledExactlyOnceWith([
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [3, 0],
+      [4, 0],
     ]);
   });
 });

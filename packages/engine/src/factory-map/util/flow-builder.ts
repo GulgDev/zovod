@@ -7,14 +7,21 @@ import { dist, type Point } from "./math";
  * drawing lines.
  */
 export class FlowBuilder {
-  private readonly points: Point[];
+  private readonly currentPoints: Point[];
+
+  /**
+   * Array of points that are currently in the path.
+   */
+  get points(): readonly Point[] {
+    return this.currentPoints;
+  }
 
   constructor(
     private readonly map: FactoryMap,
     startX: number,
     startY: number,
   ) {
-    this.points = [[startX, startY]];
+    this.currentPoints = [[startX, startY]];
   }
 
   /**
@@ -23,16 +30,18 @@ export class FlowBuilder {
    * algorithm](https://stackoverflow.com/questions/13542925).
    */
   lineTo(targetX: number, targetY: number): void {
-    const i = this.points.findIndex(([x, y]) => x === targetX && y === targetY);
+    const i = this.currentPoints.findIndex(
+      ([x, y]) => x === targetX && y === targetY,
+    );
     if (i === -1) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      let [x, y] = this.points.at(-1)!; // the flow will always contain at least 1 point (the start)
+      let [x, y] = this.currentPoints.at(-1)!; // the flow will always contain at least 1 point (the start)
 
       // If the last point is a unit cell, ignore it
-      if (this.points.length > 1) {
-        this.points.pop();
+      if (this.currentPoints.length > 1) {
+        this.currentPoints.pop();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        [x, y] = this.points.at(-1)!;
+        [x, y] = this.currentPoints.at(-1)!;
       }
 
       const dx = Math.abs(targetX - x),
@@ -62,7 +71,7 @@ export class FlowBuilder {
           !(x === targetX && y === targetY)
         ) {
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          [x, y] = this.points.at(-1)!; // the point array will always have at least one element (the start)
+          [x, y] = this.currentPoints.at(-1)!; // the point array will always have at least one element (the start)
 
           // Find the closest available neighbor
           const [closest] = (
@@ -79,7 +88,7 @@ export class FlowBuilder {
                 !this.map.getFlowNodeSource(neighborX, neighborY) &&
                 !FactoryUnitGrid.isUnitCell(neighborX, neighborY) &&
                 // Ignore points that are already in the path
-                !this.points.some(
+                !this.currentPoints.some(
                   ([x, y]) => x === neighborX && y === neighborY,
                 ),
             )
@@ -105,17 +114,17 @@ export class FlowBuilder {
           [x, y] = closest;
         }
 
-        this.points.push([x, y]);
+        this.currentPoints.push([x, y]);
       }
     } else {
-      this.points.splice(i + 1); // if the point is already in the list, simply return to it
+      this.currentPoints.splice(i + 1); // if the point is already in the list, simply return to it
     }
   }
 
   /**
-   * Build the flow segment as an array of points.
+   * Build the flow segment on the map.
    */
-  build(): readonly Point[] {
-    return this.points;
+  build(): boolean {
+    return this.map.addFlowSegment(this.currentPoints);
   }
 }
