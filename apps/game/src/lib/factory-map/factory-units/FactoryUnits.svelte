@@ -6,6 +6,8 @@
   } from "@zovod/engine";
   import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
+  import ContextMenu from "../../context-menu/ContextMenu.svelte";
+  import ContextMenuItem from "../../context-menu/ContextMenuItem.svelte";
   import Portal from "../../util/Portal.svelte";
   import { contextMenu } from "../../context-menu.svelte";
 
@@ -51,13 +53,9 @@
 
 {#if menuRect}
   <Portal bind:target={contextMenu.current}>
-    <menu
-      style:position="absolute"
-      style:left="{menuRect.right}px"
-      style:top="{menuRect.top}px"
-    >
-      <li><button>Menu item</button></li>
-    </menu>
+    <ContextMenu rect={menuRect}>
+      <ContextMenuItem>Menu item</ContextMenuItem>
+    </ContextMenu>
   </Portal>
 {/if}
 
