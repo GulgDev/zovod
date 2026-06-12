@@ -5,7 +5,7 @@
     children,
     open = $bindable(),
     rect,
-  }: { children: Snippet; open: boolean; rect?: DOMRectReadOnly } = $props();
+  }: { children: Snippet; open: boolean; rect: DOMRectReadOnly } = $props();
 
   const closeCallback = $derived(
     open

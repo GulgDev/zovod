@@ -1,20 +1,36 @@
 <script lang="ts">
+  import type { FactoryUnit } from "@zovod/engine";
   import ContextMenu from "../../context-menu/ContextMenu.svelte";
   import ContextMenuItem from "../../context-menu/ContextMenuItem.svelte";
+  import { factoryUnitTypes } from "../../economy/factory-unit-types";
 
-  let { open = $bindable(), rect }: { open: boolean; rect?: DOMRectReadOnly } =
-    $props();
+  let {
+    open = $bindable(),
+    rect,
+    onplace,
+  }: {
+    open: boolean;
+    rect: DOMRectReadOnly;
+    onplace: (unit: FactoryUnit) => void;
+  } = $props();
+
+  const currencyFormat = new Intl.NumberFormat("ru-RU", {
+    style: "decimal",
+  });
 </script>
 
 <ContextMenu bind:open {rect}>
-  <ContextMenuItem>
-    <span class="name">Хранилище</span>
-    <span class="price">100,000 р.</span>
-  </ContextMenuItem>
-  <ContextMenuItem>
-    <span class="name">Прядильный отдел</span>
-    <span class="price">100,000 р.</span>
-  </ContextMenuItem>
+  {#each factoryUnitTypes as factoryUnitType (factoryUnitType.name)}
+    {#if factoryUnitType.price && factoryUnitType.create}
+      <!-- eslint-disable-next-line @typescript-eslint/no-non-null-assertion -->
+      <ContextMenuItem onclick={(): void => onplace(factoryUnitType.create!())}>
+        <span class="name">{factoryUnitType.name}</span>
+        <span class="price">
+          {currencyFormat.format(factoryUnitType.price.buy)} р.
+        </span>
+      </ContextMenuItem>
+    {/if}
+  {/each}
 </ContextMenu>
 
 <style>
