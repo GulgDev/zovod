@@ -20,15 +20,17 @@
 
   function updateFlowEdges(): void {
     // Convert pairs of flow connections to individual edges
-    flowEdges = Array.from(map.getAllFlowEdges()).flatMap(
-      ([[x1, y1], [x2, y2]]) =>
+    flowEdges = Array.from(map.getAllFlowEdges())
+      // Don't draw flows over factory units
+      .filter(([, [x, y]]) => !isFactoryUnitCell(x, y))
+      .flatMap(([[x1, y1], [x2, y2]]) =>
         map.getFlowNodeTargets(x2, y2).map(([x3, y3]) => ({
           x: x2,
           y: y2,
           from: directionFrom(x2, y2, x1, y1),
           to: directionFrom(x2, y2, x3, y3),
         })),
-    );
+      );
   }
 
   $effect(() => {
