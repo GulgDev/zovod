@@ -81,6 +81,65 @@ describe("FlowBuilder", () => {
     ]);
   });
 
+  it("does not overlay the existing path", () => {
+    //      0   1
+    // -1   .   .
+    //
+    //  0   # > .
+    //      ~~~~v
+    //  1   .  ~.
+    const builder = new FlowBuilder(factoryMap, 0, 0);
+    builder.lineTo(1, 0);
+    builder.lineTo(1, 1);
+
+    //      0   1
+    // -1   .   .
+    //          ~
+    //  0   # > .
+    //          v
+    //  1   .   .
+    builder.lineTo(1, -1);
+
+    //      0   1
+    // -1   .   .
+    //          ^
+    //  0   # > .
+    //
+    //  1   .   .
+    expect(builder.points).toEqual([
+      [0, 0],
+      [1, 0],
+      [1, -1],
+    ]);
+  });
+
+  it("returns to a point that is closer to the destination", () => {
+    //      0   1   2
+    //  0   # > . > .
+    //      ~~~~~~~~v
+    //  1   .   .  ~#
+    const builder = new FlowBuilder(factoryMap, 0, 0);
+    builder.lineTo(2, 0);
+    builder.lineTo(2, 1);
+
+    //      0   1   2
+    //  0   # > . > .
+    //              v
+    //  1   .   .   #
+    //          ~
+    builder.lineTo(1, 1);
+
+    //      0   1   2
+    //  0   # > .   .
+    //          v
+    //  1   .   .   #
+    expect(builder.points).toEqual([
+      [0, 0],
+      [1, 0],
+      [1, 1],
+    ]);
+  });
+
   it("goes around unit cells", () => {
     //      0   1   2   3   4   5
     //  0   #   .   .   .   #   .
