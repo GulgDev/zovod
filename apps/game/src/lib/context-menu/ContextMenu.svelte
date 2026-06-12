@@ -47,5 +47,20 @@
 <style>
   menu {
     position: absolute;
+
+    display: flex;
+    flex-direction: column;
+
+    list-style-type: none;
+    margin: 0;
+    margin-left: 16px;
+    padding: 0;
+
+    user-select: none;
+
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 5.9px #906a3c3d;
+    overflow: hidden;
   }
 </style>

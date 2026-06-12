@@ -13,3 +13,22 @@
     {@render children()}
   </button>
 </li>
+
+<style>
+  button {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 4px 12px;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    background: none;
+    border: none;
+  }
+
+  button:hover {
+    background-color: #f7eacd;
+  }
+</style>
