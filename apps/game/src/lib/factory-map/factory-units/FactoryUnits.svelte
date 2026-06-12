@@ -28,9 +28,10 @@
   });
 
   let placeMenuState = $state<{
-    rect: DOMRect;
-    x: number;
-    y: number;
+    left: number;
+    top: number;
+    targetX: number;
+    targetY: number;
   }>();
 </script>
 
@@ -42,10 +43,12 @@
       icon="{import.meta.env.BASE_URL}factory-unit/place.svg"
       style="cursor: pointer;"
       onclick={(ev): void => {
+        const rect = ev.currentTarget.getBoundingClientRect();
         placeMenuState = {
-          rect: ev.currentTarget.getBoundingClientRect(),
-          x: tileColumn,
-          y: tileRow,
+          left: rect.right,
+          top: rect.top,
+          targetX: tileColumn,
+          targetY: tileRow,
         };
       }}
     />
@@ -61,10 +64,11 @@
           if (!open) placeMenuState = undefined;
         }
       }
-      rect={placeMenuState.rect}
+      left={placeMenuState.left}
+      top={placeMenuState.top}
       onplace={(unit): void => {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        map.placeUnit(unit, placeMenuState!.x, placeMenuState!.y);
+        map.placeUnit(unit, placeMenuState!.targetX, placeMenuState!.targetY);
       }}
     />
   </Portal>

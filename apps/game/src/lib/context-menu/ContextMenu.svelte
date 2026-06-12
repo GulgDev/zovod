@@ -4,8 +4,9 @@
   let {
     children,
     open = $bindable(),
-    rect,
-  }: { children: Snippet; open: boolean; rect: DOMRectReadOnly } = $props();
+    left,
+    top,
+  }: { children: Snippet; open: boolean; left: number; top: number } = $props();
 
   const closeCallback = $derived(
     open
@@ -35,8 +36,8 @@
 {#if open}
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
   <menu
-    style:left={rect && `${rect.right}px`}
-    style:top={rect && `${rect.top}px`}
+    style:left="{left}px"
+    style:top="{top}px"
     onpointerdown={(ev): void => {
       ev.stopPropagation();
     }}

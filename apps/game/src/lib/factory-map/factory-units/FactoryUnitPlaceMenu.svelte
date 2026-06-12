@@ -6,11 +6,13 @@
 
   let {
     open = $bindable(),
-    rect,
+    left,
+    top,
     onplace,
   }: {
     open: boolean;
-    rect: DOMRectReadOnly;
+    left: number;
+    top: number;
     onplace: (unit: FactoryUnit) => void;
   } = $props();
 
@@ -19,7 +21,7 @@
   });
 </script>
 
-<ContextMenu bind:open {rect}>
+<ContextMenu bind:open {left} {top}>
   {#each factoryUnitTypes as factoryUnitType (factoryUnitType.name)}
     {#if factoryUnitType.price && factoryUnitType.create}
       <!-- eslint-disable-next-line @typescript-eslint/no-non-null-assertion -->
