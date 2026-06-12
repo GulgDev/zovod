@@ -8,7 +8,7 @@
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
   import FactoryUnitPlaceMenu from "./FactoryUnitPlaceMenu.svelte";
   import Portal from "../../util/Portal.svelte";
-  import { contextMenu } from "../../context-menu.svelte";
+  import { overlay } from "../../overlay.svelte";
 
   const {
     map,
@@ -56,7 +56,7 @@
 {/key}
 
 {#if placeMenuState}
-  <Portal bind:target={contextMenu.current}>
+  <Portal bind:target={overlay.current}>
     <FactoryUnitPlaceMenu
       bind:open={
         (): boolean => placeMenuState !== undefined,

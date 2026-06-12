@@ -4,7 +4,7 @@
   import ContextMenu from "../../context-menu/ContextMenu.svelte";
   import ContextMenuItem from "../../context-menu/ContextMenuItem.svelte";
   import Portal from "../../util/Portal.svelte";
-  import { contextMenu } from "../../context-menu.svelte";
+  import { overlay } from "../../overlay.svelte";
   import {
     FLOW_EDGE_RADIUS,
     FLOW_UNIT_PADDING,
@@ -107,7 +107,7 @@
 />
 
 {#if contextMenuState}
-  <Portal bind:target={contextMenu.current}>
+  <Portal bind:target={overlay.current}>
     <ContextMenu
       bind:open={
         (): boolean => contextMenuState !== undefined,
