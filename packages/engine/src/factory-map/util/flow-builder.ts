@@ -27,7 +27,7 @@ export class FlowBuilder {
   /**
    * Draw a line from the last point to the target position through non-unit
    * cells using adapted [4-connected Bresenham's line
-   * algorithm](https://stackoverflow.com/questions/13542925).
+   * algorithm](https://stackoverflow.com/a/27719652).
    */
   lineTo(targetX: number, targetY: number): void {
     const i = this.currentPoints.findIndex(
