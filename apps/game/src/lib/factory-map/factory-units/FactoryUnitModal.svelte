@@ -1,9 +1,10 @@
 <script lang="ts">
-  import type { FactoryUnit } from "@zovod/engine";
+  import { ProductionPlant, Storage, type FactoryUnit } from "@zovod/engine";
   import FactoryUnitStatusIcon from "./FactoryUnitStatusIcon.svelte";
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
   import close from "../../../assets/close.svg";
+  import { resourceKinds } from "../../economy/resource-kinds";
 
   let {
     onremove,
@@ -88,6 +89,33 @@
 
       <div class="content">
         {#if tab === 0}{:else if tab === 1}
+          <div class="state-info">
+            <span class="title">Статус:</span>
+            <span class="value">
+              <FactoryUnitStatusIcon {active} />
+              {active ? "В работе" : "Неактивен"}
+            </span>
+          </div>
+          <div class="state-action">
+            <span class="title">Текущая работа</span>
+            <span class="description">
+              {#if unit instanceof Storage}
+                Хранилище принимает и хранит ресурсы разных видов
+              {:else if unit instanceof ProductionPlant}
+                Завод перерабатывает
+                <b>{resourceKinds[unit.consumedKind].nameAccusative}</b>
+                и производит
+                <b>{resourceKinds[unit.producedKind].nameAccusative}</b>
+              {/if}
+            </span>
+            <button
+              onclick={(): void => {
+                unit.paused = !unit.paused;
+              }}
+            >
+              {unit.paused ? "Запустить" : "Остановить"}
+            </button>
+          </div>
           <div class="state-action">
             <span class="title">Закрытие отдела</span>
             <span class="description">
