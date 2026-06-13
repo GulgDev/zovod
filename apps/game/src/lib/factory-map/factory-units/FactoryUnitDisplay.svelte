@@ -8,7 +8,13 @@
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
   import FactoryUnitModal from "./FactoryUnitModal.svelte";
 
-  const { x, y, unit }: { x: number; y: number; unit: FactoryUnit } = $props();
+  const {
+    onremove,
+    x,
+    y,
+    unit,
+  }: { onremove: () => void; x: number; y: number; unit: FactoryUnit } =
+    $props();
 
   let modalOpen = $state(false);
 </script>
@@ -36,4 +42,4 @@
   }}
 />
 
-<FactoryUnitModal {unit} bind:open={modalOpen} />
+<FactoryUnitModal {onremove} {unit} bind:open={modalOpen} />

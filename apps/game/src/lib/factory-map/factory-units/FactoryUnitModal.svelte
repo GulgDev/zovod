@@ -5,8 +5,11 @@
   import { overlay } from "../../overlay.svelte";
   import close from "../../../assets/close.svg";
 
-  let { unit, open = $bindable() }: { unit: FactoryUnit; open: boolean } =
-    $props();
+  let {
+    onremove,
+    unit,
+    open = $bindable(),
+  }: { onremove: () => void; unit: FactoryUnit; open: boolean } = $props();
 
   let dialog = $state<HTMLDialogElement>();
 
@@ -88,7 +91,15 @@
       </nav>
 
       <div class="content">
-        {#if tab === 0}{:else if tab === 1}{:else if tab === 2}{:else if tab === 3}{/if}
+        {#if tab === 0}{:else if tab === 1}
+          <div class="state-action">
+            <span class="title">Закрытие отдела</span>
+            <span class="description">
+              После закрытия доступа к отделу не будет
+            </span>
+            <button onclick={onremove}>Закрыть</button>
+          </div>
+        {:else if tab === 2}{:else if tab === 3}{/if}
       </div>
     </dialog>
   </Portal>

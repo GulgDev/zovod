@@ -75,5 +75,12 @@
 {/if}
 
 {#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
-  <FactoryUnitDisplay {x} {y} {unit} />
+  <FactoryUnitDisplay
+    onremove={(): void => {
+      map.removeUnitAt(x, y);
+    }}
+    {x}
+    {y}
+    {unit}
+  />
 {/each}
