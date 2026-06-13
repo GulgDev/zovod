@@ -101,6 +101,8 @@
       href="{import.meta.env.BASE_URL}flow/add.svg"
       style:cursor="pointer"
       onpointerdown={(ev): void => {
+        if (ev.button !== 0) return;
+
         ev.stopPropagation();
         flowBuilderState = {
           pointerId: ev.pointerId,
@@ -123,6 +125,8 @@
   !isFactoryUnitCell(tileColumn, tileRow) &&
   map.getFlowNodeSource(tileColumn, tileRow) !== undefined
     ? (ev): void => {
+        if (ev.button !== 0) return;
+
         ev.stopPropagation();
         flowBuilderState = {
           pointerId: ev.pointerId,
