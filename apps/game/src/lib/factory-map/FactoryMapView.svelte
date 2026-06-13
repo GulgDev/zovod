@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { isFactoryUnitCell, Storage, type FactoryMap } from "@zovod/engine";
+  import type { FactoryMap } from "@zovod/engine";
   import FactoryUnits from "./factory-units/FactoryUnits.svelte";
   import FactoryFlows from "./flows/FactoryFlows.svelte";
   import { ODD_COLUMN_Y_OFFSET, TILE_GAP, TILE_SIZE } from "./sizes";
   import { floorDiv, floorMod } from "../math";
-  import FactoryUnitTile from "./factory-units/FactoryUnitTile.svelte";
 
   const {
     map,
