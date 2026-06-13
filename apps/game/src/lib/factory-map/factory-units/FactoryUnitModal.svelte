@@ -95,6 +95,7 @@
       <div class="content">
         {#if tab === 0}
           <!-- Characteristics -->
+          <!-- TODO: make reactive -->
           {#if unit instanceof Storage}
             <div class="characteristic">
               <span class="title">Ресурсы</span>
