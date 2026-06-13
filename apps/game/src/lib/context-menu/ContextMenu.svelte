@@ -15,10 +15,20 @@
         }
       : undefined,
   );
+
+  let menu = $state<HTMLMenuElement>();
 </script>
 
 <svelte:window
-  onpointerdowncapture={closeCallback}
+  onpointerdowncapture={open
+    ? (ev): void => {
+        if (
+          !(ev.target instanceof Element && menu && menu.contains(ev.target))
+        ) {
+          open = false;
+        }
+      }
+    : undefined}
   onblur={closeCallback}
   onwheel={closeCallback}
 />
@@ -36,11 +46,9 @@
 {#if open}
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
   <menu
+    bind:this={menu}
     style:left="{left}px"
     style:top="{top}px"
-    onpointerdown={(ev): void => {
-      ev.stopPropagation();
-    }}
     onclick={(ev): void => {
       if (ev.target instanceof Element && ev.target.closest("button")) {
         open = false;
