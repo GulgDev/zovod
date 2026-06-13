@@ -150,6 +150,7 @@
     backdrop-filter: blur(8px);
   }
 
+  /* Header */
   .header {
     padding: 0 32px;
     margin-bottom: 8px;
@@ -164,6 +165,7 @@
     cursor: pointer;
   }
 
+  /* Tab navigation */
   nav ul {
     display: flex;
 
@@ -192,7 +194,16 @@
     cursor: pointer;
   }
 
+  /* Main content */
   .content {
     padding: 24px 32px;
   }
+
+  /* Characteristics tab */
+
+  /* State tab */
+
+  /* Production tab */
+
+  /* Supply tab */
 </style>
