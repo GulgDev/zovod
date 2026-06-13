@@ -94,6 +94,7 @@
 
       <div class="content">
         {#if tab === 0}
+          <!-- Characteristics -->
           {#if unit instanceof Storage}
             <div class="characteristic">
               <span class="title">Ресурсы</span>
@@ -115,6 +116,7 @@
             </div>
           {/if}
         {:else if tab === 1}
+          <!-- Status -->
           <div class="state-info">
             <span class="title">Статус:</span>
             <span class="value">
@@ -149,7 +151,11 @@
             </span>
             <button onclick={onremove}>Закрыть</button>
           </div>
-        {:else if tab === 2}{:else if tab === 3}{/if}
+        {:else if tab === 2}
+          <!-- Production -->
+        {:else if tab === 3}
+          <!-- Supply -->
+        {/if}
       </div>
     </dialog>
   </Portal>
