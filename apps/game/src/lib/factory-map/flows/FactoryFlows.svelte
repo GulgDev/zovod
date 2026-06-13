@@ -80,32 +80,42 @@
     >([]);
 </script>
 
-{#if !flowBuilderState && unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1]) && map.getFlowNodeSource(tileColumn, tileRow) === undefined}
-  {const [unitX, unitY] = $derived(unitPosition)}
+{#if !flowBuilderState}
+  {const source = $derived(map.getFlowNodeSource(tileColumn, tileRow))}
+  {#if unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1]) && source === undefined}
+    {const [unitX, unitY] = $derived(unitPosition)}
 
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <image
-    x={(unitX / 2) * (TILE_SIZE + TILE_GAP) +
-      (tileColumn - unitX) * (TILE_SIZE / 2 + TILE_GAP / 4) +
-      TILE_SIZE / 2 -
-      0.14 / 2}
-    y={(unitY / 2) * (TILE_SIZE + TILE_GAP) +
-      (tileRow - unitY) * (TILE_SIZE / 2 + TILE_GAP / 4) +
-      TILE_SIZE / 2 -
-      0.14 / 2}
-    width="0.14"
-    height="0.14"
-    preserveAspectRatio="none"
-    href="{import.meta.env.BASE_URL}flow/add.svg"
-    style:cursor="pointer"
-    onpointerdown={(ev): void => {
-      ev.stopPropagation();
-      flowBuilderState = {
-        pointerId: ev.pointerId,
-        builder: new FlowBuilder(map, unitX, unitY),
-      };
-    }}
-  />
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <image
+      x={(unitX / 2) * (TILE_SIZE + TILE_GAP) +
+        (tileColumn - unitX) * (TILE_SIZE / 2 + TILE_GAP / 4) +
+        TILE_SIZE / 2 -
+        0.14 / 2}
+      y={(unitY / 2) * (TILE_SIZE + TILE_GAP) +
+        (tileRow - unitY) * (TILE_SIZE / 2 + TILE_GAP / 4) +
+        TILE_SIZE / 2 -
+        0.14 / 2}
+      width="0.14"
+      height="0.14"
+      preserveAspectRatio="none"
+      href="{import.meta.env.BASE_URL}flow/add.svg"
+      style:cursor="pointer"
+      onpointerdown={(ev): void => {
+        ev.stopPropagation();
+        flowBuilderState = {
+          pointerId: ev.pointerId,
+          builder: new FlowBuilder(map, unitX, unitY),
+        };
+      }}
+    />
+  {:else if !isFactoryUnitCell(tileColumn, tileRow) && source !== undefined}
+    <FlowEdge
+      x={tileColumn}
+      y={tileRow}
+      from={directionFrom(tileColumn, tileRow, ...source)}
+      opacity="0.5"
+    />
+  {/if}
 {/if}
 
 <svelte:document

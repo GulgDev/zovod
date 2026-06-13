@@ -1,5 +1,6 @@
 <script lang="ts">
   import { isFactoryUnitCell } from "@zovod/engine";
+  import type { SVGAttributes } from "svelte/elements";
   import { UNIT_VECTORS, type Direction } from "./direction";
   import ContextMenu from "../../context-menu/ContextMenu.svelte";
   import ContextMenuItem from "../../context-menu/ContextMenuItem.svelte";
@@ -18,13 +19,14 @@
     y,
     from,
     to,
+    ...props
   }: {
     onremove?: () => void;
     x: number;
     y: number;
     from: Direction;
     to?: Direction;
-  } = $props();
+  } & SVGAttributes<SVGPathElement> = $props();
 
   // The idea is to find a bounding box for the flow edge, which is always
   // either a vertical or a horizontal rectangle:
@@ -79,7 +81,6 @@
   }>();
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <path
   d={to === undefined || (to - from + 4) % 2 === 0
     ? // straight line
@@ -104,6 +105,7 @@
   onclick={(ev): void => {
     contextMenuState = { left: ev.clientX, top: ev.clientY };
   }}
+  {...props}
 />
 
 {#if contextMenuState}
