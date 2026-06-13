@@ -109,30 +109,14 @@ export abstract class FactoryUnit {
     return !this.paused;
   }
 
-  private paused = false;
-
   /**
-   * Pause the factory unit. Paused factory units do not accept resources or
-   * perform simulation steps.
-   *
-   * @see {@link resume}
-   */
-  pause(): void {
-    this.paused = true;
-  }
-
-  /**
-   * Resume the factory unit and allow it to accept resources and perform
-   * simulation steps.
+   * Whether the factory unit is currently paused, meaning it does not accept
+   * resources or perform simulation steps.
    *
    * Note that even if the factory unit is not paused, it can be inactive due to
    * other reasons.
-   *
-   * @see {@link pause}
    */
-  resume(): void {
-    this.paused = false;
-  }
+  paused = false;
 
   /**
    * Perform a simulation step on the factory unit. If {@link paused} is set to

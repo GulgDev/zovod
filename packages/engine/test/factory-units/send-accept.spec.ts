@@ -50,22 +50,22 @@ describe("Factory units - send/accept", () => {
     });
   });
 
-  describe("pause", () => {
-    it("prevents the factory unit from updating", () => {
+  describe("paused", () => {
+    it("prevents the factory unit from updating when set to true", () => {
       const game = mock<Game>();
 
       const unit = new UnitMock();
-      unit.pause();
+      unit.paused = true;
 
       unit.update(game, 0);
 
       expect(unit.doUpdate).not.toHaveBeenCalled();
     });
 
-    it("prevents the factory unit from accepting resources", () => {
+    it("prevents the factory unit from accepting resources when set to true", () => {
       const sender = new UnitMock(),
         target = new UnitMock();
-      target.pause();
+      target.paused = true;
 
       vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
         new Map([[target, 1]]),
@@ -73,34 +73,6 @@ describe("Factory units - send/accept", () => {
       target.canAccept.mockReturnValueOnce(true);
 
       expect(sender.send(resourceA)).toBeFalse();
-    });
-  });
-
-  describe("resume", () => {
-    it("allows the factory unit to update", () => {
-      const game = mock<Game>();
-
-      const unit = new UnitMock();
-      unit.pause();
-      unit.resume();
-
-      unit.update(game, 0);
-
-      expect(unit.doUpdate).toHaveBeenCalled();
-    });
-
-    it("allows the factory unit to accept resources", () => {
-      const sender = new UnitMock(),
-        target = new UnitMock();
-      target.pause();
-      target.resume();
-
-      vi.mocked(FactoryMap.getTargetDistribution).mockReturnValueOnce(
-        new Map([[target, 1]]),
-      );
-      target.canAccept.mockReturnValueOnce(true);
-
-      expect(sender.send(resourceA)).toBeTrue();
     });
   });
 
