@@ -30,17 +30,7 @@
   function setTab(targetTab: number): () => void {
     return () => (tab = targetTab);
   }
-
-  const closeCallback = $derived(
-    open
-      ? (): void => {
-          open = false;
-        }
-      : undefined,
-  );
 </script>
-
-<svelte:window onpointerdown={closeCallback} />
 
 <svelte:document
   onkeydown={open
