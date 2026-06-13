@@ -36,4 +36,4 @@
   }}
 />
 
-<FactoryUnitModal bind:open={modalOpen} />
+<FactoryUnitModal {unit} bind:open={modalOpen} />

@@ -37,17 +37,42 @@
   <Portal bind:target={overlay.current}>
     <dialog
       bind:this={dialog}
+      closedby="any"
       onpointerdown={(ev): void => {
         ev.stopPropagation();
       }}
+      onclose={(): void => {
+        open = false;
+      }}
     >
-      Hello world!
+      <div class="header">
+        <FactoryUnitStatusIcon active={unit.active} />
+        <span>Прядильный отдел</span>
+
+        <button
+          class="close-button"
+          title="Закрыть"
+          onclick={(): void => {
+            open = false;
+          }}
+        >
+          <img src={close} alt="Закрыть" height="8" />
+        </button>
+      </div>
     </dialog>
   </Portal>
 {/if}
 
 <style>
   dialog {
+    width: 540px;
+    height: 500px;
+    max-width: calc(100% - 24px * 2);
+    max-height: calc(100% - 24px * 2);
+    box-sizing: border-box;
+
+    padding: 20px 32px;
+
     background-color: #fffbf2;
     border: 1px solid #ddd1b7;
     border-radius: 16px;
@@ -57,5 +82,14 @@
     background-color: #8e7556;
     opacity: 0.4;
     backdrop-filter: blur(8px);
+  }
+
+  .close-button {
+    float: right;
+
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
   }
 </style>
