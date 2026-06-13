@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { ProductionPlant, Storage, type FactoryUnit } from "@zovod/engine";
+  import {
+    Inventory,
+    ProductionPlant,
+    Storage,
+    type FactoryUnit,
+  } from "@zovod/engine";
   import FactoryUnitStatusIcon from "./FactoryUnitStatusIcon.svelte";
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
@@ -57,7 +62,7 @@
     >
       <div class="header">
         <FactoryUnitStatusIcon {active} />
-        <span>Прядильный отдел</span>
+        <span> Прядильный отдел</span>
 
         <button
           class="close-button"
@@ -88,7 +93,28 @@
       </nav>
 
       <div class="content">
-        {#if tab === 0}{:else if tab === 1}
+        {#if tab === 0}
+          {#if unit instanceof Storage}
+            <div class="characteristic">
+              <span class="title">Ресурсы</span>
+              <span class="value">
+                {unit.slotCount - unit.availableSlotCount}/{unit.slotCount}
+              </span>
+            </div>
+          {:else if unit instanceof ProductionPlant}
+            <div class="characteristic">
+              <span class="title">Мощность</span>
+              <span class="value">
+                {Inventory.getAssignedWorkforce(unit) *
+                  unit.throughputPerWorkforceUnit} ед./с
+              </span>
+            </div>
+            <div class="characteristic">
+              <span class="title">Рабочие</span>
+              <span class="value">{Inventory.getAssignedWorkforce(unit)}</span>
+            </div>
+          {/if}
+        {:else if tab === 1}
           <div class="state-info">
             <span class="title">Статус:</span>
             <span class="value">
