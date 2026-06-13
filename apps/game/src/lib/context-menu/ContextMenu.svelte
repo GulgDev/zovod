@@ -18,7 +18,7 @@
 </script>
 
 <svelte:window
-  onpointerdown={closeCallback}
+  onpointerdowncapture={closeCallback}
   onblur={closeCallback}
   onwheel={closeCallback}
 />
