@@ -148,20 +148,29 @@
 
       builder.lineTo(tileColumn, tileRow);
 
-      edgesToBeBuilt = builder.points
+      const points = [
+        // when branching from a flow, include the source as a context for flow edge direction
+        ...(isFactoryUnitCell(...builder.points[0])
+          ? []
+          : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            [map.getFlowNodeSource(...builder.points[0])!]),
+        ...builder.points,
+      ];
+
+      edgesToBeBuilt = points
         .slice(
           1,
           isFactoryUnitCell(
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            ...builder.points.at(-1)!, // there's always at least one point
+            ...points.at(-1)!, // there's always at least one point
           )
             ? -1
             : undefined,
         )
         .flatMap(([x2, y2], i) => {
           // i = original index - 1
-          const prev = builder.points[i],
-            next = builder.points.at(i + 2);
+          const prev = points[i],
+            next = points.at(i + 2);
           return {
             x: x2,
             y: y2,
@@ -172,7 +181,7 @@
     })}
 />
 
-{#each [...edgesToBeBuilt, ...flowEdges] as edge ((edge.y << 16) | (edge.x & 0xffff))}
+{#each [...edgesToBeBuilt, ...flowEdges] as edge ((BigInt(edge.to ?? 4) << 32n) | BigInt((edge.y << 16) | (edge.x & 0xffff)))}
   <FlowEdge
     onremove={(): void => {
       map.deleteFlowBranchAt(edge.x, edge.y);
