@@ -27,7 +27,7 @@ export abstract class ContainerUnit extends FactoryUnit {
   /**
    * @param slotCount The maximum total amount of resources that the container can store.
    */
-  constructor(private readonly slotCount: number) {
+  constructor(public readonly slotCount: number) {
     super();
     this.remainingSlots = slotCount;
   }
