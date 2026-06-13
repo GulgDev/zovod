@@ -119,6 +119,17 @@
 {/if}
 
 <svelte:document
+  onpointerdowncapture={!flowBuilderState &&
+  !isFactoryUnitCell(tileColumn, tileRow) &&
+  map.getFlowNodeSource(tileColumn, tileRow) !== undefined
+    ? (ev): void => {
+        ev.stopPropagation();
+        flowBuilderState = {
+          pointerId: ev.pointerId,
+          builder: new FlowBuilder(map, tileColumn, tileRow),
+        };
+      }
+    : undefined}
   onpointerup={flowBuilderState &&
     ((ev): void => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
