@@ -9,6 +9,9 @@ export class ProductionPlant extends FactoryUnit {
     readonly consumedKind: ResourceKind,
     readonly producedKind: ResourceKind,
     readonly requiredWorkforceUnits: number,
+    /**
+     * The amount of resources that can be handled per second per workforce unit.
+     */
     readonly throughputPerWorkforceUnit: number,
   ) {
     super();
@@ -36,7 +39,9 @@ export class ProductionPlant extends FactoryUnit {
   protected accept(): void {
     this.pending = true;
     this.productionTimer.reset(
-      this.throughputPerWorkforceUnit * Inventory.getAssignedWorkforce(this),
+      1 /
+        (this.throughputPerWorkforceUnit *
+          Inventory.getAssignedWorkforce(this)),
     );
   }
 
