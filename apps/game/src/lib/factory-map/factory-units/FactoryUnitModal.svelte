@@ -8,8 +8,14 @@
   let {
     onremove,
     unit,
+    active,
     open = $bindable(),
-  }: { onremove: () => void; unit: FactoryUnit; open: boolean } = $props();
+  }: {
+    onremove: () => void;
+    unit: FactoryUnit;
+    active: boolean;
+    open: boolean;
+  } = $props();
 
   let dialog = $state<HTMLDialogElement>();
 
@@ -59,7 +65,7 @@
       }}
     >
       <div class="header">
-        <FactoryUnitStatusIcon active={unit.active} />
+        <FactoryUnitStatusIcon {active} />
         <span>Прядильный отдел</span>
 
         <button

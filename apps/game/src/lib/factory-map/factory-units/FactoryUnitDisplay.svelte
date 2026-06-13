@@ -5,8 +5,10 @@
     Storage,
     type FactoryUnit,
   } from "@zovod/engine";
+  import { on } from "svelte/events";
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
   import FactoryUnitModal from "./FactoryUnitModal.svelte";
+  import { game } from "../../game";
 
   const {
     onremove,
@@ -16,6 +18,13 @@
   }: { onremove: () => void; x: number; y: number; unit: FactoryUnit } =
     $props();
 
+  let active = $derived(unit.active);
+  $effect(() =>
+    on(game, "update", () => {
+      if (active !== unit.active) active = unit.active;
+    }),
+  );
+
   let modalOpen = $state(false);
 </script>
 
@@ -23,7 +32,7 @@
   {x}
   {y}
   fill="#f7eacd"
-  stroke={unit.active ? "#d7e088" : "#ffbcaa"}
+  stroke={active ? "#d7e088" : "#ffbcaa"}
   icon="{import.meta.env.BASE_URL}factory-unit/{unit instanceof ProductionPlant
     ? `production-plant/${unit.producedKind}`
     : unit instanceof Storage
@@ -32,8 +41,8 @@
         ? 'market'
         : ((): never => {
             throw new TypeError('Invalid factory unit type.');
-          })()}-{unit.active ? 'green' : 'red'}.svg"
-  filter="url({import.meta.env.BASE_URL}filter-glow.svg#filter-glow-{unit.active
+          })()}-{active ? 'green' : 'red'}.svg"
+  filter="url({import.meta.env.BASE_URL}filter-glow.svg#filter-glow-{active
     ? 'green'
     : 'red'})"
   style="cursor: pointer;"
@@ -42,4 +51,4 @@
   }}
 />
 
-<FactoryUnitModal {onremove} {unit} bind:open={modalOpen} />
+<FactoryUnitModal {onremove} {unit} {active} bind:open={modalOpen} />
