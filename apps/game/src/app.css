@@ -17,3 +17,8 @@ button {
   font: inherit;
   color: inherit;
 }
+
+b {
+  font-size: 1.25em;
+  color: #1a1817;
+}

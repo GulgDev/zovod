@@ -63,7 +63,7 @@
     >
       <div class="header">
         <FactoryUnitStatusIcon {active} />
-        <span>{getFactoryUnitName(unit) ?? "Отдел"}</span>
+        <span class="title">{getFactoryUnitName(unit) ?? "Отдел"}</span>
 
         <button
           class="close-button"
@@ -96,67 +96,79 @@
       <div class="content">
         {#if tab === 0}
           <!-- Characteristics -->
-          <!-- TODO: make reactive -->
-          {#if unit instanceof Storage}
-            <div class="characteristic">
-              <span class="title">Ресурсы</span>
-              <span class="value">
-                {unit.slotCount - unit.availableSlotCount}/{unit.slotCount}
-              </span>
-            </div>
-          {:else if unit instanceof ProductionPlant}
-            <div class="characteristic">
-              <span class="title">Мощность</span>
-              <span class="value">
-                {Inventory.getAssignedWorkforce(unit) *
-                  unit.throughputPerWorkforceUnit} ед./с
-              </span>
-            </div>
-            <div class="characteristic">
-              <span class="title">Рабочие</span>
-              <span class="value">{Inventory.getAssignedWorkforce(unit)}</span>
-            </div>
-          {/if}
+          <div class="characteristics">
+            <!-- TODO: make reactive -->
+            {#if unit instanceof Storage}
+              <div class="characteristic frame">
+                <span class="title">Ресурсы</span>
+                <span class="value">
+                  <b>
+                    {unit.slotCount - unit.availableSlotCount}/{unit.slotCount}
+                  </b>
+                </span>
+              </div>
+            {:else if unit instanceof ProductionPlant}
+              <div class="characteristic frame">
+                <span class="title">Мощность</span>
+                <span class="value">
+                  <b>
+                    {Inventory.getAssignedWorkforce(unit) *
+                      unit.throughputPerWorkforceUnit}
+                  </b> ед./с
+                </span>
+              </div>
+              <div class="characteristic frame">
+                <span class="title">Рабочие</span>
+                <span class="value">
+                  <b>{Inventory.getAssignedWorkforce(unit)}</b>
+                </span>
+              </div>
+            {/if}
+          </div>
         {:else if tab === 1}
           <!-- Status -->
-          <div class="state-info">
-            <span class="title">Статус:</span>
-            <span class="value">
-              <FactoryUnitStatusIcon {active} />
-              {active ? "В работе" : "Неактивен"}
-            </span>
-          </div>
-          <div class="state-action">
-            <span class="title">Текущая работа</span>
-            <span class="description">
-              {#if unit instanceof Storage}
-                Хранилище принимает и хранит ресурсы разных видов
-              {:else if unit instanceof ProductionPlant}
-                Завод перерабатывает
-                <b>{resourceKinds[unit.consumedKind].nameAccusative}</b>
-                и производит
-                <b>{resourceKinds[unit.producedKind].nameAccusative}</b>
-              {/if}
-            </span>
-            <button
-              onclick={(): void => {
-                unit.paused = !unit.paused;
-              }}
-            >
-              {unit.paused ? "Запустить" : "Остановить"}
-            </button>
-          </div>
-          <div class="state-action">
-            <span class="title">Закрытие отдела</span>
-            <span class="description">
-              После закрытия доступа к отделу не будет
-            </span>
-            <button onclick={onremove}>Закрыть</button>
+          <div class="status">
+            <div class="state-info frame">
+              <span class="title">Статус:</span>
+              <span class="value">
+                <FactoryUnitStatusIcon {active} />
+                {active ? "В работе" : "Неактивен"}
+              </span>
+            </div>
+            <div class="state-action frame">
+              <span class="title">Текущая работа</span>
+              <span class="description">
+                {#if unit instanceof Storage}
+                  Хранилище принимает и хранит ресурсы разных видов
+                {:else if unit instanceof ProductionPlant}
+                  Завод перерабатывает
+                  <b>{resourceKinds[unit.consumedKind].nameAccusative}</b>
+                  и производит
+                  <b>{resourceKinds[unit.producedKind].nameAccusative}</b>
+                {/if}
+              </span>
+              <button
+                onclick={(): void => {
+                  unit.paused = !unit.paused;
+                }}
+              >
+                {unit.paused ? "Запустить" : "Остановить"}
+              </button>
+            </div>
+            <div class="state-action frame">
+              <span class="title">Закрытие отдела</span>
+              <span class="description">
+                После закрытия доступа к отделу не будет
+              </span>
+              <button onclick={onremove}>Закрыть</button>
+            </div>
           </div>
         {:else if tab === 2}
           <!-- Production -->
+          <div class="production"></div>
         {:else if tab === 3}
           <!-- Supply -->
+          <div class="supply"></div>
         {/if}
       </div>
     </dialog>
@@ -190,6 +202,10 @@
     margin-bottom: 8px;
   }
 
+  .header .title {
+    margin-left: 10px;
+  }
+
   .close-button {
     float: right;
 
@@ -220,6 +236,8 @@
     width: 100%;
     padding: 10px;
 
+    font-size: 12px;
+
     background: none;
     border: none;
   }
@@ -233,7 +251,26 @@
     padding: 24px 32px;
   }
 
+  .frame {
+    padding: 8px 12px;
+
+    background-color: white;
+    border: 1px solid #ddd1b7;
+    border-radius: 8px;
+  }
+
   /* Characteristics tab */
+  .characteristics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .characteristic {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
 
   /* State tab */
 
