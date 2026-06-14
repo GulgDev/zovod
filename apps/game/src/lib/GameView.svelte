@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { FactoryMap } from "@zovod/engine";
+  import { Tween, type TweenOptions } from "svelte/motion";
+  import { cubicOut } from "svelte/easing";
   import FactoryMapView from "./factory-map/FactoryMapView.svelte";
   import { VIEWPORT_SIZE } from "./factory-map/sizes";
   import Background from "./factory-map/Background.svelte";
@@ -21,9 +23,14 @@
     return new DOMPointReadOnly(x, y).matrixTransform(screenCTM.inverse());
   }
 
-  let offsetX = $state(0),
-    offsetY = $state(0);
-  let scale = $state(1);
+  const tweenOptions: TweenOptions<number> = {
+    duration: 200,
+    easing: cubicOut,
+  };
+
+  let offsetX = new Tween(0, tweenOptions),
+    offsetY = new Tween(0, tweenOptions);
+  let scale = new Tween(1, tweenOptions);
 
   // mouse events
 
@@ -55,7 +62,8 @@
   bind:this={svg}
   width="100%"
   height="100%"
-  viewBox="{offsetX} {offsetY} {VIEWPORT_SIZE / scale} {VIEWPORT_SIZE / scale}"
+  viewBox="{offsetX.current} {offsetY.current} {VIEWPORT_SIZE /
+    scale.current} {VIEWPORT_SIZE / scale.current}"
   preserveAspectRatio="xMinYMin slice"
   onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
@@ -65,45 +73,52 @@
     ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
 
     if (dragState) {
-      offsetX += dragState.x - mouseX;
-      offsetY += dragState.y - mouseY;
+      offsetX.set(offsetX.current + dragState.x - mouseX, { duration: 0 });
+      offsetY.set(offsetY.current + dragState.y - mouseY, { duration: 0 });
     }
   }}
   onwheel={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
     const newScale = Math.max(
-      Math.min(scale * SCALE_FACTOR ** Math.sign(-ev.deltaY), MAX_SCALE),
+      Math.min(
+        scale.current * SCALE_FACTOR ** Math.sign(-ev.deltaY),
+        MAX_SCALE,
+      ),
       MIN_SCALE,
     );
-    offsetX = x - (x - offsetX) * (scale / newScale);
-    offsetY = y - (y - offsetY) * (scale / newScale);
-    scale = newScale;
+    offsetX.set(x - (x - offsetX.current) * (scale.current / newScale), {
+      duration: 0,
+    });
+    offsetY.set(y - (y - offsetY.current) * (scale.current / newScale), {
+      duration: 0,
+    });
+    scale.set(newScale, { duration: 0 });
   }}
 >
-  <Background {offsetX} {offsetY} />
+  <Background offsetX={offsetX.current} offsetY={offsetY.current} />
   <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
 
 <div class="controls">
   <button
     onclick={(): void => {
-      scale *= SCALE_FACTOR;
+      scale.target = scale.current * SCALE_FACTOR;
     }}
   >
     <img src={zoomIn} alt="Приблизить" />
   </button>
   <button
     onclick={(): void => {
-      offsetX = 0;
-      offsetY = 0;
-      scale = 1;
+      offsetX.target = 0;
+      offsetY.target = 0;
+      scale.target = 1;
     }}
   >
     <img src={home} alt="В начало" />
   </button>
   <button
     onclick={(): void => {
-      scale /= SCALE_FACTOR;
+      scale.target = scale.current / SCALE_FACTOR;
     }}
   >
     <img src={zoomOut} alt="Отдалить" />
