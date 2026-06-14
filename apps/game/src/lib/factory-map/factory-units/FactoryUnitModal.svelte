@@ -9,6 +9,7 @@
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
   import close from "../../../assets/close.svg";
+  import { getFactoryUnitName } from "../../economy/factory-unit-types";
   import { resourceKinds } from "../../economy/resource-kinds";
 
   let {
@@ -62,7 +63,7 @@
     >
       <div class="header">
         <FactoryUnitStatusIcon {active} />
-        <span> Прядильный отдел</span>
+        <span>{getFactoryUnitName(unit) ?? "Отдел"}</span>
 
         <button
           class="close-button"
