@@ -8,6 +8,7 @@
   import FactoryUnitStatusIcon from "./FactoryUnitStatusIcon.svelte";
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
+  import { gameState } from "../../game.svelte";
   import close from "../../../assets/close.svg";
   import { getFactoryUnitName } from "../../economy/factory-unit-types";
   import { resourceKinds } from "../../economy/resource-kinds";
@@ -15,14 +16,14 @@
   let {
     onremove,
     unit,
-    active,
     open = $bindable(),
   }: {
     onremove: () => void;
     unit: FactoryUnit;
-    active: boolean;
     open: boolean;
   } = $props();
+
+  const active = $derived.by(gameState(() => unit.active));
 
   let dialog = $state<HTMLDialogElement>();
 
@@ -102,8 +103,11 @@
               <div class="characteristic frame">
                 <span class="title">Ресурсы</span>
                 <span class="value">
+                  {const availableSlotCount = $derived.by(
+                    gameState(() => unit.availableSlotCount),
+                  )}
                   <b>
-                    {unit.slotCount - unit.availableSlotCount}/{unit.slotCount}
+                    {unit.slotCount - availableSlotCount}/{unit.slotCount}
                   </b>
                 </span>
               </div>
@@ -111,9 +115,11 @@
               <div class="characteristic frame">
                 <span class="title">Мощность</span>
                 <span class="value">
+                  {const assignedWorkforce = $derived.by(
+                    gameState(() => Inventory.getAssignedWorkforce(unit)),
+                  )}
                   <b>
-                    {Inventory.getAssignedWorkforce(unit) *
-                      unit.throughputPerWorkforceUnit}
+                    {assignedWorkforce * unit.throughputPerWorkforceUnit}
                   </b> ед./с
                 </span>
               </div>

@@ -5,10 +5,9 @@
     Storage,
     type FactoryUnit,
   } from "@zovod/engine";
-  import { on } from "svelte/events";
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
   import FactoryUnitModal from "./FactoryUnitModal.svelte";
-  import { game } from "../../game";
+  import { gameState } from "../../game.svelte";
 
   const {
     onremove,
@@ -18,12 +17,7 @@
   }: { onremove: () => void; x: number; y: number; unit: FactoryUnit } =
     $props();
 
-  let active = $derived(unit.active);
-  $effect(() =>
-    on(game, "update", () => {
-      if (active !== unit.active) active = unit.active;
-    }),
-  );
+  const active = $derived.by(gameState(() => unit.active));
 
   let modalOpen = $state(false);
 </script>
@@ -51,4 +45,4 @@
   }}
 />
 
-<FactoryUnitModal {onremove} {unit} {active} bind:open={modalOpen} />
+<FactoryUnitModal {onremove} {unit} bind:open={modalOpen} />
