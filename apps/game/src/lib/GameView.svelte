@@ -147,6 +147,8 @@
     background-color: white;
     box-shadow: 0 5px 15px #906a3c3d;
     border-radius: 24px;
+
+    user-select: none;
   }
 
   .controls button {
