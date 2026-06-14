@@ -102,8 +102,9 @@
 <div class="controls">
   <button
     onclick={(): void => {
-      scale.target = scale.current * SCALE_FACTOR;
+      scale.target = Math.min(scale.current * SCALE_FACTOR, MAX_SCALE);
     }}
+    disabled={scale.target === MAX_SCALE}
   >
     <img src={zoomIn} alt="Приблизить" />
   </button>
@@ -118,8 +119,9 @@
   </button>
   <button
     onclick={(): void => {
-      scale.target = scale.current / SCALE_FACTOR;
+      scale.target = Math.max(scale.current / SCALE_FACTOR, MIN_SCALE);
     }}
+    disabled={scale.target === MIN_SCALE}
   >
     <img src={zoomOut} alt="Отдалить" />
   </button>
@@ -154,7 +156,14 @@
     border: none;
     border-radius: 16px;
     padding: 8px;
+  }
 
+  .controls button:not(:disabled) {
     cursor: pointer;
+  }
+
+  .controls button:disabled {
+    filter: brightness(0.95);
+    opacity: 0.8;
   }
 </style>
