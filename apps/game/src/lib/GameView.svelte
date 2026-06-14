@@ -98,7 +98,7 @@
       );
       camera.zoom(camera.scale * SCALE_FACTOR, x, y);
     }}
-    disabled={camera.scale === MAX_SCALE}
+    disabled={camera.targetScale === MAX_SCALE}
   >
     <img src={zoomIn} alt="Приблизить" />
   </button>
@@ -119,7 +119,7 @@
       );
       camera.zoom(camera.scale / SCALE_FACTOR, x, y);
     }}
-    disabled={camera.scale === MIN_SCALE}
+    disabled={camera.targetScale === MIN_SCALE}
   >
     <img src={zoomOut} alt="Отдалить" />
   </button>

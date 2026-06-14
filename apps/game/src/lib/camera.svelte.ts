@@ -13,6 +13,8 @@ export class Camera {
   readonly offsetX = $derived(this.offsetTween.current.x);
   readonly offsetY = $derived(this.offsetTween.current.y);
 
+  readonly targetScale = $derived(this.scaleTween.target);
+
   constructor(
     private readonly minScale: number,
     private readonly maxScale: number,
