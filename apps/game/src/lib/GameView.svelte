@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { FactoryMap } from "@zovod/engine";
-  import { Tween, type TweenOptions } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import FactoryMapView from "./factory-map/FactoryMapView.svelte";
   import { VIEWPORT_SIZE } from "./factory-map/sizes";
   import Background from "./factory-map/Background.svelte";
+  import { Camera } from "./camera.svelte";
   import { overlay } from "./overlay.svelte";
   import home from "../assets/camera-controls/home.svg";
   import zoomIn from "../assets/camera-controls/zoom-in.svg";
@@ -23,21 +23,17 @@
     return new DOMPointReadOnly(x, y).matrixTransform(screenCTM.inverse());
   }
 
-  const tweenOptions: TweenOptions<number> = {
+  const MIN_SCALE = 0.4,
+    MAX_SCALE = 1;
+
+  const camera = new Camera(MIN_SCALE, MAX_SCALE, {
     duration: 200,
     easing: cubicOut,
-  };
-
-  let offsetX = new Tween(0, tweenOptions),
-    offsetY = new Tween(0, tweenOptions);
-  let scale = new Tween(1, tweenOptions);
+  });
 
   // mouse events
 
   const SCALE_FACTOR = 1.1;
-
-  const MIN_SCALE = 0.4,
-    MAX_SCALE = 1;
 
   // mouse position in viewport coordinate space
   let mouseX = $state(0),
@@ -62,8 +58,8 @@
   bind:this={svg}
   width="100%"
   height="100%"
-  viewBox="{offsetX.current} {offsetY.current} {VIEWPORT_SIZE /
-    scale.current} {VIEWPORT_SIZE / scale.current}"
+  viewBox="{camera.offsetX} {camera.offsetY} {VIEWPORT_SIZE /
+    camera.scale} {VIEWPORT_SIZE / camera.scale}"
   preserveAspectRatio="xMinYMin slice"
   onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
@@ -73,55 +69,57 @@
     ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
 
     if (dragState) {
-      offsetX.set(offsetX.current + dragState.x - mouseX, { duration: 0 });
-      offsetY.set(offsetY.current + dragState.y - mouseY, { duration: 0 });
+      camera.setOffset(
+        camera.offsetX + dragState.x - mouseX,
+        camera.offsetY + dragState.y - mouseY,
+        { duration: 0 },
+      );
     }
   }}
   onwheel={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
-    const newScale = Math.max(
-      Math.min(
-        scale.current * SCALE_FACTOR ** Math.sign(-ev.deltaY),
-        MAX_SCALE,
-      ),
-      MIN_SCALE,
-    );
-    offsetX.set(x - (x - offsetX.current) * (scale.current / newScale), {
+    camera.zoom(camera.scale * SCALE_FACTOR ** Math.sign(-ev.deltaY), x, y, {
       duration: 0,
     });
-    offsetY.set(y - (y - offsetY.current) * (scale.current / newScale), {
-      duration: 0,
-    });
-    scale.set(newScale, { duration: 0 });
   }}
 >
-  <Background offsetX={offsetX.current} offsetY={offsetY.current} />
+  <Background offsetX={camera.offsetX} offsetY={camera.offsetY} />
   <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
 
 <div class="controls">
   <button
     onclick={(): void => {
-      scale.target = Math.min(scale.current * SCALE_FACTOR, MAX_SCALE);
+      if (!svg) throw new Error("Viewport is not connected to the DOM yet.");
+
+      const { x, y } = screenToViewportPoint(
+        svg.clientLeft + svg.clientWidth / 2,
+        svg.clientTop + svg.clientHeight / 2,
+      );
+      camera.zoom(camera.scale * SCALE_FACTOR, x, y);
     }}
-    disabled={scale.target === MAX_SCALE}
+    disabled={camera.scale === MAX_SCALE}
   >
     <img src={zoomIn} alt="Приблизить" />
   </button>
   <button
     onclick={(): void => {
-      offsetX.target = 0;
-      offsetY.target = 0;
-      scale.target = 1;
+      camera.setTransform(0, 0, 1);
     }}
   >
     <img src={home} alt="В начало" />
   </button>
   <button
     onclick={(): void => {
-      scale.target = Math.max(scale.current / SCALE_FACTOR, MIN_SCALE);
+      if (!svg) throw new Error("Viewport is not connected to the DOM yet.");
+
+      const { x, y } = screenToViewportPoint(
+        svg.clientLeft + svg.clientWidth / 2,
+        svg.clientTop + svg.clientHeight / 2,
+      );
+      camera.zoom(camera.scale / SCALE_FACTOR, x, y);
     }}
-    disabled={scale.target === MIN_SCALE}
+    disabled={camera.scale === MIN_SCALE}
   >
     <img src={zoomOut} alt="Отдалить" />
   </button>
