@@ -126,8 +126,8 @@
             {/if}
           </div>
         {:else if tab === 1}
-          <!-- Status -->
-          <div class="status">
+          <!-- State -->
+          <div class="state">
             <div class="state-info frame">
               <span class="title">Статус:</span>
               <span class="value">
@@ -142,9 +142,13 @@
                   Хранилище принимает и хранит ресурсы разных видов
                 {:else if unit instanceof ProductionPlant}
                   Завод перерабатывает
-                  <b>{resourceKinds[unit.consumedKind].nameAccusative}</b>
+                  <strong>
+                    {resourceKinds[unit.consumedKind].nameAccusative}
+                  </strong>
                   и производит
-                  <b>{resourceKinds[unit.producedKind].nameAccusative}</b>
+                  <strong>
+                    {resourceKinds[unit.producedKind].nameAccusative}
+                  </strong>
                 {/if}
               </span>
               <button
@@ -273,6 +277,53 @@
   }
 
   /* State tab */
+  .state {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    color: #564a3f;
+  }
+
+  .state-info .title {
+    margin-right: 12px;
+  }
+
+  .state-info .value {
+    text-transform: uppercase;
+
+    color: #36302b;
+  }
+
+  .state-action {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    grid-auto-flow: column;
+    column-gap: 12px;
+  }
+
+  .state-action .title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1817;
+  }
+
+  .state-action button {
+    grid-row: span 2;
+    place-self: center;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    background-color: #f7eacd;
+    color: #563414;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+
+    cursor: pointer;
+  }
 
   /* Production tab */
 
