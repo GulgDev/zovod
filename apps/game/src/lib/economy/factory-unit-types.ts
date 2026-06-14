@@ -44,7 +44,7 @@ export const factoryUnitTypes: FactoryUnitTypeInfo[] = [
     name: "Швейная мастерская",
     price: { buy: 120, sell: 80 },
     create() {
-      return new ProductionPlant("threads", "cloth", 2, 0.03);
+      return new ProductionPlant("cloth", "clothing", 2, 0.03);
     },
   },
 ] as const;
