@@ -1,9 +1,17 @@
+@import "@fontsource/spectral";
+
 body {
   margin: 0;
   overflow: hidden;
+
+  font-family: "Spectral", serif;
 }
 
 #app {
   width: 100vw;
   height: 100vh;
+}
+
+button {
+  font: inherit;
 }

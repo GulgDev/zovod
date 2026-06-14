@@ -42,6 +42,9 @@ importers:
 
   apps/game:
     dependencies:
+      '@fontsource/spectral':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@zovod/engine':
         specifier: workspace:*
         version: link:../../packages/engine
@@ -727,6 +730,9 @@ packages:
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@fontsource/spectral@5.2.8':
+    resolution: {integrity: sha512-0CqZ8/z8A38BdeSz5t2NSd5tCO1R9P1k7SF2VpRLMbZTMSSR6+2Dk0ZBMfEQK/IrBLQS1HgHLMqpdTwRpnKpGQ==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -3645,6 +3651,8 @@ snapshots:
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
+
+  '@fontsource/spectral@5.2.8': {}
 
   '@humanfs/core@0.19.2':
     dependencies:
