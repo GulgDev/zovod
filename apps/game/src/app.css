@@ -5,6 +5,7 @@ body {
   overflow: hidden;
 
   font-family: "Spectral", serif;
+  color: #36302b;
 }
 
 #app {
@@ -14,4 +15,5 @@ body {
 
 button {
   font: inherit;
+  color: inherit;
 }
