@@ -150,6 +150,8 @@
   }
 
   .controls button {
+    display: flex; /* ignore font dimensions, so that the buttons are square */
+
     background-color: #f7eacd;
     border: none;
     border-radius: 16px;
