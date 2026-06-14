@@ -4,6 +4,9 @@
   import { VIEWPORT_SIZE } from "./factory-map/sizes";
   import Background from "./factory-map/Background.svelte";
   import { overlay } from "./overlay.svelte";
+  import home from "../assets/camera-controls/home.svg";
+  import zoomIn from "../assets/camera-controls/zoom-in.svg";
+  import zoomOut from "../assets/camera-controls/zoom-out.svg";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -81,10 +84,62 @@
   <FactoryMapView {map} {mouseX} {mouseY} />
 </svg>
 
+<div class="controls">
+  <button
+    onclick={(): void => {
+      scale *= SCALE_FACTOR;
+    }}
+  >
+    <img src={zoomIn} alt="Приблизить" />
+  </button>
+  <button
+    onclick={(): void => {
+      offsetX = 0;
+      offsetY = 0;
+      scale = 1;
+    }}
+  >
+    <img src={home} alt="В начало" />
+  </button>
+  <button
+    onclick={(): void => {
+      scale /= SCALE_FACTOR;
+    }}
+  >
+    <img src={zoomOut} alt="Отдалить" />
+  </button>
+</div>
+
 {@render overlay.current?.()}
 
 <style>
   svg {
     background-color: #fffbf2;
+  }
+
+  .controls {
+    position: absolute;
+    top: 50%;
+    right: 32px;
+    transform: translateY(-50%);
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 8px;
+    gap: 10px;
+
+    background-color: white;
+    box-shadow: 0 5px 15px #906a3c3d;
+    border-radius: 24px;
+  }
+
+  .controls button {
+    background-color: #f7eacd;
+    border: none;
+    border-radius: 16px;
+    padding: 8px;
+
+    cursor: pointer;
   }
 </style>
