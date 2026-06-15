@@ -112,12 +112,12 @@
                 </span>
               </div>
             {:else if unit instanceof ProductionPlant}
+              {const assignedWorkforce = $derived.by(
+                gameState(() => Inventory.getAssignedWorkforce(unit)),
+              )}
               <div class="characteristic frame">
                 <span class="title">Мощность</span>
                 <span class="value">
-                  {const assignedWorkforce = $derived.by(
-                    gameState(() => Inventory.getAssignedWorkforce(unit)),
-                  )}
                   <b>
                     {assignedWorkforce * unit.throughputPerWorkforceUnit}
                   </b> ед./с
