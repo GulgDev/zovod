@@ -125,9 +125,7 @@
               </div>
               <div class="characteristic frame">
                 <span class="title">Рабочие</span>
-                <span class="value">
-                  <b>{Inventory.getAssignedWorkforce(unit)}</b>
-                </span>
+                <span class="value"><b>{assignedWorkforce}</b></span>
               </div>
             {/if}
           </div>
@@ -162,7 +160,8 @@
                   unit.paused = !unit.paused;
                 }}
               >
-                {unit.paused ? "Запустить" : "Остановить"}
+                {const paused = $derived.by(gameState(() => unit.paused))}
+                {paused ? "Запустить" : "Остановить"}
               </button>
             </div>
             <div class="state-action frame">
