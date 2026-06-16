@@ -174,7 +174,52 @@
           </div>
         {:else if tab === 2}
           <!-- Production -->
-          <div class="production"></div>
+          <div class="production">
+            {#if unit instanceof ProductionPlant}
+              {const assignedWorkforce = $derived.by(
+                  gameState(() => Inventory.getAssignedWorkforce(unit)),
+                ),
+                unassignedWorkforce = $derived.by(
+                  gameState(() => game.inventory.unassignedWorkforce),
+                )}
+              <div class="frame">
+                <span class="title">Рабочая сила</span>
+                <div class="contents">
+                  <input
+                    bind:value={
+                      (): number => assignedWorkforce,
+                      (value): void => {
+                        const current = Inventory.getAssignedWorkforce(unit);
+                        if (value > current)
+                          game.inventory.assignWorkforce(unit, value - current);
+                        else
+                          game.inventory.unassignWorkforce(
+                            unit,
+                            current - value,
+                          );
+                      }
+                    }
+                    max={assignedWorkforce + unassignedWorkforce}
+                    type="range"
+                  />
+                  <div class="legend">
+                    <div class="legend-item">
+                      <span class="legend-label" style:--symbol-color="#dcb982">
+                        Текущий отдел
+                      </span>
+                      <span class="legend-value">{assignedWorkforce}</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-label" style:--symbol-color="#ddd1b7">
+                        В запасе
+                      </span>
+                      <span class="legend-value">{unassignedWorkforce}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {/if}
+          </div>
         {:else if tab === 3}
           <!-- Supply -->
           <div class="supply"></div>
@@ -331,6 +376,143 @@
   }
 
   /* Production tab */
+  .production {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .production .title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1a1817;
+  }
+
+  .production .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-top: 8px;
+  }
+
+  .production .legend-label::before {
+    content: "";
+    display: inline-block;
+
+    width: 2em;
+    height: 1.5em;
+    margin-right: 0.5em;
+    vertical-align: middle;
+
+    background-color: var(--symbol-color);
+    border-radius: 6px;
+  }
+
+  .production .legend-value {
+    float: right;
+  }
+
+  /* Range input styles */
+  .production input[type="range"] {
+    --track-color: #ddd1b7;
+    --progress-color: #dcb982;
+    --track-height: 6px;
+
+    --thumb-color: #dcb982;
+    --thumb-shadow: 0 2px 10px #dcb98280;
+    --thumb-height: 24px;
+  }
+
+  .production input[type="range"] {
+    /* Reset user agent styles */
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    margin: 0;
+
+    width: 100%;
+    height: var(--thumb-height);
+  }
+
+  /* Track style */
+  .production input[type="range"]::-webkit-slider-container {
+    background-color: var(--track-color);
+    border-radius: var(--track-height);
+    height: var(--track-height);
+
+    margin-top: calc((var(--thumb-height) - var(--track-height)) / 2);
+  }
+
+  .production input[type="range"]::-moz-range-track {
+    background-color: var(--track-color);
+    border-radius: var(--track-height);
+    height: var(--track-height);
+  }
+
+  /* Thumb style */
+  .production input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    height: var(--thumb-height);
+    width: var(--thumb-height);
+
+    background-color: var(--thumb-color);
+    box-shadow: var(--thumb-shadow);
+    border: none;
+    border-radius: 100%;
+  }
+
+  .production input[type="range"]::-moz-range-thumb {
+    height: var(--thumb-height);
+    width: var(--thumb-height);
+
+    background-color: var(--thumb-color);
+    box-shadow: var(--thumb-shadow);
+    border: none;
+    border-radius: 100%;
+  }
+
+  /* Progress style */
+  .production input[type="range"]::-webkit-slider-thumb {
+    /*
+      Chromium browsers don't support changing the progress color natively, so
+      we use thumb border as a workaround
+    */
+    border-image: linear-gradient(var(--progress-color))
+      /* set border image slice so that the top, bottom and right parts are
+         empty (transparent) and the left part is filled with progress color */
+      0 0 0 1 /
+      /* fill the space between thumb bounding box and track with transparency
+         (empty top and bottom parts) */
+      calc((var(--thumb-height) - var(--track-height)) / 2)
+      /* stretch the border horizontally */ 100vw /
+      /* allow the border to overflow horizontally */ 0 100vw;
+  }
+
+  .production input[type="range"]::-webkit-slider-runnable-track {
+    overflow-x: clip; /* clip the thumb border to the track */
+  }
+
+  .production input[type="range"]::-webkit-slider-container {
+    /*
+      Because the progress fill created that way cannot be rounded, the rounded
+      edges must be created by the slider container itself
+    */
+    padding: 0 calc(var(--track-height) / 2);
+    background-image: linear-gradient(
+      to right,
+      var(--progress-color) calc(var(--track-height) / 2),
+      transparent 0
+    );
+  }
+
+  .production input[type="range"]::-moz-range-progress {
+    height: var(--track-height);
+    border-radius: var(--track-height);
+    background-color: var(--progress-color);
+  }
 
   /* Supply tab */
 </style>
