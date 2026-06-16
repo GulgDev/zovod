@@ -47,7 +47,7 @@
   let dialog = $state<HTMLDialogElement>();
 
   $effect(() => {
-    // FIXME: Is this a hack?
+    // Show the dialog as a modal (this can't be done with HTML only)
     if (open) dialog?.showModal();
     else dialog?.close();
   });
