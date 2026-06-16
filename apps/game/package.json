@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@fontsource/spectral": "^5.2.8",
-    "@zovod/engine": "workspace:*"
+    "@zovod/engine": "workspace:*",
+    "fast-deep-equal": "^3.1.3"
   }
 }

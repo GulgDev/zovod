@@ -1,5 +1,23 @@
+<script lang="ts" module>
+  const factoryUnitIds = new WeakMap<FactoryUnit, number>();
+
+  let currentId = 1;
+  function getFactoryUnitId(unit: FactoryUnit): number {
+    let id = factoryUnitIds.get(unit);
+    if (id !== undefined) return id;
+
+    factoryUnitIds.set(unit, (id = currentId++));
+    return id;
+  }
+
+  function getUniqueFactoryUnitName(unit: FactoryUnit): string {
+    return `${getFactoryUnitName(unit) ?? "Отдел"} №${getFactoryUnitId(unit)}`;
+  }
+</script>
+
 <script lang="ts">
   import {
+    FactoryMap,
     Inventory,
     ProductionPlant,
     Storage,
@@ -7,6 +25,7 @@
   } from "@zovod/engine";
   import FactoryUnitStatusIcon from "./FactoryUnitStatusIcon.svelte";
   import Portal from "../../util/Portal.svelte";
+  import MultiSlider from "../../MultiSlider.svelte";
   import { overlay } from "../../overlay.svelte";
   import { game, gameState } from "../../game.svelte";
   import close from "../../../assets/close.svg";
@@ -64,7 +83,7 @@
     >
       <div class="header">
         <FactoryUnitStatusIcon {active} />
-        <span class="title">{getFactoryUnitName(unit) ?? "Отдел"}</span>
+        <span class="title">{getUniqueFactoryUnitName(unit)}</span>
 
         <button
           class="close-button"
@@ -217,6 +236,48 @@
                       </span>
                       <span class="legend-value">{unassignedWorkforce}</span>
                     </div>
+                  </div>
+                </div>
+              </div>
+            {/if}
+            {const targetDistribution = $derived.by(
+              gameState(() => FactoryMap.getTargetDistribution(unit))
+            )}
+            {#if targetDistribution.size >= 2}
+              <div class="frame">
+                <div class="title">Распределение выхода продукции</div>
+                <div class="contents">
+                  <MultiSlider
+                    bind:values={
+                      (): number[] => Array.from(targetDistribution.values()),
+                      (values: number[]): void =>
+                        FactoryMap.setTargetDistribution(
+                          unit,
+                          new Map(
+                            Array.from(
+                              targetDistribution.keys(),
+                              (target, i) => [target, values[i]],
+                            ),
+                          ),
+                        )
+                    }
+                  />
+                  <div class="legend" style:margin-top="20px">
+                    {#each targetDistribution.entries() as [unit, probability], index (unit)}
+                      <div class="legend-item">
+                        <span
+                          class="legend-label"
+                          style:--symbol-color="color-mix(in srgb, #f0d8aa,
+                          #563414 calc({index / (targetDistribution.size - 1)} *
+                          100%))"
+                        >
+                          &rightarrow; {getUniqueFactoryUnitName(unit)}
+                        </span>
+                        <span class="legend-value">
+                          {Math.round(probability * 100)}%
+                        </span>
+                      </div>
+                    {/each}
                   </div>
                 </div>
               </div>
@@ -384,6 +445,12 @@
     gap: 24px;
   }
 
+  .production .frame {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .production .title {
     font-size: 20px;
     font-weight: 600;
@@ -395,7 +462,7 @@
     flex-direction: column;
     gap: 16px;
 
-    margin-top: 8px;
+    margin-top: 12px;
   }
 
   .production .legend-label::before {

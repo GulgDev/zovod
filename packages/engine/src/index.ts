@@ -1,7 +1,7 @@
 export { Game, type GameUpdateEvent } from "./game";
 export { Inventory } from "./economy/inventory";
 
-export type { FactoryMap } from "./factory-map";
+export { FactoryMap } from "./factory-map";
 
 import { FactoryUnitGrid } from "./factory-map/unit-grid";
 export const { isUnitCell: isFactoryUnitCell } = FactoryUnitGrid;

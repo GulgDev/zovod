@@ -1,5 +1,6 @@
 import { Game, Inventory } from "@zovod/engine";
 import { on } from "svelte/events";
+import equal from "fast-deep-equal/es6";
 
 export const game = new Game(
   new Inventory(0, { workforceUnit: { buy: 0, sell: 0 } }),
@@ -18,7 +19,7 @@ export function gameState<T>(callback: () => T): () => T {
   $effect(() =>
     on(game, "update", () => {
       const newValue = callback();
-      if (newValue !== current) current = newValue;
+      if (!equal(newValue, current)) current = newValue;
     }),
   );
 
