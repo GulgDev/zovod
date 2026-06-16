@@ -8,7 +8,7 @@
   import FactoryUnitStatusIcon from "./FactoryUnitStatusIcon.svelte";
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
-  import { gameState } from "../../game.svelte";
+  import { game, gameState } from "../../game.svelte";
   import close from "../../../assets/close.svg";
   import { getFactoryUnitName } from "../../economy/factory-unit-types";
   import { resourceKinds } from "../../economy/resource-kinds";
@@ -119,7 +119,9 @@
                 <span class="title">Мощность</span>
                 <span class="value">
                   <b>
-                    {assignedWorkforce * unit.throughputPerWorkforceUnit}
+                    {(
+                      assignedWorkforce * unit.throughputPerWorkforceUnit
+                    ).toFixed(1)}
                   </b> ед./с
                 </span>
               </div>
