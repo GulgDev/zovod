@@ -185,7 +185,7 @@
     })}
 />
 
-{#each [...edgesToBeBuilt, ...flowEdges] as edge ((BigInt(edge.to ?? 4) << 32n) | BigInt((edge.y << 16) | (edge.x & 0xffff)))}
+{#each [...edgesToBeBuilt, ...flowEdges] as edge ((BigInt(edge.to ?? 4) << 32n) | BigInt((edge.y << 16) | (edge.x & 0xffff)) & 0xffffffffn)}
   <FlowEdge
     onremove={(): void => {
       map.deleteFlowBranchAt(edge.x, edge.y);
