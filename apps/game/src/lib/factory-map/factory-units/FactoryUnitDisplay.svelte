@@ -31,11 +31,9 @@
     ? `production-plant/${unit.producedKind}`
     : unit instanceof Storage
       ? 'storage'
-      : unit instanceof Market
-        ? 'market'
-        : ((): never => {
-            throw new TypeError('Invalid factory unit type.');
-          })()}-{active ? 'green' : 'red'}.svg"
+      : ((): never => {
+          throw new TypeError('Invalid factory unit type.');
+        })()}-{active ? 'green' : 'red'}.svg"
   filter="url({import.meta.env.BASE_URL}filter-glow.svg#filter-glow-{active
     ? 'green'
     : 'red'})"

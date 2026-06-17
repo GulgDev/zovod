@@ -1,10 +1,12 @@
 <script lang="ts">
   import {
     isFactoryUnitCell,
+    Market,
     type FactoryMap,
     type FactoryUnit,
   } from "@zovod/engine";
   import FactoryUnitDisplay from "./FactoryUnitDisplay.svelte";
+  import MarketDisplay from "./MarketDisplay.svelte";
   import FactoryUnitTile from "./FactoryUnitTile.svelte";
   import FactoryUnitPlaceMenu from "./FactoryUnitPlaceMenu.svelte";
   import Portal from "../../util/Portal.svelte";
@@ -74,7 +76,7 @@
   </Portal>
 {/if}
 
-{#each factoryUnits as [[x, y], unit] ((y << 16) | (x & 0xffff))}
+{#each factoryUnits?.filter(([, unit]) => !(unit instanceof Market)) as [[x, y], unit] ((y << 16) | (x & 0xffff))}
   <FactoryUnitDisplay
     onremove={(): void => {
       map.removeUnitAt(x, y);
@@ -84,3 +86,5 @@
     {unit}
   />
 {/each}
+
+<MarketDisplay />

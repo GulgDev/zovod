@@ -110,7 +110,7 @@
         };
       }}
     />
-  {:else if !isFactoryUnitCell(tileColumn, tileRow) && source !== undefined}
+  {:else if !isFactoryUnitCell(tileColumn, tileRow) && source !== undefined && /* exclude reserved flow nodes */ !(source[0] === tileColumn && source[1] === tileRow)}
     <FlowEdge
       x={tileColumn}
       y={tileRow}

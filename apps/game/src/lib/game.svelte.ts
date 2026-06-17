@@ -1,4 +1,4 @@
-import { Game, Inventory } from "@zovod/engine";
+import { Game, Inventory, Market } from "@zovod/engine";
 import { on } from "svelte/events";
 import equal from "fast-deep-equal/es6";
 import { workforceUnit } from "./economy/resource-kinds";
@@ -6,6 +6,33 @@ import { workforceUnit } from "./economy/resource-kinds";
 export const game = new Game(
   new Inventory(100, { workforceUnit: workforceUnit.price }),
 );
+
+// Initialize the factory map by adding a market.
+// Note that because market spans multiple tiles, we prohibit creating flows
+// inbetween those tiles
+//      0   1   2
+//
+// -2   @   .   .
+//
+// -1   x   x   @
+//
+//  0   @   x   x
+//
+//  1   x   x   @
+//
+//  2   @   .   .
+const market = new Market(20, 30);
+game.factoryMap.placeUnit(market, 0, -2);
+game.factoryMap.placeUnit(market, 0, 0);
+game.factoryMap.placeUnit(market, 0, 2);
+game.factoryMap.placeUnit(market, 2, -1);
+game.factoryMap.placeUnit(market, 2, 1);
+game.factoryMap.reserveFlowNode(0, -1);
+game.factoryMap.reserveFlowNode(0, 1);
+game.factoryMap.reserveFlowNode(1, -1);
+game.factoryMap.reserveFlowNode(1, 0);
+game.factoryMap.reserveFlowNode(1, 1);
+game.factoryMap.reserveFlowNode(2, 0);
 
 /**
  * Creates a reactive state by listening to game update events and checking if a
