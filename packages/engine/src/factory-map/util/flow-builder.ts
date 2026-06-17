@@ -87,7 +87,12 @@ export class FlowBuilder {
             if (isAvailable(x + incrementX, y + inc)) {
               this.add(x, (y += inc));
               this.add(x + incrementX, y);
-              return this.lineTo(targetX, targetY); // the current increment becomes invalid
+
+              // The current increment becomes invalid, start the
+              // procedure from scratch
+              // FIXME: this leads to infinite recursion when the target cannot
+              // be reached
+              return this.lineTo(targetX, targetY);
             } else if (isAvailable(x + incrementX, y - inc)) {
               this.add(x, (y -= inc));
               this.add(x + incrementX, y);
