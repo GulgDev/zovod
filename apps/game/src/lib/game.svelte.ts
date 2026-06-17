@@ -1,9 +1,10 @@
 import { Game, Inventory } from "@zovod/engine";
 import { on } from "svelte/events";
 import equal from "fast-deep-equal/es6";
+import { workforceUnit } from "./economy/resource-kinds";
 
 export const game = new Game(
-  new Inventory(0, { workforceUnit: { buy: 0, sell: 0 } }),
+  new Inventory(0, { workforceUnit: workforceUnit.price }),
 );
 
 /**

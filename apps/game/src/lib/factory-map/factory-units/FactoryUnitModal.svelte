@@ -30,7 +30,7 @@
   import { game, gameState } from "../../game.svelte";
   import close from "../../../assets/close.svg";
   import { getFactoryUnitName } from "../../economy/factory-unit-types";
-  import { resourceKinds } from "../../economy/resource-kinds";
+  import { resourceKinds, workforceUnit } from "../../economy/resource-kinds";
 
   let {
     onremove,
@@ -56,6 +56,27 @@
 
   function setTab(targetTab: number): () => void {
     return () => (tab = targetTab);
+  }
+
+   // used in the supply tab
+  let currentResource = $derived(
+    unit instanceof Storage
+      ? Object.keys(resourceKinds)[0]
+      : unit instanceof ProductionPlant
+        ? "workforceUnit"
+        : undefined,
+  );
+
+  function validateResourceCount(value: number): number {
+    if (currentResource === undefined)
+      throw new Error("No resource kind selected to validate against.");
+
+    return Math.min(
+      Math.max(value, 1),
+      currentResource === "workforceUnit"
+        ? game.inventory.getMaxAffordableWorkforceUnits()
+        : game.inventory.getMaxAffordableResourceAmount(currentResource)
+    );
   }
 </script>
 
@@ -284,22 +305,116 @@
           </div>
         {:else if tab === 3}
           <!-- Supply -->
-          <div class="supply"></div>
+          <div class="supply">
+            {#if unit instanceof Storage}
+              {#each Object.entries(resourceKinds) as [resource, info] (resource)}
+                <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
+                <div
+                  class={[
+                    "frame item",
+                    { active: currentResource === resource },
+                  ]}
+                  onclick={(): void => {
+                    currentResource = resource;
+                  }}
+                >
+                  <span class="resource-info">
+                    <span class="title">{info.name}</span>
+                    <span class="label">Контракт</span>
+                  </span>
+                  <span class="price">
+                    <b>{info.price.buy} р.</b> / ед.
+                  </span>
+                </div>
+              {/each}
+            {:else if unit instanceof ProductionPlant}
+              <div
+                class={[
+                  "frame item",
+                  { active: currentResource === "workforceUnit" },
+                ]}
+              >
+                <span class="title">{workforceUnit.name}</span>
+                <span class="label">Разовая покупка</span>
+                <span class="price">
+                  <b>{workforceUnit.price.buy} р.</b>
+                  / ед.
+                </span>
+              </div>
+            {/if}
+          </div>
+          {/if}
+        </div>
+        {#if tab === 3 && currentResource !== undefined}
+          {const balance = $derived.by(gameState(() => game.inventory.balance))}
+          {#key balance}
+            {let resourceCount = $state(validateResourceCount(1))}
+            <div class="purchase-panel">
+              <div>
+                {#if currentResource === "workforceUnit"}
+                  <span class="label">Объём поставки</span>
+                  <input
+                    type="number"
+                    bind:value={
+                      (): number => resourceCount,
+                      (value): void => {
+                        resourceCount = validateResourceCount(value);
+                      }
+                    }
+                  />
+                {/if}
+              </div>
+              <div>
+                <span class="price">
+                  {currentResource === "workforceUnit"
+                    ? game.inventory.getWorkforceUnitPrice() * resourceCount
+                    : game.inventory.getResourcePrice(currentResource)} р.
+                </span>
+                <button
+                  disabled={resourceCount === 0}
+                  onclick={(): void => {
+                    if (currentResource === "workforceUnit") {
+                      if (!(unit instanceof ProductionPlant))
+                        throw new Error(
+                          "Cannot assign workforce to a non-production unit."
+                        );
+
+                      if (!game.inventory.buyWorkforce(resourceCount))
+                        throw new Error("Failed to buy workforce units.");
+                      game.inventory.assignWorkforce(unit, resourceCount);
+                    } else {
+                      if (!(unit instanceof Storage))
+                        throw new Error(
+                          "Cannot assign resources to a non-storage unit."
+                        );
+                      
+                      unit.renewedResourceKind = currentResource;
+                    }
+                  }}
+                >
+                  Купить
+                </button>
+              </div>
+            </div>
+          {/key}
         {/if}
-      </div>
-    </dialog>
+      </dialog>
   </Portal>
 {/if}
 
 <style>
   dialog {
+    display: flex;
+    flex-direction: column;
+
     width: 540px;
     height: 500px;
     max-width: calc(100% - 24px * 2);
     max-height: calc(100% - 24px * 2);
     box-sizing: border-box;
 
-    padding: 20px 0;
+    padding: 0;
+    padding-top: 20px;
 
     background-color: #fffbf2;
     color: inherit;
@@ -365,6 +480,9 @@
 
   /* Main content */
   .content {
+    flex: auto;
+    overflow-y: auto;
+    
     padding: 24px 32px;
   }
 
@@ -584,4 +702,115 @@
   }
 
   /* Supply tab */
+  .supply {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .supply .item {
+    display: flex;
+    align-items: baseline;
+
+    color: #564a3f;
+
+    user-select: none;
+  }
+
+  .supply .item:not(.active) {
+    background-color: transparent;
+  }
+
+  .supply .title {
+    font-weight: 700;
+    color: #1a1817;
+  }
+
+  .supply .label {
+    margin-left: 8px;
+    padding: 0 6px;
+    border-radius: 4px;
+    align-self: center;
+
+    background-color: #f0d8aa;
+    color: #563414;
+
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  .supply .price {
+    margin-left: auto;
+  }
+
+  .purchase-panel {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 16px 32px;
+
+    border-top: inherit;
+  }
+
+  .purchase-panel .label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 12px;
+  }
+
+  .purchase-panel input {
+    width: 3ch;
+    padding: 4px 14px;
+    
+    font: inherit;
+    background-color: white;
+    border: 1px solid #906a3c;
+    border-radius: 12px;
+  }
+
+  /* Hide the step buttons in number input */
+  .purchase-panel input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: auto; /* silence css vendor prefix warning */
+  }
+
+  .purchase-panel input[type="number"]::-webkit-outer-spin-button,
+  .purchase-panel input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .purchase-panel div:last-child {
+    text-align: right;
+  }
+
+  .purchase-panel .price {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .purchase-panel button {
+    padding: 10px 16px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    background-color: #dcb982;
+    color: #1a0b00;
+    border: none;
+    border-radius: 8px;
+
+    cursor: pointer;
+  }
+
+  .purchase-panel button:disabled {
+    filter: brightness(0.95);
+    opacity: 0.8;
+
+    cursor: not-allowed;
+  }
 </style>
