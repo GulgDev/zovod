@@ -32,7 +32,7 @@ export class DirectedGraph {
    * Create an edge between two cells in von Neumann neighborhood.
    *
    * @throws Will throw if the Manhattan distance between the pair of cells is not 1.
-   * @throws Will throw if the successor cell already has a predecessor.
+   * @throws Will throw if the successor cell already has a predecessor or is reserved.
    */
   addEdge(x1: number, y1: number, x2: number, y2: number): void {
     if (dist(x1, y1, x2, y2) !== 1)
@@ -46,10 +46,26 @@ export class DirectedGraph {
     // Trying to add a second incoming edge is an invalid
     // operation and should be checked user-side
     if (this.predecessors.has(keyTo))
-      throw new Error(`(${x2}, ${y2}) already has a predecessor`);
+      throw new Error(
+        `(${x2}, ${y2}) already has a predecessor or is reserved`,
+      );
 
     this.predecessors.set(keyTo, keyFrom);
     this.successors.getOrInsertComputed(keyFrom, () => new Set()).add(keyTo);
+  }
+
+  /**
+   * Reserve a node so that no edges can be added to it.
+   *
+   * @throws Will throw if the cell already has a predecessor or is reserved.
+   */
+  reserve(x: number, y: number): void {
+    const key = packCoords(x, y);
+
+    if (this.predecessors.has(key))
+      throw new Error(`(${x}, ${y}) already has a predecessor or is reserved`);
+
+    this.predecessors.set(key, key);
   }
 
   /**
@@ -85,9 +101,12 @@ export class DirectedGraph {
   }
 
   /**
-   * Find the predecessor of a node.
+   * Find the predecessor of a node. If the node is reserved, it is the
+   * predecessor of itself.
    *
    * @returns The coordinates of the predecessor, or `undefined` if there isn't one.
+   *
+   * @see {@link reserve} for reserving nodes.
    */
   getPredecessor(x: number, y: number): Point | undefined {
     const key = this.predecessors.get(packCoords(x, y));

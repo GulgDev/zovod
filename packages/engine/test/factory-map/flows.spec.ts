@@ -372,6 +372,22 @@ describe("FactoryMap - flow map", () => {
     });
   });
 
+  describe("reserveFlowNode", () => {
+    it("makes a node its own source", () => {
+      expect(() => map.reserveFlowNode(2, 0)).not.toThrow();
+
+      expect(map.getFlowNodeSource(2, 0)).toEqual([2, 0]);
+    });
+
+    it("throws when the node already has a source", () => {
+      map.reserveFlowNode(2, 0);
+
+      expect(() => map.reserveFlowNode(2, 0)).toThrow(
+        "already has a predecessor or is reserved",
+      );
+    });
+  });
+
   describe("getAllFlowEdges", () => {
     it("find all flow edges", () => {
       //      0   1   2

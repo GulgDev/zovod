@@ -223,11 +223,24 @@ export class FactoryMap extends EventTarget {
   }
 
   /**
-   * Find the predecessor of a flow node.
+   * Reserve a flow node so that no further added flow can pass through it.
+   *
+   * @throws Will throw if the flow node is already reserved or is a part of a flow tree.
+   *
+   * @see {@link FlowGrid.reserveFlowNode}
+   */
+  reserveFlowNode(x: number, y: number): void {
+    this.flowGrid.reserveFlowNode(x, y);
+  }
+
+  /**
+   * Find the predecessor of a flow node. If the node is reserved, it is the
+   * predecessor of itself.
    *
    * @returns The coordinates of the predecessor, or `undefined` if there isn't one.
    *
    * @see {@link FlowGrid.getFlowNodeSource}
+   * @see {@link reserveFlowNode} for reserving nodes.
    */
   getFlowNodeSource(x: number, y: number): Point | undefined {
     return this.flowGrid.getFlowNodeSource(x, y);
