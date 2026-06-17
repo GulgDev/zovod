@@ -302,6 +302,7 @@
     padding: 20px 0;
 
     background-color: #fffbf2;
+    color: inherit;
     border: 1px solid #ddd1b7;
     border-radius: 16px;
   }
