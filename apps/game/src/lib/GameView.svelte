@@ -51,6 +51,17 @@
   onpointerup={(ev): void => {
     if (ev.pointerId === dragState?.pointerId) dragState = undefined;
   }}
+  onpointermove={(ev): void => {
+    ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
+
+    if (dragState) {
+      camera.setOffset(
+        camera.offsetX + dragState.x - mouseX,
+        camera.offsetY + dragState.y - mouseY,
+        { duration: 0 },
+      );
+    }
+  }}
 />
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -64,17 +75,6 @@
   onpointerdown={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
     dragState = { pointerId: ev.pointerId, x, y };
-  }}
-  onpointermove={(ev): void => {
-    ({ x: mouseX, y: mouseY } = screenToViewportPoint(ev.clientX, ev.clientY));
-
-    if (dragState) {
-      camera.setOffset(
-        camera.offsetX + dragState.x - mouseX,
-        camera.offsetY + dragState.y - mouseY,
-        { duration: 0 },
-      );
-    }
   }}
   onwheel={(ev): void => {
     const { x, y } = screenToViewportPoint(ev.clientX, ev.clientY);
@@ -130,6 +130,8 @@
 <style>
   svg {
     background-color: #fffbf2;
+
+    user-select: none;
   }
 
   .controls {
