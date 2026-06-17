@@ -4,7 +4,7 @@ import equal from "fast-deep-equal/es6";
 import { workforceUnit } from "./economy/resource-kinds";
 
 export const game = new Game(
-  new Inventory(1000, { workforceUnit: workforceUnit.price }),
+  new Inventory(100, { workforceUnit: workforceUnit.price }),
 );
 
 /**
