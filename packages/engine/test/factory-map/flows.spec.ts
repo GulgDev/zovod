@@ -3,7 +3,6 @@ import { FactoryMap } from "../../src/factory-map";
 import { UnitMock } from "../util/unit-mock";
 import {
   map,
-  unitChangeListener,
   flowChangeListener,
 } from "./util/with-factory-map";
 
