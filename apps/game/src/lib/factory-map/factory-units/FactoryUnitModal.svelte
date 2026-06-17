@@ -11,7 +11,9 @@
   }
 
   function getUniqueFactoryUnitName(unit: FactoryUnit): string {
-    return `${getFactoryUnitName(unit) ?? "Отдел"} №${getFactoryUnitId(unit)}`;
+    return unit instanceof Market
+      ? "Рынок" // there is only a single market unit instance in the game
+      : `${getFactoryUnitName(unit) ?? "Отдел"} №${getFactoryUnitId(unit)}`;
   }
 </script>
 
@@ -19,6 +21,7 @@
   import {
     FactoryMap,
     Inventory,
+    Market,
     ProductionPlant,
     Storage,
     type FactoryUnit,
