@@ -1,4 +1,8 @@
-@import "@fontsource/spectral";
+@import "@fontsource/spectral/400.css";
+@import "@fontsource/spectral/500.css";
+@import "@fontsource/spectral/600.css";
+@import "@fontsource/spectral/700.css";
+@import "@fontsource/spectral/400-italic.css";
 
 body {
   margin: 0;
@@ -19,6 +23,7 @@ button {
 }
 
 b {
+  font-weight: 600;
   font-size: 1.25em;
   color: #1a1817;
 }
