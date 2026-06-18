@@ -1,7 +1,9 @@
 <script lang="ts">
   import {
+    Inventory,
     isFactoryUnitCell,
     Market,
+    ProductionPlant,
     type FactoryMap,
     type FactoryUnit,
   } from "@zovod/engine";
@@ -83,6 +85,12 @@
     onremove={(): void => {
       const info = factoryUnitTypes.find((type) => type.is(unit));
       if (info && info.price) game.inventory.earnMoney(info.price.sell);
+
+      if (unit instanceof ProductionPlant)
+        game.inventory.unassignWorkforce(
+          unit,
+          Inventory.getAssignedWorkforce(unit),
+        );
       map.removeUnitAt(x, y);
     }}
     {x}
