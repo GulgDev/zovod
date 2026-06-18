@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    Market,
     ProductionPlant,
     Storage,
     type FactoryUnit,
