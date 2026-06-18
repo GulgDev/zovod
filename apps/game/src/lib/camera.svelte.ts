@@ -29,6 +29,7 @@ export class Camera {
     y: number,
     tweenOptions?: TweenOptions<CameraOffset>,
   ): void {
+    this.cleanup?.();
     this.scaleTween.set(this.scale, { duration: 0 });
     this.offsetTween.set({ x, y }, tweenOptions);
   }
@@ -39,9 +40,15 @@ export class Camera {
     scale: number,
     tweenOptions?: TweenOptions<CameraOffset> & TweenOptions<number>,
   ): void {
+    this.cleanup?.();
     this.scaleTween.set(scale, tweenOptions);
     this.offsetTween.set({ x, y }, tweenOptions);
   }
+
+  /**
+   * A cleanup function to unbind offset from scale (used when zooming).
+   */
+  private cleanup?: () => void;
 
   zoom(
     scale: number,
@@ -50,6 +57,8 @@ export class Camera {
     tweenOptions?: TweenOptions<number>,
   ): void {
     scale = Math.max(Math.min(scale, this.maxScale), this.minScale);
+
+    this.cleanup?.();
 
     const cleanup = $effect.root(() => {
       const startingOffsetX = this.offsetX,
@@ -71,6 +80,11 @@ export class Camera {
         );
       });
     });
-    this.scaleTween.set(scale, tweenOptions).finally(cleanup);
+    this.cleanup = (): void => {
+      this.cleanup = undefined;
+      cleanup();
+    };
+
+    this.scaleTween.set(scale, tweenOptions).then(() => this.cleanup?.());
   }
 }
