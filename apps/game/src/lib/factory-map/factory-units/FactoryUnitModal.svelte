@@ -353,57 +353,62 @@
           {/if}
         </div>
         {#if tab === 3 && (unit instanceof ProductionPlant) && currentResource !== undefined}
+          {let resourceCount = $state(1)}
           {const balance = $derived.by(gameState(() => game.inventory.balance))}
-          {#key balance}
-            {let resourceCount = $state(validateResourceCount(1))}
-            <div class="purchase-panel">
-              <div>
-                {#if currentResource === "workforceUnit"}
-                  <span class="label">Объём поставки</span>
-                  <input
-                    type="number"
-                    bind:value={
-                      (): number => resourceCount,
-                      (value): void => {
-                        resourceCount = validateResourceCount(value);
-                      }
+          {const validatedResourceCount = $derived((
+            void balance, // re-validate when balance changes
+            validateResourceCount(resourceCount)
+          ))}
+          <div class="purchase-panel">
+            <div>
+              {#if currentResource === "workforceUnit"}
+                <span class="label">Объём поставки</span>
+                <input
+                  type="number"
+                  bind:value={
+                    (): number => validatedResourceCount,
+                    (value): void => {
+                      resourceCount = value;
                     }
-                  />
-                {/if}
-              </div>
-              <div>
-                <span class="price">
-                  {currentResource === "workforceUnit"
-                    ? game.inventory.getWorkforceUnitPrice() * resourceCount
-                    : game.inventory.getResourcePrice(currentResource)} р.
-                </span>
-                <button
-                  disabled={resourceCount === 0}
-                  onclick={(): void => {
-                    if (currentResource === "workforceUnit") {
-                      if (!(unit instanceof ProductionPlant))
-                        throw new Error(
-                          "Cannot assign workforce to a non-production unit."
-                        );
-
-                      if (!game.inventory.buyWorkforce(resourceCount))
-                        throw new Error("Failed to buy workforce units.");
-                      game.inventory.assignWorkforce(unit, resourceCount);
-                    } else {
-                      if (!(unit instanceof Storage))
-                        throw new Error(
-                          "Cannot assign resources to a non-storage unit."
-                        );
-                      
-                      unit.renewedResourceKind = currentResource;
-                    }
-                  }}
-                >
-                  Купить
-                </button>
-              </div>
+                  }
+                />
+              {/if}
             </div>
-          {/key}
+            <div>
+              <span class="price">
+                {currentResource === "workforceUnit"
+                  ? game.inventory.getWorkforceUnitPrice() *
+                    validatedResourceCount
+                  : game.inventory.getResourcePrice(currentResource)} р.
+              </span>
+              <button
+                disabled={validatedResourceCount === 0}
+                onclick={(): void => {
+                  if (currentResource === "workforceUnit") {
+                    if (!(unit instanceof ProductionPlant))
+                      throw new Error(
+                        "Cannot assign workforce to a non-production unit."
+                      );
+
+                    if (!game.inventory.buyWorkforce(validatedResourceCount))
+                      throw new Error("Failed to buy workforce units.");
+                    game.inventory.assignWorkforce(
+                      unit, validatedResourceCount
+                    );
+                  } else {
+                    if (!(unit instanceof Storage))
+                      throw new Error(
+                        "Cannot assign resources to a non-storage unit."
+                      );
+                    
+                    unit.renewedResourceKind = currentResource;
+                  }
+                }}
+              >
+                Купить
+              </button>
+            </div>
+          </div>
         {/if}
       </dialog>
   </Portal>
