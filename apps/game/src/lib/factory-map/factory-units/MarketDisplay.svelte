@@ -8,4 +8,5 @@
   x="0"
   y={-(TILE_SIZE + TILE_GAP)}
   width={TILE_SIZE + TILE_GAP + TILE_SIZE}
+  preserveAspectRatio="none" // otherwise shrinks in FF for some reason
 />
