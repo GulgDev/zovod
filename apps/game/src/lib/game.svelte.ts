@@ -1,10 +1,15 @@
 import { Game, Inventory, Market } from "@zovod/engine";
 import { on } from "svelte/events";
 import equal from "fast-deep-equal/es6";
-import { workforceUnit } from "./economy/resource-kinds";
+import { resourceKinds, workforceUnit } from "./economy/resource-kinds";
 
 export const game = new Game(
-  new Inventory(100, { workforceUnit: workforceUnit.price }),
+  new Inventory(100, {
+    ...Object.fromEntries(
+      Object.entries(resourceKinds).map(([kind, { price }]) => [kind, price]),
+    ),
+    workforceUnit: workforceUnit.price,
+  }),
 );
 
 // Initialize the factory map by adding a market.
