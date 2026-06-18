@@ -318,7 +318,9 @@
                     { active: currentResource === resource },
                   ]}
                   onclick={(): void => {
-                    currentResource = resource;
+                    if (currentResource !== resource)
+                      currentResource = unit.renewedResourceKind = resource;
+                    else currentResource = unit.renewedResourceKind = undefined;
                   }}
                 >
                   <span class="resource-info">
@@ -348,7 +350,7 @@
           </div>
           {/if}
         </div>
-        {#if tab === 3 && currentResource !== undefined}
+        {#if tab === 3 && (unit instanceof ProductionPlant) && currentResource !== undefined}
           {const balance = $derived.by(gameState(() => game.inventory.balance))}
           {#key balance}
             {let resourceCount = $state(validateResourceCount(1))}
