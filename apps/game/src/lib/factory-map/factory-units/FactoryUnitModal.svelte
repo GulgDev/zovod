@@ -1,4 +1,6 @@
 <script lang="ts" module>
+  // TODO: refactor this into multiple components
+
   const factoryUnitIds = new WeakMap<FactoryUnit, number>();
 
   let currentId = 1;
