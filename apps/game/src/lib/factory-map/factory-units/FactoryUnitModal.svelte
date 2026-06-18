@@ -66,7 +66,7 @@
    // used in the supply tab
   let currentResource = $derived(
     unit instanceof Storage
-      ? Object.keys(resourceKinds)[0]
+      ? unit.renewedResourceKind
       : unit instanceof ProductionPlant
         ? "workforceUnit"
         : undefined,
