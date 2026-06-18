@@ -11,6 +11,8 @@
   import FactoryUnitPlaceMenu from "./FactoryUnitPlaceMenu.svelte";
   import Portal from "../../util/Portal.svelte";
   import { overlay } from "../../overlay.svelte";
+  import { factoryUnitTypes } from "../../economy/factory-unit-types";
+  import { game } from "../../game.svelte";
 
   const {
     map,
@@ -79,6 +81,8 @@
 {#each factoryUnits?.filter(([, unit]) => !(unit instanceof Market)) as [[x, y], unit] ((y << 16) | (x & 0xffff))}
   <FactoryUnitDisplay
     onremove={(): void => {
+      const info = factoryUnitTypes.find((type) => type.is(unit));
+      if (info && info.price) game.inventory.earnMoney(info.price.sell);
       map.removeUnitAt(x, y);
     }}
     {x}
