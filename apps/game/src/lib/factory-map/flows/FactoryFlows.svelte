@@ -2,7 +2,9 @@
   import {
     FlowBuilder,
     isFactoryUnitCell,
+    Market,
     type FactoryMap,
+    type FactoryUnit,
   } from "@zovod/engine";
   import { directionFrom, type Direction } from "./direction";
   import FlowEdge from "./FlowEdge.svelte";
@@ -78,11 +80,16 @@
         to?: Direction;
       }[]
     >([]);
+
+  function isValidSourceUnit(unit?: FactoryUnit): boolean {
+    return unit !== undefined && !(unit instanceof Market);
+  }
 </script>
 
+{const source = $derived(map.getFlowNodeSource(tileColumn, tileRow))}
+
 {#if !flowBuilderState}
-  {const source = $derived(map.getFlowNodeSource(tileColumn, tileRow))}
-  {#if unitPosition && map.getUnitAt(unitPosition[0], unitPosition[1]) && source === undefined}
+  {#if unitPosition && isValidSourceUnit(map.getUnitAt(unitPosition[0], unitPosition[1])) && source === undefined}
     {const [unitX, unitY] = $derived(unitPosition)}
 
     <!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -123,7 +130,9 @@
 <svelte:document
   onpointerdowncapture={!flowBuilderState &&
   !isFactoryUnitCell(tileColumn, tileRow) &&
-  map.getFlowNodeSource(tileColumn, tileRow) !== undefined
+  source !== undefined &&
+  // exclude reserved flow nodes
+  !(source[0] === tileColumn && source[1] === tileRow)
     ? (ev): void => {
         if (ev.button !== 0) return;
 
