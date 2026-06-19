@@ -39,14 +39,18 @@
 
 <div class="container">
   <button
-    onclick={() => (speedLevel -= LEVEL_STEP)}
+    onclick={(): void => {
+      speedLevel -= LEVEL_STEP;
+    }}
     disabled={speedLevel === MIN_LEVEL}
   >
     <img height="16" src={minus} alt="Замедлить" />
   </button>
   <span class="date">{dateFormat.format(date)}</span>
   <button
-    onclick={() => (speedLevel += LEVEL_STEP)}
+    onclick={(): void => {
+      speedLevel += LEVEL_STEP;
+    }}
     disabled={speedLevel === MAX_LEVEL}
   >
     <img height="16" src={plus} alt="Ускорить" />
