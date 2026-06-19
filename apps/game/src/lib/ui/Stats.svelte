@@ -3,9 +3,16 @@
   import moneyIcon from "../../assets/icons/money.svg";
   import workforceIcon from "../../assets/icons/workforce.svg";
 
-  const valueFormat = new Intl.NumberFormat("ru-RU", {
-    style: "decimal",
-  });
+  const currencyFormat = new Intl.NumberFormat("ru-RU", {
+      style: "decimal",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }),
+    workforceFormat = new Intl.NumberFormat("ru-RU", {
+      style: "decimal",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
 
   const balance = $derived.by(gameState(() => game.inventory.balance)),
     workforce = $derived.by(gameState(() => game.inventory.totalWorkforce));
@@ -14,11 +21,11 @@
 <div class="container">
   <div class="stat">
     <img src={moneyIcon} alt="Деньги" />
-    <span>{valueFormat.format(balance)}</span>
+    <span>{currencyFormat.format(balance)}</span>
   </div>
   <div class="stat">
     <img src={workforceIcon} alt="Рабочая сила" />
-    <span>{valueFormat.format(workforce)}</span>
+    <span>{workforceFormat.format(workforce)}</span>
   </div>
 </div>
 

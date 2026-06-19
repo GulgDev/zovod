@@ -12,6 +12,28 @@ export const game = new Game(
   }),
 );
 
+function gameOver(): void {
+  alert("Игра окончена! Вы разорились.");
+  close();
+}
+
+// Passive expenses
+let currentExpenses = 5 / 60; // start from 5 rubles per minute
+
+const INCREMENT = 2 / 60, // increment by 2 rubles per minute
+  INCREMENT_INTERVAL = 60; // increment every minute
+
+let timeSinceLastIncrement = 0;
+game.addEventListener("update", (ev) => {
+  timeSinceLastIncrement += ev.deltaTime;
+  while (timeSinceLastIncrement >= INCREMENT_INTERVAL) {
+    currentExpenses += INCREMENT;
+    timeSinceLastIncrement -= INCREMENT_INTERVAL;
+  }
+
+  if (!game.inventory.spendMoney(currentExpenses * ev.deltaTime)) gameOver();
+});
+
 // Initialize the factory map by adding a market.
 // Note that because market spans multiple tiles, we prohibit creating flows
 // inbetween those tiles
