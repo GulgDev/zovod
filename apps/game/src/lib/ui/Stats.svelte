@@ -26,7 +26,7 @@
   .container {
     display: flex;
     gap: 12px;
-    padding: 12px;
+    padding: 8px 12px;
 
     background-color: white;
     box-shadow: 0 2px 6px #906a3c3d;
