@@ -2,6 +2,7 @@ import type { Game } from "../game";
 import { Timer } from "./util/timer";
 import { ContainerUnit } from "./abstract/container-unit";
 
+// TODO: allow multiple incoming flows
 export class Market extends ContainerUnit {
   constructor(
     slotCount: number,
