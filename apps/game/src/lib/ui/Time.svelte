@@ -16,7 +16,7 @@
     MAX_LEVEL = 2,
     LEVEL_STEP = 0.5;
 
-  let date = new SvelteDate(1830, 0);
+  let date = new SvelteDate(1860, 0);
 
   const speed = $derived.by(gameState(() => game.speed));
 
@@ -35,6 +35,23 @@
       date.setSeconds(date.getSeconds() + updateEvent.deltaTime * TIME_SCALE);
     }),
   );
+
+  // The game ends after a certain year
+  const ENDING_YEAR = 1861;
+
+  function gameOver(): void {
+    alert(
+      "Поздравляем! Вы дошли до 1861 года. На этом историческая часть игры заканчивается, но вы всё ещё можете продолжить управлять своим заводом.",
+    );
+  }
+
+  let ended = false;
+  $effect(() => {
+    if (date.getUTCFullYear() >= ENDING_YEAR && !ended) {
+      ended = true;
+      gameOver();
+    }
+  });
 </script>
 
 <div class="container">
