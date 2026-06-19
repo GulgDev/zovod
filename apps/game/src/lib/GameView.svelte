@@ -6,9 +6,9 @@
   import Background from "./factory-map/Background.svelte";
   import { Camera } from "./camera.svelte";
   import { overlay } from "./overlay.svelte";
-  import home from "../assets/camera-controls/home.svg";
-  import zoomIn from "../assets/camera-controls/zoom-in.svg";
-  import zoomOut from "../assets/camera-controls/zoom-out.svg";
+  import home from "../assets/controls/home.svg";
+  import plus from "../assets/controls/plus.svg";
+  import minus from "../assets/controls/minus.svg";
 
   const { map }: { map: FactoryMap } = $props();
 
@@ -100,7 +100,7 @@
     }}
     disabled={camera.targetScale === MAX_SCALE}
   >
-    <img src={zoomIn} alt="Приблизить" />
+    <img src={plus} alt="Приблизить" />
   </button>
   <button
     onclick={(): void => {
@@ -121,7 +121,7 @@
     }}
     disabled={camera.targetScale === MIN_SCALE}
   >
-    <img src={zoomOut} alt="Отдалить" />
+    <img src={minus} alt="Отдалить" />
   </button>
 </div>
 
@@ -154,7 +154,7 @@
   }
 
   .controls button {
-    display: flex; /* ignore font dimensions, so that the buttons are square */
+    display: flex; /* ignore font dimensions so that the buttons are square */
 
     background-color: #f7eacd;
     border: none;
