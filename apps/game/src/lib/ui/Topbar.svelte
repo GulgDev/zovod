@@ -20,5 +20,12 @@
 
     width: 100%;
     box-sizing: border-box;
+
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .topbar > :global(*) {
+    pointer-events: all;
   }
 </style>
