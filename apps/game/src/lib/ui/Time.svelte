@@ -16,7 +16,7 @@
     MAX_LEVEL = 2,
     LEVEL_STEP = 0.5;
 
-  let date = new SvelteDate(1860, 0);
+  let date = new SvelteDate(1830, 0);
 
   const speed = $derived.by(gameState(() => game.speed));
 
