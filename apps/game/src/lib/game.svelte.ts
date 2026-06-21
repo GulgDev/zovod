@@ -1,7 +1,35 @@
-import { Game, Inventory, Market } from "@zovod/engine";
+import { SvelteDate } from "svelte/reactivity";
+import { Game, Inventory, Market, type GameUpdateEvent } from "@zovod/engine";
 import { on } from "svelte/events";
 import equal from "fast-deep-equal/es6";
 import { resourceKinds, workforceUnit } from "./economy/resource-kinds";
+
+/**
+ * Manages the passage of years.
+ */
+export class Calendar extends EventTarget {
+  static readonly STARTING_YEAR = 1830;
+  static readonly ENDING_YEAR = 1861;
+
+  private static readonly TIME_SCALE = (365 * 24 * 60 * 60) / 60; // 1 in-game-year = 1 minute
+
+  readonly date = new SvelteDate(Calendar.STARTING_YEAR, 0);
+
+  constructor(game: Game) {
+    super();
+    game.addEventListener("update", this.update);
+  }
+
+  private prevYear = NaN;
+  private readonly update = (ev: GameUpdateEvent): void => {
+    this.date.setSeconds(
+      this.date.getSeconds() + ev.deltaTime * Calendar.TIME_SCALE,
+    );
+
+    if (this.prevYear !== (this.prevYear = this.date.getUTCFullYear()))
+      this.dispatchEvent(new Event("newyear"));
+  };
+}
 
 export const game = new Game(
   new Inventory(200, {
@@ -12,6 +40,8 @@ export const game = new Game(
   }),
 );
 
+export const calendar = new Calendar(game);
+
 function gameOver(): void {
   alert("Игра окончена! Вы разорились.");
   close();
@@ -20,17 +50,13 @@ function gameOver(): void {
 // Passive expenses
 let currentExpenses = 5 / 60; // start from 5 rubles per minute
 
-const INCREMENT = 2 / 60, // increment by 2 rubles per minute
-  INCREMENT_INTERVAL = 60; // increment every minute
+const INCREMENT = 2 / 60; // increment by 2 rubles per minute every year
 
-let timeSinceLastIncrement = 0;
+calendar.addEventListener("newyear", () => {
+  currentExpenses += INCREMENT;
+});
+
 game.addEventListener("update", (ev) => {
-  timeSinceLastIncrement += ev.deltaTime;
-  while (timeSinceLastIncrement >= INCREMENT_INTERVAL) {
-    currentExpenses += INCREMENT;
-    timeSinceLastIncrement -= INCREMENT_INTERVAL;
-  }
-
   if (!game.inventory.spendMoney(currentExpenses * ev.deltaTime)) gameOver();
 });
 

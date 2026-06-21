@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { SvelteDate } from "svelte/reactivity";
-  import { on } from "svelte/events";
-  import type { GameUpdateEvent } from "@zovod/engine";
-  import { game, gameState } from "../game.svelte";
+  import { calendar, game, gameState } from "../game.svelte";
   import plus from "../../assets/controls/plus.svg";
   import minus from "../../assets/controls/minus.svg";
 
@@ -16,8 +13,6 @@
     MAX_LEVEL = 2,
     LEVEL_STEP = 0.5;
 
-  let date = new SvelteDate(1830, 0);
-
   const speed = $derived.by(gameState(() => game.speed));
 
   let speedLevel = $derived(Math.log2(speed));
@@ -25,32 +20,6 @@
     if (speedLevel < MIN_LEVEL) speedLevel = MIN_LEVEL;
     else if (speedLevel > MAX_LEVEL) speedLevel = MAX_LEVEL;
     game.speed = 2 ** speedLevel;
-  });
-
-  const TIME_SCALE = (365 * 24 * 60 * 60) / 60; // 1 minute = 1 in-game-year
-
-  $effect(() =>
-    on(game, "update", (ev) => {
-      const updateEvent = ev as GameUpdateEvent;
-      date.setSeconds(date.getSeconds() + updateEvent.deltaTime * TIME_SCALE);
-    }),
-  );
-
-  // The game ends after a certain year
-  const ENDING_YEAR = 1861;
-
-  function gameOver(): void {
-    alert(
-      "Поздравляем! Вы дошли до 1861 года. На этом историческая часть игры заканчивается, но вы всё ещё можете продолжить управлять своим заводом.",
-    );
-  }
-
-  let ended = false;
-  $effect(() => {
-    if (date.getUTCFullYear() >= ENDING_YEAR && !ended) {
-      ended = true;
-      gameOver();
-    }
   });
 </script>
 
@@ -63,7 +32,7 @@
   >
     <img height="16" src={minus} alt="Замедлить" />
   </button>
-  <span class="date">{dateFormat.format(date)}</span>
+  <span class="date">{dateFormat.format(calendar.date)}</span>
   <button
     onclick={(): void => {
       speedLevel += LEVEL_STEP;

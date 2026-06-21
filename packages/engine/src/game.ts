@@ -27,6 +27,16 @@ export class Game extends EventTarget {
     this.start();
   }
 
+  private paused = false;
+
+  pause(): void {
+    this.paused = true;
+  }
+
+  resume(): void {
+    this.paused = false;
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   private lastFrameTimestamp: DOMHighResTimeStamp = document.timeline
     .currentTime! as number; // document.timeline is always active
@@ -46,6 +56,8 @@ export class Game extends EventTarget {
    * all factory units of the {@link factoryMap}.
    */
   private update(deltaTime: number): void {
+    if (this.paused) return;
+
     for (const unit of this.factoryMap.getAllUnits())
       unit.update(this, deltaTime);
 
